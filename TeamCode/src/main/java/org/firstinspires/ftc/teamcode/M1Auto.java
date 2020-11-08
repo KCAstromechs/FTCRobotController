@@ -77,7 +77,7 @@ public class M1Auto extends LinearOpMode {
 
             case 2:
                 //Square C
-                //DOWNLOAD FIRST
+                //DOWNLOAD FIRST!
                 //to the rings
                 //grab that wobble goal!
                 mb.driveStraight(5,0,.3);
