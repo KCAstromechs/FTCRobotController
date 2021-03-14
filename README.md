@@ -3,7 +3,6 @@
 Code used for the M2 robot, Orbit. Used in MO NW League Meets
 
 ## ORIGINAL README FILE FOLLOWS
-
 ## NOTICE
 
 This repository contains the public FTC SDK for the Ultimate Goal (2020-2021) competition season.
