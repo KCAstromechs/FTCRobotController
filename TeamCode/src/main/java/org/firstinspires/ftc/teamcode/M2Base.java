@@ -60,9 +60,11 @@ public class M2Base {
 
         // RESET ENCODERS
         encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // START THE ENCODERS
         encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         // GYRO INITIALIZE
