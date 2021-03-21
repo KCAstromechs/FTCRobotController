@@ -28,11 +28,11 @@ public class M2Base {
     private DcMotor backLeft = null;
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
-    private Servo wobbleGoal = null;
+    private DcMotor wobbleGoal = null;
     private DcMotor intake = null;
     private DcMotor shooter = null;
     private DcMotor rotator = null;
-    public DcMotor encoderY = null;
+    private Servo wobbleGrab = null;
     private BNO055IMU imu;
 
     public void init() throws InterruptedException {
@@ -41,11 +41,11 @@ public class M2Base {
         backRight = callingOpMode.hardwareMap.get(DcMotor.class, "backRight");
         frontLeft = callingOpMode.hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = callingOpMode.hardwareMap.get(DcMotor.class, "frontRight");
-        wobbleGoal = callingOpMode.hardwareMap.get(Servo.class, "wobbleGoal");
+        wobbleGoal = callingOpMode.hardwareMap.get(DcMotor.class, "wobbleGoal");
         shooter = callingOpMode.hardwareMap.get(DcMotor.class, "shooter");
         rotator = callingOpMode.hardwareMap.get(DcMotor.class, "rotator");
         intake = callingOpMode.hardwareMap.get(DcMotor.class,"intake");
-        encoderY = callingOpMode.hardwareMap.get(DcMotor.class, "encoderY");
+        wobbleGrab = callingOpMode.hardwareMap.get(Servo.class, "wobbleGrab");
         imu = callingOpMode.hardwareMap.get(BNO055IMU.class,"imu");
 
         //Reverse motors
@@ -59,11 +59,11 @@ public class M2Base {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // RESET ENCODERS
-        encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // START THE ENCODERS
-        encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
@@ -89,20 +89,12 @@ public class M2Base {
         rotator.setPower(rotatorPower);
     }
 
+
     public void angleEncoderServoTele(){
         float zAngle;
         zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
         callingOpMode.telemetry.addData( "z angle:", zAngle );
-        callingOpMode.telemetry.addData("Servo position", wobbleGoal.getPosition());
         callingOpMode.telemetry.update();
-    }
-    public void wobbleGoalPosition(double position){
-        if(position == CLOSED){
-            wobbleGoal.setPosition(CLOSED);
-        }
-        if(position == OPEN){
-            wobbleGoal.setPosition(OPEN);
-        }
     }
 
     //Oh Yeah Its Strafing Time Babyyyy
@@ -195,8 +187,8 @@ public class M2Base {
             desiredAngle = normalizeAngle(desiredAngle);
         }
         float zAngle = 0.0f;
-        encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
         frontRight.setPower(power);
@@ -204,7 +196,7 @@ public class M2Base {
         frontLeft.setPower(power);
         backLeft.setPower(power);
 
-        while ( Math.abs(encoderClicks) > Math.abs(encoderY.getCurrentPosition() )){
+        while ( Math.abs(encoderClicks) > Math.abs(intake.getCurrentPosition() )){
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
             if(useCheat) {
                 zAngle = (float) normalizeAngle(zAngle);
@@ -218,7 +210,7 @@ public class M2Base {
             frontLeft.setPower(power + driveCorrect);
             backLeft.setPower(power + driveCorrect);
 
-            callingOpMode.telemetry.addData( "encoderY:", encoderY.getCurrentPosition());
+            callingOpMode.telemetry.addData( "encoderY:", intake.getCurrentPosition());
             callingOpMode.telemetry.addData("zAngle", zAngle);
             callingOpMode.telemetry.addData("desiredAngle", desiredAngle);
             callingOpMode.telemetry.update();

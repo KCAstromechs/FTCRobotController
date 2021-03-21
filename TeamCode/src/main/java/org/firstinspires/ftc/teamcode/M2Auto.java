@@ -101,7 +101,7 @@ public class M2Auto extends LinearOpMode {
             tfod.shutdown();
         }
 
-        telemetry.addData("encoderY", mb.encoderY.getCurrentPosition());
+
 
 
         //drive forwa
@@ -112,25 +112,25 @@ public class M2Auto extends LinearOpMode {
 
         // shooter power up and rotator goes
 
-        mb.shooter(-.62);
+       // mb.shooter(-.62);
         sleep(2500);
         //r1
-        mb.rotator(-1);
+     //   mb.rotator(-1);
         sleep(400);
-        mb.rotator(0);
+     //   mb.rotator(0);
         //r2
         sleep(600);
-        mb.rotator(-1);
+       // mb.rotator(-1);
         sleep(400);
-        mb.rotator(0);
+       // mb.rotator(0);
         //r3
         sleep(600);
-        mb.rotator(-1);
+       // mb.rotator(-1);
         sleep(400);
-        mb.rotator(0);
+       // mb.rotator(0);
         //off
-        mb.rotator(0);
-        mb.shooter(0);
+        //mb.rotator(0);
+        //mb.shooter(0);
 
 
 

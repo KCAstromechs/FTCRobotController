@@ -36,6 +36,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
 @TeleOp(name="M2 TeleOp", group="Iterative Opmode")
 public class M2TeleOp extends OpMode
 {
@@ -48,9 +52,9 @@ public class M2TeleOp extends OpMode
     private DcMotor shooter = null;
     private DcMotor rotator = null;
     private DcMotor intake = null;
-    private DcMotor encoderY = null;
+    private DcMotor wobbleGoal = null;
     private DcMotor encoderX = null;
-    private Servo wobbleGoal = null;
+    private Servo wobbleGrab = null;
     private BNO055IMU imu;
 
     double leftPower;
@@ -58,7 +62,7 @@ public class M2TeleOp extends OpMode
     double trigger;
     double servoPosition = 0;
     double shooterPower = .62;
-    boolean aWasPressed, bWasPressed;
+    boolean aWasPressed, bWasPressed, xWasPressed, yWasPressed;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -72,8 +76,8 @@ public class M2TeleOp extends OpMode
         shooter = hardwareMap.get(DcMotor.class, "shooter");
         intake = hardwareMap.get(DcMotor.class, "intake");
         rotator = hardwareMap.get(DcMotor.class, "rotator");
-        encoderY = hardwareMap.get(DcMotor.class, "encoderY");
-        wobbleGoal = hardwareMap.get(Servo.class,"wobbleGoal");
+        wobbleGoal = hardwareMap.get(DcMotor.class,"wobbleGoal");
+        wobbleGrab = hardwareMap.get(Servo.class, "wobbleGrab");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -89,10 +93,15 @@ public class M2TeleOp extends OpMode
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // RESET ENCODERS
-        encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //wobbleGoal.setMod;
+        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbleGoal.setTargetPosition(0);
+
 
         // START THE ENCODERS
-        encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        wobbleGoal.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         //All the gyro setup
         float yAngle;
@@ -218,39 +227,45 @@ public class M2TeleOp extends OpMode
     }
 
 
-
-
-        //Wobble Goal Servo
-        //Up Position
-        if(gamepad2.y){
-           // wobbleGoal.setPosition(0);
-            if (servoPosition<.6) servoPosition+= .005;
-            wobbleGoal.setPosition(servoPosition);
+    if(gamepad1.y){
+        if (!yWasPressed) {
+            yWasPressed = true;
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+2000);
+            wobbleGoal.setPower(.5);
 
         }
-        /*
-        //Down Position
-        if (gamepad2.x){
-            //wobbleGoal.setPosition(.0);
-            if (servoPosition>.5) servoPosition-= .005;
-            wobbleGoal.setPosition(servoPosition);
+    }
+    else{
+        yWasPressed = false;
+    }
+
+    if(gamepad1.x) {
+        if (!xWasPressed) {
+            xWasPressed = true;
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-2000);
+            wobbleGoal.setPower(.5);
+
         }
-        //Reset Position
-        if(gamepad2.a){
-            wobbleGoal.setPosition(1);
-        }
-        //encoder reset
-        if(gamepad1.b){
-            encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+    }
+    else{
+        xWasPressed = false;
+    }
+
+    //closed
+    if(gamepad1.a){
+        wobbleGrab.setPosition(.5);
+    }
+
+    //open
+    if (gamepad1.b){
+        wobbleGrab.setPosition(1);
+    }
 
 
-         */
 
-
-        telemetry.addData("encoderY", encoderY.getCurrentPosition());
+        telemetry.addData("encoderY", intake.getCurrentPosition());
         telemetry.addData("shooterPower", shooterPower);
+        telemetry.addData("target position", wobbleGoal.getTargetPosition());
         telemetry.update();
     }
 
