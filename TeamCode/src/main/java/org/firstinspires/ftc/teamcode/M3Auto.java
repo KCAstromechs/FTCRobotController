@@ -39,8 +39,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@Autonomous(name = "M2Auto", group = "Linear Opmode")
-public class M2Auto extends LinearOpMode {
+@Autonomous(name = "M3Auto", group = "Linear Opmode")
+public class M3Auto extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
@@ -134,14 +134,6 @@ public class M2Auto extends LinearOpMode {
 
 
 
-        //back up to line up for grabbing the wobble goal
-        mb.driveStraight(30,0,-.4);
-        //turn to have the BACK of the robot parallel to the wobble goal
-        mb.turnToAngle(-65,.3);
-        //back up towards the wall
-        mb.driveStraight(29,-65,-.3);
-
-
 
 
         //decide square
@@ -150,34 +142,19 @@ public class M2Auto extends LinearOpMode {
 
             case "None":
                 // Square A
-                mb.turnToAngle(-170, .3);
-                mb.driveStraight(60, -170, -.3);
 
 
                 break;
 
             case "Quad":
                 //Square C
-                //bring that boi to the square
-                mb.turnToAngle(-175, .3);
-                mb.driveStraight(102, -175, -.5);
-
-                // go back and park
-                mb.driveStraight(40, -175, .4);
-
-
-
 
 
                 break;
 
             case "Single":
                 //Square B
-                mb.turnToAngle(172,-.3);
-                mb.driveStraight(78,172,-.4);
-
-                //go back and park
-                mb.driveStraight(10,180, .4);
+            
 
         }
 

@@ -13,9 +13,8 @@ public class M2Base {
 
     final double K_TURN = 0.02;
     final double STRAFE_CONSTANT = 0.02;
-    final double CLOSED = 0;
+    final double CLOSED = .5;
     final double OPEN = 1;
-    final double SHOOT = 1;
 
     //Important Set-Up Stuff
     OpMode callingOpMode;
@@ -88,6 +87,14 @@ public class M2Base {
     public void rotator(double rotatorPower){
         rotator.setPower(rotatorPower);
     }
+
+        //power always positive, if going backwards use negative encoder clicks
+    public void wobbleGoalMech(double power, int clicks){
+        wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+clicks);
+        wobbleGoal.setPower(power);
+    }
+
+
 
 
     public void angleEncoderServoTele(){
