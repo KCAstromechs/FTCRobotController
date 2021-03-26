@@ -154,7 +154,7 @@ public class M3Auto extends LinearOpMode {
 
             case "Single":
                 //Square B
-            
+
 
         }
 

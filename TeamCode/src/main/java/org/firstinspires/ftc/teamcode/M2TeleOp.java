@@ -95,7 +95,8 @@ public class M2TeleOp extends OpMode
         // RESET ENCODERS
         //wobbleGoal.setMod;
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wobbleGoal.setTargetPosition(0);
+        wobbleGoal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 
         // START THE ENCODERS
@@ -230,9 +231,8 @@ public class M2TeleOp extends OpMode
     if(gamepad1.y){
         if (!yWasPressed) {
             yWasPressed = true;
-            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+2000);
-            wobbleGoal.setPower(.5);
-
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+100);
+            wobbleGoal.setPower(.2);
         }
     }
     else{
@@ -242,8 +242,8 @@ public class M2TeleOp extends OpMode
     if(gamepad1.x) {
         if (!xWasPressed) {
             xWasPressed = true;
-            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-2000);
-            wobbleGoal.setPower(.5);
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-100);
+            wobbleGoal.setPower(.2);
 
         }
     }
@@ -265,7 +265,9 @@ public class M2TeleOp extends OpMode
 
         telemetry.addData("encoderY", intake.getCurrentPosition());
         telemetry.addData("shooterPower", shooterPower);
-        telemetry.addData("target position", wobbleGoal.getTargetPosition());
+        telemetry.addData("wobble goal encoder click:", wobbleGoal.getTargetPosition());
+        telemetry.addData("current position", wobbleGoal.getCurrentPosition());
+
         telemetry.update();
     }
 
