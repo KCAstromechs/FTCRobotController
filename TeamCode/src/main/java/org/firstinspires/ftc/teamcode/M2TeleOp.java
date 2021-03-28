@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -97,7 +98,7 @@ public class M2TeleOp extends OpMode
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wobbleGoal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
+        wobbleGoal.setTargetPosition(0);
 
         // START THE ENCODERS
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -231,7 +232,7 @@ public class M2TeleOp extends OpMode
     if(gamepad1.y){
         if (!yWasPressed) {
             yWasPressed = true;
-            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+100);
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+2000);
             wobbleGoal.setPower(.2);
         }
     }
@@ -242,7 +243,7 @@ public class M2TeleOp extends OpMode
     if(gamepad1.x) {
         if (!xWasPressed) {
             xWasPressed = true;
-            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-100);
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-2000);
             wobbleGoal.setPower(.2);
 
         }
@@ -251,12 +252,12 @@ public class M2TeleOp extends OpMode
         xWasPressed = false;
     }
 
-    //closed
+    //open
     if(gamepad1.a){
         wobbleGrab.setPosition(.5);
     }
 
-    //open
+    //closed
     if (gamepad1.b){
         wobbleGrab.setPosition(1);
     }

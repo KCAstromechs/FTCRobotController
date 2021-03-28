@@ -13,8 +13,8 @@ public class M2Base {
 
     final double K_TURN = 0.02;
     final double STRAFE_CONSTANT = 0.02;
-    final double CLOSED = .5;
-    final double OPEN = 1;
+    final double OPEN = .5;
+    final double CLOSED = 1;
 
     //Important Set-Up Stuff
     OpMode callingOpMode;
@@ -61,9 +61,11 @@ public class M2Base {
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
         // START THE ENCODERS
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
 
         // GYRO INITIALIZE
