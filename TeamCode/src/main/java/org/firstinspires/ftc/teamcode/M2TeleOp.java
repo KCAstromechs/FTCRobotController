@@ -229,22 +229,22 @@ public class M2TeleOp extends OpMode
     }
 
 
-    if(gamepad1.y){
+    if(gamepad2.left_stick_y > 0.3){
         if (!yWasPressed) {
             yWasPressed = true;
             wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+2000);
-            wobbleGoal.setPower(.2);
+            wobbleGoal.setPower(.5);
         }
     }
     else{
         yWasPressed = false;
     }
 
-    if(gamepad1.x) {
+    if(gamepad2.left_stick_y < -0.3) {
         if (!xWasPressed) {
             xWasPressed = true;
             wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-2000);
-            wobbleGoal.setPower(.2);
+            wobbleGoal.setPower(.5);
 
         }
     }
@@ -253,12 +253,12 @@ public class M2TeleOp extends OpMode
     }
 
     //open
-    if(gamepad1.a){
+    if(gamepad2.x){
         wobbleGrab.setPosition(.5);
     }
 
     //closed
-    if (gamepad1.b){
+    if (gamepad2.y){
         wobbleGrab.setPosition(1);
     }
 
