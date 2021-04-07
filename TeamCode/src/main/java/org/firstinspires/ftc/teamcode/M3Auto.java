@@ -101,18 +101,18 @@ public class M3Auto extends LinearOpMode {
             tfod.shutdown();
         }
 
-
+//DOWNLOAD NEXT TIME 
 
 
         //drive forwa
-        mb.driveStraight(43, 0, .3);
-        mb.turnToAngle(0, .3);
-        mb.driveStraight(2, 0, .4);
+        mb.driveStraight(51, 0, .3);
+        mb.turnToAngle(21, .3);
+        mb.driveStraight(2, 21, .4);
         sleep(1000);
 
         // shooter power up and rotator goes
 
-        mb.shooter(-.62);
+        mb.shooter(-.8);
         sleep(2500);
         //r1
         mb.rotator(-1);

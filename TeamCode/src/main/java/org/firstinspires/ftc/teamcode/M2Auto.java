@@ -105,9 +105,9 @@ public class M2Auto extends LinearOpMode {
 
 
         //drive forwa
-        mb.driveStraight(43, 0, .3);
-        mb.turnToAngle(0, .3);
-        mb.driveStraight(2, 0, .4);
+        mb.driveStraight(54, 0, .4);
+        mb.turnToAngle(-5, .3);
+        mb.driveStraight(2, -5, .4);
         sleep(1000);
 
         // shooter power up and rotator goes

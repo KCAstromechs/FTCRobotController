@@ -233,7 +233,7 @@ public class M2TeleOp extends OpMode
         if (!yWasPressed) {
             yWasPressed = true;
             wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+2000);
-            wobbleGoal.setPower(.5);
+            wobbleGoal.setPower(.7);
         }
     }
     else{
@@ -244,12 +244,26 @@ public class M2TeleOp extends OpMode
         if (!xWasPressed) {
             xWasPressed = true;
             wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-2000);
-            wobbleGoal.setPower(.5);
+            wobbleGoal.setPower(.7);
 
         }
     }
     else{
         xWasPressed = false;
+    }
+
+    if(wobbleGoal.getCurrentPosition()<= -10 || wobbleGoal.getCurrentPosition()>= 4010 ){
+        wobbleGoal.setPower(0);
+        if(wobbleGoal.getCurrentPosition()>= 4010) {
+            wobbleGoal.setTargetPosition(4000);
+            wobbleGoal.setPower(.7);
+        }
+        else {
+            wobbleGoal.setTargetPosition(0);
+            wobbleGoal.setPower(.7);
+        }
+
+
     }
 
     //open

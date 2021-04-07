@@ -34,6 +34,7 @@ public class M2Base {
     private Servo wobbleGrab = null;
     private BNO055IMU imu;
 
+
     public void init() throws InterruptedException {
         // Hardware Map Stuff
         backLeft =  callingOpMode.hardwareMap.get(DcMotor.class, "backLeft");
@@ -46,6 +47,7 @@ public class M2Base {
         intake = callingOpMode.hardwareMap.get(DcMotor.class,"intake");
         wobbleGrab = callingOpMode.hardwareMap.get(Servo.class, "wobbleGrab");
         imu = callingOpMode.hardwareMap.get(BNO055IMU.class,"imu");
+
 
         //Reverse motors
         frontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -96,7 +98,14 @@ public class M2Base {
         wobbleGoal.setPower(power);
     }
 
-
+    public void wobbleServoPosition(String position){
+        if(position =="CLOSED"){
+            wobbleGrab.setPosition(CLOSED);
+        }
+        if (position == "OPEN"){
+            wobbleGrab.setPosition(OPEN);
+        }
+    }
 
 
     public void angleEncoderServoTele(){
