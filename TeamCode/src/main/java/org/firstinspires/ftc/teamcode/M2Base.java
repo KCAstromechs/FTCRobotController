@@ -62,11 +62,14 @@ public class M2Base {
         // RESET ENCODERS
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbleGoal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
+        wobbleGoal.setTargetPosition(0);
         // START THE ENCODERS
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        wobbleGoal.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
 
@@ -93,10 +96,15 @@ public class M2Base {
     }
 
         //power always positive, if going backwards use negative encoder clicks
-    public void wobbleGoalMech(double power, int clicks){
-        wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+clicks);
-        wobbleGoal.setPower(power);
-    }
+    public void wobbleGoalMech(double power, int pos){
+
+            wobbleGoal.setTargetPosition(pos);
+            wobbleGoal.setPower(power);
+
+        }
+
+
+
 
     public void wobbleServoPosition(String position){
         if(position =="CLOSED"){
