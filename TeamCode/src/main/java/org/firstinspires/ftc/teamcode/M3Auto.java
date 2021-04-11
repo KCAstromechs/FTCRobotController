@@ -106,14 +106,13 @@ public class M3Auto extends LinearOpMode {
         mb.wobbleServoPosition("CLOSED");
         //drive forwa
         mb.driveStraight(47, 0, .4);
+        //shooter
+        mb.shooter(-.75);
         mb.turnToAngle(21, .4);
         mb.driveStraight(2, 21, .5);
         sleep(500);
 
-        // shooter power up and rotator goes
 
-        mb.shooter(-.75);
-        sleep(2000);
         //r1
         mb.rotator(-1);
         sleep(400);
@@ -138,100 +137,106 @@ public class M3Auto extends LinearOpMode {
 
         //decide square
         // square a= none square b = one square c = quad
-        switch ("Single") {
+        switch (ringCount) {
 
             case "None":
                 // Square A
 
-                //NEEDS TUNING
+                //Ndone
                 //drive forward and deliver the wobble goal
                 mb.driveStraight(6, 21, .5);
+                //bring mech down
+                mb.wobbleGoalMech(.7, 3500);
+                //moving toward the square
                 mb.turnToAngle(-104, .4);
                 mb.driveStraight(17, -104, -.5);
-                //deliver
-                mb.wobbleGoalMech(.7, 4000);
-                sleep(1500);
+                mb.wobbleGoalMech(.8,3800);
+                sleep(500);
                 mb.wobbleServoPosition("OPEN");
                 sleep(500);
                 //back up and begin driving toward the second wobble goal
                 mb.driveStraight(7,-90, .5);
-                mb.turnToAngle(-15, .4);
-                mb.driveStraight(43,-15,-.5);
+                mb.turnToAngle(-13.5, .4);
+                mb.driveStraight(38,-13.5,-.5);
                 //collect and begin to deliver
                 mb.wobbleServoPosition("CLOSED");
-                sleep(1500);
-                mb.wobbleGoalMech(.7,2000);
-                sleep(2000);
+                sleep(800);
+                mb.wobbleGoalMech(.8,2000);
+                sleep(1000);
                 mb.turnToAngle(-160,.4, true);
-                mb.driveStraight(28, -160, -.5);
-
-                //deliver
-                mb.wobbleGoalMech(.7,4000);
+                mb.wobbleGoalMech(.8,3300);
+                mb.driveStraight(33, -160, -.5);
+                mb.wobbleGoalMech(.8,3800);
                 sleep(1000);
                 mb.wobbleServoPosition("OPEN");
                 sleep(750);
-                mb.wobbleGoalMech(.7,0);
-                mb.driveStraight(10,-160, -.5);
-
-
-
-
-
+                mb.wobbleGoalMech(.8,10);
+                mb.driveStraight(3, -160, .5);
+                mb.turnToAngle(-45, .4,true);
+                mb.driveStraight(17,-45, .5);
                 break;
 
             case "Quad":
                 //Square C
-                //TUNE THIS
+                //tuned
                 mb.turnToAngle(-150,.4);
+                mb.wobbleGoalMech(.8,3500);
                 mb.driveStraight(58,-150, -.5);
-                mb.wobbleGoalMech(.7,4000);
-                sleep(1500);
+                mb.wobbleGoalMech(.8,3800);
+                sleep(500);
                 mb.wobbleServoPosition("OPEN");
-                sleep(750);
-                mb.turnToAngle(4,.4);
-                mb.driveStraight(60, 4, -.7);
-                mb.driveStraight(12, 4, -.4);
+                sleep(500);
+                mb.driveStraight(5,-150, .5);
+                //go grab the other one
+                mb.turnToAngle(1,.4);
+                mb.driveStraight(60, 0, -.7);
+                mb.driveStraight(9, 0, -.4);
                 mb.wobbleServoPosition("CLOSED");
                 sleep(1000);
                 mb.wobbleGoalMech(.7, 2000);
-                sleep(1000);
-                mb.turnToAngle(-170, .4, true);
-                mb.driveStraight(70, -177, -.7 );
-                mb.wobbleGoalMech(.7, 4000);
-                sleep(1500);
+                sleep(800);
+                //go to deliver
+                mb.turnToAngle(-177, .4, true);
+                mb.wobbleGoalMech(.8,3000);
+                mb.driveStraight(75, -177, -.7 );
+                //deliver
+                mb.wobbleGoalMech(.7, 3800);
+                sleep(500);
                 mb.wobbleServoPosition("OPEN");
-                sleep(750);
-                mb.wobbleGoalMech(.7, 0);
-                mb.driveStraight(38, -180, .6);
-
-
-
-
-
+                sleep(500);
+                //park
+                mb.wobbleGoalMech(.7, 10);
+                mb.driveStraight(17, -180, .6);
                 break;
 
             case "Single":
                 //Square B
                 mb.turnToAngle(-155, .4);
-                mb.driveStraight(6, -155, -.5);
-                mb.wobbleGoalMech(.7,4000);
-                sleep(1500);
+                mb.wobbleGoalMech(.8,3500);
+                mb.driveStraight(27, -155, -.5);
+                mb.wobbleGoalMech(.8,3800);
+                sleep(800);
                 mb.wobbleServoPosition("OPEN");
-                sleep(750);
-                mb.turnToAngle(-35, -.4);
-                mb.driveStraight(60, -35, -.5);
+                sleep(500);
+                //return for the second one
+                mb.driveStraight(32,-155,.6);
+                mb.turnToAngle(-160, .4);
+                mb.driveStraight(10, -150, -.5);
                 mb.wobbleServoPosition("CLOSED");
                 sleep(750);
-                mb.wobbleGoalMech(.7, 2000);
-                //sleeo?
-                mb.turnToAngle(170, .4);
-                mb.driveStraight(60, 175, -.6);
-                mb.wobbleGoalMech(.7,4000);
-                sleep(1500);
+                mb.wobbleGoalMech(.8, 2000);
+                //
+                mb.turnToAngle(174, .4);
+                mb.wobbleGoalMech(.8,3300);
+                mb.driveStraight(48, 174, -.6);
+                //deliver
+                mb.wobbleGoalMech(.8,3800);
+                sleep(500);
                 mb.wobbleServoPosition("OPEN");
-                sleep(750);
-                mb.wobbleGoalMech(.7, 0);
-                mb.driveStraight(12, -5, .6);
+                sleep(500);
+                //park
+                mb.wobbleGoalMech(.8, 10);
+                mb.driveStraight(3, 174, .6);
 
 
         }
