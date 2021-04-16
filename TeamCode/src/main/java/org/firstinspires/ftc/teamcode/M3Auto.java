@@ -219,16 +219,17 @@ public class M3Auto extends LinearOpMode {
                 mb.wobbleServoPosition("OPEN");
                 sleep(500);
                 //return for the second one
-                mb.driveStraight(32,-155,.6);
-                mb.turnToAngle(-160, .4);
-                mb.driveStraight(10, -150, -.5);
+                //**REVISE POINT**
+                mb.driveStraight(52,-155,.6);
+                mb.turnToAngle(-63.5,.4);
+                mb.driveStraight(25, -63.5, -.5);
                 mb.wobbleServoPosition("CLOSED");
                 sleep(750);
                 mb.wobbleGoalMech(.8, 2000);
-                //
-                mb.turnToAngle(174, .4);
-                mb.wobbleGoalMech(.8,3300);
-                mb.driveStraight(48, 174, -.6);
+                mb.turnToAngle(-170, .4);
+                mb.driveStraight(24, -170, -.6);
+                mb.turnToAngle(170, -.4);
+                mb.driveStraight(28, 165, -.5);
                 //deliver
                 mb.wobbleGoalMech(.8,3800);
                 sleep(500);
@@ -237,7 +238,6 @@ public class M3Auto extends LinearOpMode {
                 //park
                 mb.wobbleGoalMech(.8, 10);
                 mb.driveStraight(3, 174, .6);
-
 
         }
 
