@@ -258,9 +258,9 @@ public class M2TeleOp extends OpMode
         }
     }
 
-    if(wobbleGoal.getCurrentPosition()<= -10 || wobbleGoal.getCurrentPosition()>= 4010 ){
+    if(wobbleGoal.getTargetPosition()<= -10 || wobbleGoal.getTargetPosition()>= 4010 ){
         wobbleGoal.setPower(0);
-        if(wobbleGoal.getCurrentPosition()>= 4010) {
+        if(wobbleGoal.getTargetPosition()>= 4010) {
             wobbleGoal.setTargetPosition(4000);
             wobbleGoal.setPower(.7);
         }
