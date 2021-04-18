@@ -64,6 +64,7 @@ public class M2TeleOp extends OpMode
     double servoPosition = 0;
     double shooterPower = .62;
     boolean aWasPressed, bWasPressed, xWasPressed, yWasPressed;
+    boolean upAvailable, downAvailable;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -97,13 +98,15 @@ public class M2TeleOp extends OpMode
         //wobbleGoal.setMod;
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wobbleGoal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         wobbleGoal.setTargetPosition(0);
 
         // START THE ENCODERS
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         wobbleGoal.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        // for fancy wobble time
+        upAvailable = true;
+        downAvailable = true;
 
         //All the gyro setup
         float yAngle;
@@ -228,28 +231,31 @@ public class M2TeleOp extends OpMode
         shooter.setPower(0);
     }
 
+    // reset wobble goal flag
+    if (gamepad2.left_stick_y < 0.3) {
+        upAvailable = true;
+    }
 
-    if(gamepad2.left_stick_y > 0.3){
-        if (!yWasPressed) {
-            yWasPressed = true;
-            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()+2000);
+    if (gamepad2.left_stick_y > -0.3) {
+        downAvailable = true;
+    }
+
+    // wobble goal up
+    if (upAvailable) {
+        if (gamepad2.left_stick_y > 0.7) {
+            upAvailable = false;
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition() + 2000);
             wobbleGoal.setPower(.7);
         }
     }
-    else{
-        yWasPressed = false;
-    }
 
-    if(gamepad2.left_stick_y < -0.3) {
-        if (!xWasPressed) {
-            xWasPressed = true;
-            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition()-2000);
+    // wobble goal down
+    if (downAvailable) {
+        if (gamepad2.left_stick_y < -0.7) {
+            downAvailable = false;
+            wobbleGoal.setTargetPosition(wobbleGoal.getTargetPosition() - 2000);
             wobbleGoal.setPower(.7);
-
         }
-    }
-    else{
-        xWasPressed = false;
     }
 
     if(wobbleGoal.getCurrentPosition()<= -10 || wobbleGoal.getCurrentPosition()>= 4010 ){

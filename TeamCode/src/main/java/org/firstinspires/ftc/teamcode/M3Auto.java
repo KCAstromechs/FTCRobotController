@@ -188,17 +188,17 @@ public class M3Auto extends LinearOpMode {
                 sleep(500);
                 mb.driveStraight(5,-150, .5);
                 //go grab the other one
-                mb.turnToAngle(1,.4);
-                mb.driveStraight(60, 0, -.7);
-                mb.driveStraight(9, 0, -.4);
+                mb.turnToAngle(.5,.4);
+                mb.driveStraight(60, .5, -.7);
+                mb.driveStraight(9, .5, -.4);
                 mb.wobbleServoPosition("CLOSED");
                 sleep(1000);
                 mb.wobbleGoalMech(.7, 2000);
                 sleep(800);
                 //go to deliver
-                mb.turnToAngle(-177, .4, true);
+                mb.turnToAngle(-174, .4, true);
                 mb.wobbleGoalMech(.8,3000);
-                mb.driveStraight(75, -177, -.7 );
+                mb.driveStraight(75, -174, -.7 );
                 //deliver
                 mb.wobbleGoalMech(.7, 3800);
                 sleep(500);
@@ -206,7 +206,7 @@ public class M3Auto extends LinearOpMode {
                 sleep(500);
                 //park
                 mb.wobbleGoalMech(.7, 10);
-                mb.driveStraight(17, -180, .6);
+                mb.driveStraight(21, -180, .6);
                 break;
 
             case "Single":
