@@ -62,7 +62,8 @@ public class M2TeleOp extends OpMode
     double rightPower;
     double trigger;
     double servoPosition = 0;
-    double shooterPower = .62;
+    double shooterPower = .74;
+    double powerShotPower = .69;
     boolean aWasPressed, bWasPressed, xWasPressed, yWasPressed;
     boolean upAvailable, downAvailable;
     /*
@@ -198,6 +199,15 @@ public class M2TeleOp extends OpMode
      else{
          rotator.setPower(0);
      }
+
+     // power presets
+        if  (gamepad2.right_trigger > 0.7) {
+            shooterPower = .84;
+        }
+
+        if (gamepad2.left_trigger > 0.7) {
+            shooterPower = powerShotPower;
+        }
 
       // power testing
     if(gamepad2.a) {

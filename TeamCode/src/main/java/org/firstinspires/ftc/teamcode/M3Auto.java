@@ -107,7 +107,7 @@ public class M3Auto extends LinearOpMode {
         //drive forwa
         mb.driveStraight(47, 0, .4);
         //shooter
-        mb.shooter(-.75);
+        mb.shooter(-.8);
         mb.turnToAngle(21, .4);
         mb.driveStraight(2, 21, .5);
         sleep(500);
