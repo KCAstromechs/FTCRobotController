@@ -133,6 +133,11 @@ public class M1_Test_TeleOp extends OpMode
             rightPower = -gamepad1.right_stick_y/2;
         }
 
+        frontRight.setPower(rightPower);
+        backRight.setPower(rightPower);
+        frontLeft.setPower(leftPower);
+        backLeft.setPower(leftPower);
+
         if(gamepad1.dpad_up){
             carouselMover.setPower(carouselPower =+.05);
         }
@@ -147,13 +152,34 @@ public class M1_Test_TeleOp extends OpMode
         }
 
 
-        trigger = (gamepad1.right_trigger-gamepad1.left_trigger)/2;
+        trigger = (gamepad1.right_trigger - gamepad1.left_trigger) / 2;
         //mecanum, wheels diagonal from each other go the same direction
         // right front is always -, and so is its diagonal friend
-        frontRight.setPower(rightPower-trigger);
-        backRight.setPower(rightPower+trigger);
-        frontRight.setPower(leftPower+trigger);
-        backRight.setPower(leftPower-trigger);
+        frontRight.setPower(rightPower - trigger);
+        backRight.setPower(rightPower + trigger);
+        backLeft.setPower(leftPower + trigger);
+        frontLeft.setPower(leftPower - trigger);
+
+
+        /*
+        if (gamepad1.x) {
+            backRight.setPower(0.5);
+            backLeft.setPower(0.5);
+        }
+
+        if (gamepad1.y) {
+            frontRight.setPower(0.5);
+            backRight.setPower(0.5);
+        }
+
+         */
+
+        telemetry.addData("carousel power", carouselPower);
+        telemetry.addData("frontRight", frontRight.getPower());
+        telemetry.addData("frontLeft", frontRight.getPower());
+        telemetry.addData("backRight", frontRight.getPower());
+        telemetry.addData("backLeft", frontRight.getPower());
+        telemetry.update();
     }
 
     /*
