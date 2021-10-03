@@ -44,21 +44,26 @@ public class M1_Test_TeleOp extends OpMode
     private DcMotor frontLeft = null;
     private DcMotor backRight = null;
     private DcMotor backLeft = null;
+    private DcMotor carouselMover = null;
     private BNO055IMU imu;
 
     double leftPower;
     double rightPower;
     double trigger;
+    double carouselPower;
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-        frontRight = hardwareMap.get(DcMotor.class, "rightFront");
-        frontLeft = hardwareMap.get(DcMotor.class, "leftFront");
-        backLeft = hardwareMap.get(DcMotor.class,"leftRear");
-        backRight = hardwareMap.get(DcMotor.class,"rightRear");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        backLeft = hardwareMap.get(DcMotor.class,"backLeft");
+        backRight = hardwareMap.get(DcMotor.class,"backRight");
+        carouselMover = hardwareMap.get(DcMotor.class, "carouselMover");
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
@@ -68,6 +73,7 @@ public class M1_Test_TeleOp extends OpMode
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        carouselMover.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //All the gyro setup
         float yAngle;
        /* BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();
@@ -78,6 +84,7 @@ public class M1_Test_TeleOp extends OpMode
         telemetry.addData("Status", "Initialized");
 
         */
+       carouselPower=0;
     }
 
     /*
@@ -125,6 +132,20 @@ public class M1_Test_TeleOp extends OpMode
             leftPower = -gamepad1.left_stick_y/2;
             rightPower = -gamepad1.right_stick_y/2;
         }
+
+        if(gamepad1.dpad_up){
+            carouselMover.setPower(carouselPower =+.05);
+        }
+        if (gamepad1.dpad_down){
+            carouselMover.setPower(carouselPower -=.05);
+        }
+        if(gamepad1.a){
+            carouselMover.setPower(carouselPower);
+        }
+        if (gamepad1.b){
+            carouselMover.setPower(0);
+        }
+
 
         trigger = (gamepad1.right_trigger-gamepad1.left_trigger)/2;
         //mecanum, wheels diagonal from each other go the same direction
