@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class M1_Robot_Base implements TankDriveBase {
+public class ArtemisBase implements TankDriveBase {
 
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -13,9 +13,8 @@ public class M1_Robot_Base implements TankDriveBase {
     DcMotor _backRight;
 
 
-    //thing that happens when new is used (constructor)
-    public M1_Robot_Base(HardwareMap hardwareMap) {
 
+    public ArtemisBase(HardwareMap hardwareMap) {
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");

@@ -138,6 +138,9 @@ public class M1_Test_TeleOp extends OpMode
         frontLeft.setPower(leftPower);
         backLeft.setPower(leftPower);
 
+
+
+        //-.65 and .65
         if(gamepad1.dpad_up){
             carouselMover.setPower(carouselPower =+.05);
         }
@@ -145,20 +148,20 @@ public class M1_Test_TeleOp extends OpMode
             carouselMover.setPower(carouselPower -=.05);
         }
         if(gamepad1.a){
-            carouselMover.setPower(carouselPower);
+            carouselMover.setPower(-carouselPower);
         }
         if (gamepad1.b){
             carouselMover.setPower(0);
         }
 
 
-        trigger = (gamepad1.right_trigger - gamepad1.left_trigger) / 2;
+        trigger = (gamepad1.right_trigger - gamepad1.left_trigger);
         //mecanum, wheels diagonal from each other go the same direction
         // right front is always -, and so is its diagonal friend
         frontRight.setPower(rightPower - trigger);
         backRight.setPower(rightPower + trigger);
-        backLeft.setPower(leftPower + trigger);
-        frontLeft.setPower(leftPower - trigger);
+        frontLeft.setPower(leftPower + trigger);
+        backLeft.setPower(leftPower - trigger);
 
 
         /*
