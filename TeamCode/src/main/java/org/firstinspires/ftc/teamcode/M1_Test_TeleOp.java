@@ -156,12 +156,7 @@ public class M1_Test_TeleOp extends OpMode
 
 
         trigger = (gamepad1.right_trigger - gamepad1.left_trigger);
-        //mecanum, wheels diagonal from each other go the same direction
-        // right front is always -, and so is its diagonal friend
-        frontRight.setPower(rightPower - trigger);
-        backRight.setPower(rightPower + trigger);
-        frontLeft.setPower(leftPower + trigger);
-        backLeft.setPower(leftPower - trigger);
+
 
 
         /*

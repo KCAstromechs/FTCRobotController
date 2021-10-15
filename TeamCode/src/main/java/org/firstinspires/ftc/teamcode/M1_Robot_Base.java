@@ -4,17 +4,21 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class M1_Robot_Base implements TankDriveBase {
+public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
     //Important Set-Up Stuff
     DcMotor _frontLeft;
     DcMotor _backLeft;
     DcMotor _frontRight;
     DcMotor _backRight;
-
+    double _leftPower;
+    double _rightPower;
+    double _strafePower;
 
     //thing that happens when new is used (constructor)
     public M1_Robot_Base(HardwareMap hardwareMap) {
+
+        //underscore means it's a private variable
 
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -36,8 +40,7 @@ public class M1_Robot_Base implements TankDriveBase {
      */
     @Override
     public void setLeftPower(double power){
-        _frontLeft.setPower(power);
-        _backLeft.setPower(power);
+        _leftPower = power;
     }
 
     /**
@@ -46,8 +49,7 @@ public class M1_Robot_Base implements TankDriveBase {
      */
     @Override
     public void setRightPower(double power){
-        _frontRight.setPower(power);
-        _backRight.setPower(power);
+        _rightPower = power;
     }
 
     /**
@@ -60,5 +62,22 @@ public class M1_Robot_Base implements TankDriveBase {
     public void setSidePowers(double leftPower, double rightPower){
         setLeftPower(leftPower);
         setRightPower(rightPower);
+    }
+
+    @Override
+    public void strafe(double strafePower){
+        _strafePower=strafePower;
+
+
+    }
+
+    @Override
+    public void performUpdates() {
+        //if strafePower (trigger) is 0 then it will act as a tank drive
+        _frontRight.setPower(_rightPower-_strafePower);
+        _backLeft.setPower(_leftPower-_strafePower);
+        _frontLeft.setPower(_leftPower+_strafePower);
+        _backRight.setPower(_rightPower+_strafePower);
+
     }
 }

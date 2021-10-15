@@ -33,14 +33,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Tank Drive", group="Iterative Opmode")
-public class TankDrive extends OpMode
+@TeleOp(name="Mecanum Drive", group="Iterative Opmode")
+public class MecanumDrive extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private M1_Robot_Base rb;
     double leftPower;
     double rightPower;
+    double trigger;
+
 
 
 
@@ -52,7 +54,7 @@ public class TankDrive extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        //rb = new ArtemisBase(hardwareMap);
+
         rb = new M1_Robot_Base(hardwareMap);
 
 
@@ -89,10 +91,14 @@ public class TankDrive extends OpMode
             leftPower = -gamepad1.left_stick_y/2;
             rightPower = -gamepad1.right_stick_y/2;
         }
-
+        //tank
         rb.setSidePowers(leftPower, rightPower);
-        rb.performUpdates();
 
+        //strafing
+        trigger=gamepad1.right_trigger-gamepad1.left_trigger;
+        rb.strafe(trigger);
+
+        rb.performUpdates();
 
         
 

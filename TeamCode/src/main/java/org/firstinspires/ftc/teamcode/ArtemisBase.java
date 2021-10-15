@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class ArtemisBase implements TankDriveBase {
+public class ArtemisBase implements TankDriveable {
 
     //Important Set-Up Stuff
     DcMotor _frontLeft;
