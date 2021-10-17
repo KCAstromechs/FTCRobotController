@@ -157,21 +157,6 @@ public class M1_Test_TeleOp extends OpMode
 
         trigger = (gamepad1.right_trigger - gamepad1.left_trigger);
 
-
-
-        /*
-        if (gamepad1.x) {
-            backRight.setPower(0.5);
-            backLeft.setPower(0.5);
-        }
-
-        if (gamepad1.y) {
-            frontRight.setPower(0.5);
-            backRight.setPower(0.5);
-        }
-
-         */
-
         telemetry.addData("carousel power", carouselPower);
         telemetry.addData("frontRight", frontRight.getPower());
         telemetry.addData("frontLeft", frontRight.getPower());
