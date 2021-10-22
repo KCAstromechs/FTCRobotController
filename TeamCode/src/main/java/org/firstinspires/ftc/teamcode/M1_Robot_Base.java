@@ -9,6 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
     //Important Set-Up Stuff
@@ -20,7 +22,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _leftPower;
     double _rightPower;
     double _strafePower;
-    final double K_TURN = 0.02;
+    final double K_TURN = 0.005;
+    //.0039
     BNO055IMU imu;
 
     //thing that happens when new is used (constructor)
@@ -32,6 +35,9 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
         _backRight = hardwareMap.get(DcMotor.class,"backRight");
+        _encoderY = hardwareMap.get(DcMotor.class,"encoderY");
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
+
 
         _frontRight.setDirection(DcMotor.Direction.REVERSE);
         _backRight.setDirection(DcMotor.Direction.REVERSE);
@@ -49,11 +55,12 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // START THE ENCODERS
-        _frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _encoderY.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        );
 
         // GYRO INITIALIZE
         float zAngle;
@@ -65,6 +72,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();IMUParams.mode = BNO055IMU.SensorMode.IMU;
         IMUParams.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(IMUParams);
+
 
     }
 
@@ -105,6 +113,10 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
+    public void information(){
+        telemetry.addData("encoder", _encoderY.getCurrentPosition());
+        telemetry.addData("angle", imu.getAngularOrientation());
+    }
 
     public void driveStraightInches(double inches, double desiredAngle, double power) throws InterruptedException{
         driveStraight((int)(inches*147.5), desiredAngle,power);
@@ -121,8 +133,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             desiredAngle = normalizeAngle(desiredAngle+180);
         }
         float yAngle = 0.0f;
-        //_encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //_encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
         _frontRight.setPower(power);
