@@ -45,7 +45,7 @@ public class CoinsBlueCarousel extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        rb = new M1_Robot_Base(hardwareMap);
+        rb = new M1_Robot_Base(hardwareMap, telemetry);
 
         //sleep to let the gyro initialize and chill
         sleep(500);
@@ -53,13 +53,17 @@ public class CoinsBlueCarousel extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        /*
         //drive backwards
-        rb.driveStraightInches(30,30,.4);
-        sleep(5000);
-
+        rb.driveStraightInches(15,0,-.4);
         //move  towards the carousel
-       // rb.turnToAngle(-90,-.2);
-       // rb.driveStraightInches(15,-90, -.4);
+        rb.turnToAngle(-90,.3);
+        rb.driveStraightInches(15,-90, -.4);
+        // drive backwards to put wheel on carousel
+        rb.turnToAngle(-145,.3);
+        rb.driveStraightInches(10.5,-145, -.4);
+         */
+        rb.deliverDuck();
 
 
 

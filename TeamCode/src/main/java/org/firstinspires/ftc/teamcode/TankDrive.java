@@ -53,7 +53,7 @@ public class TankDrive extends OpMode
         telemetry.addData("Status", "Initialized");
 
         //rb = new ArtemisBase(hardwareMap);
-        rb = new M1_Robot_Base(hardwareMap);
+        rb = new M1_Robot_Base(hardwareMap, telemetry);
 
 
     }
