@@ -29,42 +29,62 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
-
-@Autonomous(name="Coins Blue Carousel")
-public class CoinsBlueCarousel extends LinearOpMode {
+@TeleOp(name="Encoder Test", group="Iterative Opmode")
+public class EncoderTest extends OpMode
+{
+    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private M1_Robot_Base rb;
 
+
+
+
+
+    /*
+     * Code to run ONCE when the driver hits INIT
+     */
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init() {
+        telemetry.addData("Status", "Initialized");
+
+        //rb = new ArtemisBase(hardwareMap);
         rb = new M1_Robot_Base(hardwareMap, telemetry);
 
-        //sleep to let the gyro initialize and chill
-        sleep(500);
-        telemetry.addData("ready","ready");
-        telemetry.update();
 
-        waitForStart();
-        //drive backwards
-        rb.driveStraightInches(10,0,-.4);
-        //move  towards the carousel
-        rb.turnToAngle(-90,.3);
-        rb.driveStraightInches(15,-90, -.4);
-        // drive backwards to put wheel on carousel
-        rb.turnToAngle(-140,.3);
-        rb.driveStraightInches(9,-140, -.3);
-        rb.deliverDuck();
-
-
-
-        }
     }
 
+    /*
+     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     */
+    @Override
+    public void init_loop() {
+    }
+
+    /*
+     * Code to run ONCE when the driver hits PLAY
+     */
+    @Override
+    public void start() {
+        runtime.reset();
+    }
+
+    /*
+     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+     */
+    @Override
+    public void loop() {
+        rb.encoderTest();
+    }
+
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop() {
+    }
+
+}

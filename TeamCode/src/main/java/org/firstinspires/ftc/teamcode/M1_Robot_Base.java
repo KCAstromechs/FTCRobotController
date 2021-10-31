@@ -247,10 +247,19 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _carouselMover.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _carouselMover.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while(Math.abs(_carouselMover.getCurrentPosition())<750){
+        while(_carouselMover.getCurrentPosition()<1800){
             _telemetry.addData("wheel encoder", _carouselMover.getCurrentPosition());
-            _carouselMover.setPower(.45);
+            _telemetry.update();
+            _carouselMover.setPower(.35);
+            _backLeft.setPower(-.1);
+            _frontLeft.setPower(-.1);
+            _backRight.setPower(-.1);
+            _frontRight.setPower(-.1);
         }
+        _backLeft.setPower(0);
+        _frontLeft.setPower(0);
+        _backRight.setPower(0);
+        _frontRight.setPower(0);
         _carouselMover.setPower(0);
     }
 
@@ -261,6 +270,15 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
 
 
+        _telemetry.update();
+    }
+
+    public void encoderTest(){
+        _telemetry.addData("clicks: carousel mover", _carouselMover.getCurrentPosition());
+        _telemetry.addData("clicks: front left", _frontLeft.getCurrentPosition());
+        _telemetry.addData("clicks: front right", _frontRight.getCurrentPosition());
+        _telemetry.addData("clicks: back right", _backRight.getCurrentPosition());
+        _telemetry.addData("clicks: back left", _backLeft.getCurrentPosition());
         _telemetry.update();
     }
 
