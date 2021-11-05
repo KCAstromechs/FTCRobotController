@@ -243,14 +243,19 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         return Math.abs(a1 - (a2+360));
     }
 
-    public void deliverDuck(){
+    public void deliverDuck(boolean isBlue){
         _carouselMover.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _carouselMover.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while(_carouselMover.getCurrentPosition()<1800){
+        while(Math.abs(_carouselMover.getCurrentPosition())<1800){
             _telemetry.addData("wheel encoder", _carouselMover.getCurrentPosition());
             _telemetry.update();
-            _carouselMover.setPower(.35);
+            if (isBlue == true) {
+                _carouselMover.setPower(.35);
+            }
+            else{
+                _carouselMover.setPower(-.35);
+            }
             _backLeft.setPower(-.1);
             _frontLeft.setPower(-.1);
             _backRight.setPower(-.1);

@@ -30,16 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-
-@Autonomous(name="Coins Blue Carousel")
-public class CoinsBlueCarousel extends LinearOpMode {
+@Autonomous(name="Coins Red Carousel")
+public class CoinsRedCarousel extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private M1_Robot_Base rb;
 
@@ -56,17 +52,17 @@ public class CoinsBlueCarousel extends LinearOpMode {
         //drive backwards
         rb.driveStraightInches(10,0,-.4);
         //move  towards the carousel
-        rb.turnToAngle(-90,.3);
-        rb.driveStraightInches(15,-90, -.4);
+        rb.turnToAngle(90,.3);
+        rb.driveStraightInches(15,90, -.4);
         // drive backwards to put wheel on carousel
-        rb.turnToAngle(-140,.3);
-        rb.driveStraightInches(9,-140, -.3);
-        rb.deliverDuck(true);
+        rb.turnToAngle(130,.3);
+        rb.driveStraightInches(9,130, -.3);
+        rb.deliverDuck(false);
         sleep(1000);
         //drive forward to line up with storage unit
-        rb.driveStraightInches(23, -140, .4);
-        rb.turnToAngle(-90, .3);
-        rb.driveStraightInches(15, -90, -.4);
+        rb.driveStraightInches(23, 130, .4);
+        rb.turnToAngle(90, .3);
+        rb.driveStraightInches(15, 90, -.4);
 
 
 
