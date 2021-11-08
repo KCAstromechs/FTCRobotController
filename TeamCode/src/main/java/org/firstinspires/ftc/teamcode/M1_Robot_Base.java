@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,13 +22,15 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     DcMotor _backRight;
     DcMotor _encoderY;
     DcMotor _carouselMover;
+    DcMotor _intake;
+    DcMotor _lifter;
     double _leftPower;
     double _rightPower;
     double _strafePower;
+    double _lifterPower;
+    double _intakePower;
     Telemetry _telemetry;
     final double K_TURN = 0.02;
-    //.005
-    //.0039
     BNO055IMU imu;
 
     //thing that happens when new is used (constructor)
@@ -41,11 +44,14 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backRight = hardwareMap.get(DcMotor.class,"backRight");
         _encoderY = hardwareMap.get(DcMotor.class,"encoderY");
         _carouselMover = hardwareMap.get(DcMotor.class, "carouselMover");
+        _lifter= hardwareMap.get(DcMotor.class, "lifter");
+        _intake = hardwareMap.get(DcMotor.class, "intake");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
 
         _frontRight.setDirection(DcMotor.Direction.REVERSE);
         _backRight.setDirection(DcMotor.Direction.REVERSE);
+        _lifter.setDirection(DcMotor.Direction.REVERSE);
 
         _backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         _frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -58,6 +64,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // START THE ENCODERS
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -65,6 +72,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _lifter.setTargetPosition(0);
+        _lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // GYRO INITIALIZE
         float zAngle;
@@ -230,6 +239,12 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         return a;
     }
 
+    /***
+     * used for finding the
+     * @param ang1
+     * @param ang2
+     * @return
+     */
     public double angleDifference(double ang1, double ang2) {
         double a1 = normalizeAngle(ang1);
         double a2 = normalizeAngle(ang2);
@@ -243,6 +258,13 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         return Math.abs(a1 - (a2+360));
     }
 
+    /***
+     *
+     * @param isBlue
+     * is used for determining whether the motor power should be positive or negative
+     * true is for blue side autos
+     * false is for red side autos
+     */
     public void deliverDuck(boolean isBlue){
         _carouselMover.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _carouselMover.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -287,6 +309,36 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _telemetry.update();
     }
 
+    public void changeLifterPosition(int position){
+        if(position!=0) {
+            int newTargetPosition = _lifter.getCurrentPosition() + position;
+            if (newTargetPosition > 1300) newTargetPosition = 1300;
+            if (newTargetPosition < 0) newTargetPosition = 0;
+            _lifter.setTargetPosition(newTargetPosition);
+            _lifter.setPower(.5);
+        }
+        _telemetry.addData("lifter target", _lifter.getTargetPosition());
+        _telemetry.addData("lifter encoder", _lifter.getCurrentPosition());
+        _telemetry.addData("position", position);
+        _telemetry.update();
+    }
+
+    public void setIntakeCollect(){
+        _intakePower = .8;
+        _intake.setPower(_intakePower);
+    }
+
+    public void setIntakeDischarge(){
+        _intakePower = -.8;
+        _intake.setPower(_intakePower);
+    }
+
+    public void setIntakeOff(){
+        _intakePower = 0;
+        _intake.setPower(_intakePower);
+    }
+
+
     @Override
     public void performUpdates() {
         //if strafePower (trigger) is 0 then it will act as a tank drive
@@ -294,6 +346,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backLeft.setPower(_leftPower-_strafePower);
         _frontLeft.setPower(_leftPower+_strafePower);
         _backRight.setPower(_rightPower+_strafePower);
+
+
 
     }
 }
