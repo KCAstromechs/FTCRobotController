@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="Coins Red Carousel")
-public class CoinsRedCarousel extends LinearOpMode {
+@Autonomous(name="Coins Red Warehouse")
+public class CoinsRedWarehouse extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private M1_Robot_Base rb;
 
@@ -50,27 +50,12 @@ public class CoinsRedCarousel extends LinearOpMode {
 
 
         waitForStart();
+        //drive to warehouse
         rb.setDriveReadyLifter();
         sleep(1500);
-        //drive backwards
-        rb.driveStraightInches(5,0,-.4);
-        //move  towards the carousel
-        rb.turnToAngle(90,.3);
-        rb.driveStraightInches(22,90, -.4);
-        // drive backwards to put wheel on carousel
-        rb.turnToAngle(130,.3);
-        rb.driveStraightInches(4,130, -.3);
-        rb.deliverDuck(false);
-        sleep(1000);
-        //drive forward to line up with storage unit
-        rb.driveStraightInches(13, 130, .4);
-        rb.turnToAngle(30, .3);
-        rb.driveStraightInches(6, 30, -.4);
-        rb.turnToAngle(90,.3);
-        rb.driveStraightInches(9,90,-.3);
+        rb.driveStraightInches(40,0,.4);
         rb.setLifterO();
         sleep(2000);
-
 
 
 

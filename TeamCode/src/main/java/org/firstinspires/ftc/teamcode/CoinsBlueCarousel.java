@@ -51,26 +51,38 @@ public class CoinsBlueCarousel extends LinearOpMode {
         sleep(500);
         telemetry.addData("ready","ready");
         telemetry.update();
+        rb.setDriveReadyLifter();
 
         waitForStart();
+        rb.setDriveReadyLifter();
+        sleep(1500);
         //drive backwards
-        rb.driveStraightInches(10,0,-.4);
+        rb.driveStraightInches(5,0,-.4);
         //move  towards the carousel
         rb.turnToAngle(-90,.3);
-        rb.driveStraightInches(15,-90, -.4);
+        rb.driveStraightInches(22,-90, -.4);
         // drive backwards to put wheel on carousel
-        rb.turnToAngle(-140,.3);
-        rb.driveStraightInches(9,-140, -.3);
-        rb.deliverDuck(true);
+        rb.turnToAngle(-130,.3);
+        rb.driveStraightInches(4,-130, -.3);
+        rb.deliverDuck(false);
         sleep(1000);
         //drive forward to line up with storage unit
-        rb.driveStraightInches(23, -140, .4);
-        rb.turnToAngle(-90, .3);
-        rb.driveStraightInches(15, -90, -.4);
+        rb.driveStraightInches(13, -130, .4);
+        rb.turnToAngle(-30, .3);
+        rb.driveStraightInches(6, -30, -.4);
+        rb.turnToAngle(-90,.3);
+        rb.driveStraightInches(9,-90,-.3);
+        rb.setLifterO();
+        sleep(2000);
 
 
 
 
-        }
+
+
+
+
+
+    }
     }
 

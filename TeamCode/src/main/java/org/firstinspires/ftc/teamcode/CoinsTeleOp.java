@@ -83,9 +83,25 @@ public class CoinsTeleOp extends OpMode
     @Override
     public void loop() {
 
+
+
         //lifter
         rb.changeLifterPosition((int)(-gamepad2.right_stick_y*48.0));
 
+
+
+        //duck
+        if (gamepad2.dpad_up){
+            rb.duckON();
+        }
+
+        if (gamepad2.dpad_down){
+            rb.duckReverse();
+        }
+
+        if (gamepad2.dpad_right){
+            rb.duckOFF();
+        }
 
         //intake
         if(gamepad2.a){

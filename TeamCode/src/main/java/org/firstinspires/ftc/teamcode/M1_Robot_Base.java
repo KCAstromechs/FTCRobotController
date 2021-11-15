@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
+    public static final double duckPower = .50;
     //Important Set-Up Stuff
     DcMotor _frontLeft;
     DcMotor _backLeft;
@@ -32,6 +33,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     Telemetry _telemetry;
     final double K_TURN = 0.02;
     BNO055IMU imu;
+    final int lifterLevel1 =500;
 
     //thing that happens when new is used (constructor)
     public M1_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -269,14 +271,14 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _carouselMover.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _carouselMover.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while(Math.abs(_carouselMover.getCurrentPosition())<1800){
+        while(Math.abs(_carouselMover.getCurrentPosition())<2600){
             _telemetry.addData("wheel encoder", _carouselMover.getCurrentPosition());
             _telemetry.update();
             if (isBlue == true) {
-                _carouselMover.setPower(.35);
+                _carouselMover.setPower(duckPower);
             }
             else{
-                _carouselMover.setPower(-.35);
+                _carouselMover.setPower(-duckPower);
             }
             _backLeft.setPower(-.1);
             _frontLeft.setPower(-.1);
@@ -306,6 +308,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _telemetry.addData("clicks: front right", _frontRight.getCurrentPosition());
         _telemetry.addData("clicks: back right", _backRight.getCurrentPosition());
         _telemetry.addData("clicks: back left", _backLeft.getCurrentPosition());
+        _telemetry.addData("clicks: lifter", _lifter.getCurrentPosition());
         _telemetry.update();
     }
 
@@ -323,6 +326,16 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _telemetry.update();
     }
 
+    public void setDriveReadyLifter(){
+        _lifter.setTargetPosition(lifterLevel1);
+        _lifter.setPower(.5);
+    }
+
+    public void setLifterO(){
+        _lifter.setTargetPosition(0);
+        _lifter.setPower(.5);
+    }
+
     public void setIntakeCollect(){
         _intakePower = .8;
         _intake.setPower(_intakePower);
@@ -338,6 +351,17 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _intake.setPower(_intakePower);
     }
 
+    public void duckON(){
+        _carouselMover.setPower(duckPower);
+    }
+
+    public void duckOFF(){
+        _carouselMover.setPower(0);
+    }
+
+    public void duckReverse(){
+        _carouselMover.setPower(-duckPower);
+    }
 
     @Override
     public void performUpdates() {
