@@ -51,7 +51,7 @@ public class CoinsBlueCarousel extends LinearOpMode {
         sleep(500);
         telemetry.addData("ready","ready");
         telemetry.update();
-        rb.setDriveReadyLifter();
+
 
         waitForStart();
         rb.setDriveReadyLifter();
@@ -62,12 +62,12 @@ public class CoinsBlueCarousel extends LinearOpMode {
         rb.turnToAngle(-90,.3);
         rb.driveStraightInches(22,-90, -.4);
         // drive backwards to put wheel on carousel
-        rb.turnToAngle(-130,.3);
-        rb.driveStraightInches(4,-130, -.3);
-        rb.deliverDuck(false);
+        rb.turnToAngle(-150,.3);
+        rb.driveStraightInches(2,-150, -.3);
+        rb.deliverDuck(true);
         sleep(1000);
         //drive forward to line up with storage unit
-        rb.driveStraightInches(13, -130, .4);
+        rb.driveStraightInches(13, -150, .4);
         rb.turnToAngle(-30, .3);
         rb.driveStraightInches(6, -30, -.4);
         rb.turnToAngle(-90,.3);

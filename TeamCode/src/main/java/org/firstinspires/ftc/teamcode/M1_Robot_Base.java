@@ -16,6 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
     public static final double duckPower = .50;
+    final double autoDuckPower = .25;
     //Important Set-Up Stuff
     DcMotor _frontLeft;
     DcMotor _backLeft;
@@ -67,6 +68,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _carouselMover.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         // START THE ENCODERS
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -74,6 +77,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _carouselMover.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         _lifter.setTargetPosition(0);
         _lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -271,14 +275,14 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _carouselMover.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _carouselMover.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while(Math.abs(_carouselMover.getCurrentPosition())<2600){
+        while(Math.abs(_carouselMover.getCurrentPosition())<3400){
             _telemetry.addData("wheel encoder", _carouselMover.getCurrentPosition());
             _telemetry.update();
             if (isBlue == true) {
-                _carouselMover.setPower(duckPower);
+                _carouselMover.setPower(autoDuckPower);
             }
             else{
-                _carouselMover.setPower(-duckPower);
+                _carouselMover.setPower(-autoDuckPower);
             }
             _backLeft.setPower(-.1);
             _frontLeft.setPower(-.1);
@@ -314,9 +318,10 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     public void changeLifterPosition(int position){
         if(position!=0) {
-            int newTargetPosition = _lifter.getCurrentPosition() + position;
+            int newTargetPosition = _lifter.getCurrentPosition
+                    () + position;
             if (newTargetPosition > 1300) newTargetPosition = 1300;
-            if (newTargetPosition < 0) newTargetPosition = 0;
+            if (newTargetPosition < -10) newTargetPosition = -10;
             _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(.5);
         }
