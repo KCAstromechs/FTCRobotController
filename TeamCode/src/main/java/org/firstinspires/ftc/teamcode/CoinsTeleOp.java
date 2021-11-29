@@ -132,7 +132,14 @@ public class CoinsTeleOp extends OpMode
         rb.strafe(trigger);
 
 
+       if (gamepad2.left_bumper){
+           rb.setCapperUndelivered();
+       }
 
+
+        if (gamepad2.right_bumper){
+            rb.setCapperDelivered();
+        }
 
 
         rb.performUpdates();

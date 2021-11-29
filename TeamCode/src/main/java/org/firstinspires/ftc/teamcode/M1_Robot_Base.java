@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,6 +27,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     DcMotor _carouselMover;
     DcMotor _intake;
     DcMotor _lifter;
+    Servo _capper;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -41,6 +43,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
         //underscore means it's a private variable
         _telemetry = telemetry;
+        _capper = hardwareMap.get(Servo.class, "capper");
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
@@ -321,7 +324,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             int newTargetPosition = _lifter.getCurrentPosition
                     () + position;
             if (newTargetPosition > 1300) newTargetPosition = 1300;
-            if (newTargetPosition < -10) newTargetPosition = -10;
+            if (newTargetPosition < -60) newTargetPosition = -60;
             _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(.5);
         }
@@ -368,6 +371,12 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _carouselMover.setPower(-duckPower);
     }
 
+    public void setCapperUndelivered(){
+        _capper.setPosition(0);
+    }
+    public void setCapperDelivered(){
+        _capper.setPosition(.5);
+    }
     @Override
     public void performUpdates() {
         //if strafePower (trigger) is 0 then it will act as a tank drive
