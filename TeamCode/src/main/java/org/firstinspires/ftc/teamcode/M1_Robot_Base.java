@@ -371,21 +371,34 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _carouselMover.setPower(-duckPower);
     }
 
-    public void setCapperUndelivered(){
-        _capper.setPosition(0);
-    }
     public void setCapperDelivered(){
+        _capper.setPosition(.97);
+    }
+
+    public void setCapperUndelivered(){
         _capper.setPosition(.5);
     }
     @Override
     public void performUpdates() {
         //if strafePower (trigger) is 0 then it will act as a tank drive
+        /*
         _frontRight.setPower(_rightPower-_strafePower);
         _backLeft.setPower(_leftPower-_strafePower);
         _frontLeft.setPower(_leftPower+_strafePower);
         _backRight.setPower(_rightPower+_strafePower);
 
+         */
 
 
+        _frontRight.setPower(_rightPower+_strafePower);
+        _backLeft.setPower(_leftPower+_strafePower);
+        _frontLeft.setPower(-_rightPower+_strafePower);
+        _backRight.setPower(-_leftPower+_strafePower);
+
+
+        //powers = sticks used to determine what side of the robot the motor is on from collector in the front
+        //- means that the motor is corkscrewing backwards
+        // always +trigger because strafepower is rtrigger-ltrigger
+        //strafe right is + due to mechanical front being positive (left is opposite)
     }
 }

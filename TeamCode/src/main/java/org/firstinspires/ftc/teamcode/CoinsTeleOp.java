@@ -116,8 +116,8 @@ public class CoinsTeleOp extends OpMode
 
         //slow button
         if (gamepad1.left_bumper){
-            leftPower = -gamepad1.left_stick_y/4;
-            rightPower = -gamepad1.right_stick_y/4;
+            leftPower = -gamepad1.left_stick_y;
+            rightPower = -gamepad1.right_stick_y;
         }
         else{
             //hey, it's negative because up on the joystick is negative, and we need to make sure that the number it returns is positive
@@ -128,11 +128,17 @@ public class CoinsTeleOp extends OpMode
         rb.setSidePowers(leftPower, rightPower);
 
         //strafing
-        trigger=gamepad1.right_trigger-gamepad1.left_trigger;
+        trigger=(gamepad1.right_trigger-gamepad1.left_trigger)/2;
         rb.strafe(trigger);
 
 
-       if (gamepad2.left_bumper){
+
+
+
+
+
+
+        if (gamepad2.left_bumper){
            rb.setCapperUndelivered();
        }
 
