@@ -390,9 +390,9 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
          */
 
 
-        _frontRight.setPower(_rightPower+_strafePower);
+        _frontRight.setPower(_rightPower-_strafePower);
         _backLeft.setPower(_leftPower+_strafePower);
-        _frontLeft.setPower(-_rightPower+_strafePower);
+        _frontLeft.setPower(-_rightPower-_strafePower);
         _backRight.setPower(-_leftPower+_strafePower);
 
 

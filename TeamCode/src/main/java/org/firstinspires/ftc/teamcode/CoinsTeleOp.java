@@ -128,7 +128,7 @@ public class CoinsTeleOp extends OpMode
         rb.setSidePowers(leftPower, rightPower);
 
         //strafing
-        trigger=(gamepad1.right_trigger-gamepad1.left_trigger)/2;
+        trigger=(gamepad1.right_trigger-gamepad1.left_trigger);
         rb.strafe(trigger);
 
 
