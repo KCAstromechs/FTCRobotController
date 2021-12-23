@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -12,9 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
+public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
     public static final double duckPower = .50;
     final double autoDuckPower = .25;
@@ -39,7 +36,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     final int lifterLevel1 =500;
 
     //thing that happens when new is used (constructor)
-    public M1_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry) {
+    public M2_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry) {
 
         //underscore means it's a private variable
         _telemetry = telemetry;
@@ -380,14 +377,6 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
     @Override
     public void performUpdates() {
-        //if strafePower (trigger) is 0 then it will act as a tank drive
-        /*
-        _frontRight.setPower(_rightPower-_strafePower);
-        _backLeft.setPower(_leftPower-_strafePower);
-        _frontLeft.setPower(_leftPower+_strafePower);
-        _backRight.setPower(_rightPower+_strafePower);
-
-         */
 
 
         _frontRight.setPower(_rightPower-_strafePower);
