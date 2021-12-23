@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
     public static final double duckPower = .50;
+    public static final double ENCODER_TO_INCHES = 147.5;
     final double autoDuckPower = .25;
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -32,6 +33,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _intakePower;
     Telemetry _telemetry;
     final double K_TURN = 0.02;
+    final double K_STRAFE = 0.02;
     BNO055IMU imu;
     final int lifterLevel1 =500;
 
@@ -134,8 +136,10 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
 
+
+
     public void driveStraightInches(double inches, double desiredAngle, double power) throws InterruptedException{
-        driveStraight((int)(inches*147.5), desiredAngle,power);
+        driveStraight((int)(inches* ENCODER_TO_INCHES), desiredAngle,power);
     }
 
     // All of the drive straight code which allows us to stay on course
@@ -171,6 +175,64 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             _backRight.setPower(power - driveCorrect);
             _frontLeft.setPower(power + driveCorrect);
             _backLeft.setPower(power + driveCorrect);
+
+        }
+
+        _frontRight.setPower(0);
+        _backRight.setPower(0);
+        _frontLeft.setPower(0);
+        _backLeft.setPower(0);
+    }
+
+    public void driveStrafeInches(double inches, double desiredAngle, double power) throws InterruptedException{
+        driveStrafe((int)(inches* ENCODER_TO_INCHES), desiredAngle,power);
+    }
+
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power) throws InterruptedException{
+        driveStrafe (encoderClicks, desiredAngle,  power, false);
+    }
+
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power, boolean useCheat) throws InterruptedException {
+
+        if(useCheat){
+            desiredAngle = normalizeAngle(desiredAngle+180);
+        }
+        float zAngle = 0.0f;
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Thread.sleep(250);
+
+        _frontRight.setPower(power);
+        _backRight.setPower(-power);
+        _frontLeft.setPower(-power);
+        _backLeft.setPower(power);
+
+       // int averageEncoderClicks = ((Math.abs(_backLeft.getCurrentPosition())+ Math.abs(_frontLeft.getCurrentPosition()))/2);
+        int averageEncoderClicks = _backLeft.getCurrentPosition();
+        while ( Math.abs(encoderClicks) > averageEncoderClicks){
+             averageEncoderClicks = _backLeft.getCurrentPosition();
+          // information();
+            _telemetry.addData(" absolute value of average encoder clicks", Math.abs(averageEncoderClicks));
+            _telemetry.update();
+            zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            if(useCheat) {
+                zAngle = (float) normalizeAngle(zAngle + 180);
+            }
+            // TODO: Issue with angles crossing the circle discontinutiy
+            //       e.g. yAngle = 171 and desiredAngle = -179
+           //
+            double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+
+
+            _frontRight.setPower(power - driveCorrect);
+            _backRight.setPower(-power + driveCorrect);
+            _frontLeft.setPower(-power + driveCorrect);
+            _backLeft.setPower(power - driveCorrect);
+
+
+
 
         }
 
@@ -221,7 +283,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         // while the
         while (angleDifference(desiredAngle, zAngle) > 5) {
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-            information();
+           information();
 
             if(useCheat) {
                 zAngle = (float)normalizeAngle(zAngle + 180);
@@ -296,11 +358,15 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _carouselMover.setPower(0);
     }
 
-
     public void information(){
-        double convertedClicks = _encoderY.getCurrentPosition()*147.5;
+        double convertedClicks = _encoderY.getCurrentPosition()* ENCODER_TO_INCHES;
         _telemetry.addData("encoders (inches)",convertedClicks);
-        _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+        _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);_telemetry.addData("front right power", _frontRight.getPower());
+        _telemetry.addData("back right power", _backRight.getPower());
+        _telemetry.addData("front left power", _frontLeft.getPower());
+        _telemetry.addData("back left power", _backLeft.getPower());
+        _telemetry.addData("front right power", _frontRight.getCurrentPosition());
+
 
 
         _telemetry.update();
