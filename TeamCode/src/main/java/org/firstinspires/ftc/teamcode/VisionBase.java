@@ -138,7 +138,7 @@ class VisionBase {
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
     }
 
-    // call this to analyze and take the picture
+    // call this to run vision
     public void runVision() {
         // if something goes wrong and mostGreen is not updated, we will go to our preferred position
         mostGreen = preferredPosition;
@@ -167,8 +167,8 @@ class VisionBase {
 
     // do stuff with the frame
     private void onNewFrame(Bitmap frame) {
-        annotateBitmap(frame);
         analyzeBitmap(frame);
+        annotateBitmap(frame);
         saveBitmap(frame);
         frame.recycle(); // not strictly necessary, but helpful
     }
