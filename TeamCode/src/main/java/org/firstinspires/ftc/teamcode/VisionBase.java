@@ -73,7 +73,30 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 class VisionBase {
 
     //----------------------------------------------------------------------------------------------
-    // State
+    // Analyzing-Related Variables
+    //----------------------------------------------------------------------------------------------
+
+    // color constants
+    int BLUE = -16776961;
+    int RED = -65536;
+    int WHITE = 0xffffffff;
+    // mapping values
+    int minX = 190;
+    int maxX = 600;
+    int minY = 230;
+    int maxY= 350;
+    int analyzedWidth = (maxX-minX);
+    int analyzedHeight = (maxY-minY);
+    int analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
+    int dividerA = (minX + (analyzedWidth/3));
+    int dividerB = (minX + (analyzedWidth/3*2));
+    // other
+    int minAvgGreen = 30; // lowball value, properly calculate this with testing
+    String mostGreen;
+    String preferredPosition = "RIGHT";
+
+    //----------------------------------------------------------------------------------------------
+    // Stolen Camera Variables
     //----------------------------------------------------------------------------------------------
 
     private static final String TAG = "Webcam Sample";
@@ -101,25 +124,8 @@ class VisionBase {
      * if you're curious): no knowledge of multi-threading is needed here. */
     private Handler callbackHandler;
 
-    // analyzing related variables
-    int green = -16776961;
-    int RED = -65536;
-    int WHITE = 0xffffffff;
-    int minX = 190;
-    int maxX = 600;
-    int minY = 230;
-    int maxY= 350;
-    int analyzedWidth = (maxX-minX);
-    int analyzedHeight = (maxY-minY);
-    int analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
-    int dividerA = (minX + (analyzedWidth/3));
-    int dividerB = (minX + (analyzedWidth/3*2));
-    int minAvgGreen = 30; // lowball value, properly calculate this with testing
-    String mostGreen;
-    String preferredPosition = "RIGHT";
-
     //----------------------------------------------------------------------------------------------
-    // Interacting with this Class
+    // Utilization in Auto / Interact with this Class
     //----------------------------------------------------------------------------------------------
 
     // do this at the beginning
@@ -174,7 +180,7 @@ class VisionBase {
         // plot x axis
         int imageWidth = bitmap.getWidth();
         for (int x = 0; x < imageWidth; x++) {
-            bitmap.setPixel(x,0,green);
+            bitmap.setPixel(x,0,BLUE);
         }
         // plot y axis
         int imageHeight = bitmap.getHeight();
