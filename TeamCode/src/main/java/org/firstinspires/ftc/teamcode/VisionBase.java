@@ -32,12 +32,8 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
-import android.os.Build;
 import android.os.Handler;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -70,17 +66,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
-/**
- * This OpMode illustrates how to open a webcam and retrieve images from it. It requires a configuration
- * containing a webcam with the default name ("Webcam 1"). When the opmode runs, pressing the 'A' button
- * will cause a frame from the camera to be written to a file on the device, which can then be retrieved
- * by various means (e.g.: Device File Explorer in Android Studio; plugging the device into a PC and
- * using Media Transfer; ADB; etc)
- */
-@TeleOp(name="Vision Test")
-public class VisionConcept extends LinearOpMode {
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+class VisionBase {
 
     //----------------------------------------------------------------------------------------------
     // State
@@ -116,65 +106,60 @@ public class VisionConcept extends LinearOpMode {
     int RED = -65536;
     int WHITE = 0xffffffff;
     int minX = 190;
-    int maxX= 600;
+    int maxX = 600;
     int minY = 230;
     int maxY= 350;
     int analyzedWidth = (maxX-minX);
+    int analyzedHeight = (maxY-minY);
+    int analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
     int dividerA = (minX + (analyzedWidth/3));
     int dividerB = (minX + (analyzedWidth/3*2));
+    int minAvgGreen = 30; // lowball value, properly calculate this with testing
+    String mostGreen;
+    String preferredPosition = "RIGHT";
 
     //----------------------------------------------------------------------------------------------
-    // Main OpMode entry
+    // Interacting with this Class
     //----------------------------------------------------------------------------------------------
 
-    @Override public void runOpMode() {
-
+    // do this at the beginning
+    public void initVision() {
         callbackHandler = CallbackLooper.getDefault().getHandler();
         cameraManager = ClassFactory.getInstance().getCameraManager();
         cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         initializeFrameQueue(2);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
+    }
 
+    // call this to analyze and take the picture
+    public void runVision() {
+        // if something goes wrong and mostGreen is not updated, we will go to our preferred position
+        mostGreen = preferredPosition;
         try {
+            // if we can't access our camera, stop running the code
             openCamera();
-            if (camera == null) return;
-
-            startCamera();
-            if (cameraCaptureSession == null) return;
-
-            telemetry.addData(">", "Press Play to start");
-            telemetry.update();
-            waitForStart();
-            telemetry.clear();
-            telemetry.addData(">", "Started...Press 'A' to capture frame");
-
-            boolean buttonPressSeen = false;
-            boolean captureWhenAvailable = false;
-            while (opModeIsActive()) {
-
-                boolean buttonIsPressed = gamepad1.a;
-                if (buttonIsPressed && !buttonPressSeen) {
-                    captureWhenAvailable = true;
-                }
-                buttonPressSeen = buttonIsPressed;
-
-                if (captureWhenAvailable) {
-                    Bitmap bmp = frameQueue.poll();
-                    if (bmp != null) {
-                        captureWhenAvailable = false;
-                        onNewFrame(bmp);
-                    }
-                }
-
-                telemetry.update();
+            if (camera == null) {
+                return;
             }
+            startCamera();
+            if (cameraCaptureSession == null) {
+                return;
+            }
+            // grab our frame and then do something with it
+            Bitmap bmp = frameQueue.poll();
+            if (bmp != null) {
+                onNewFrame(bmp);
+            }
+            // give info
+            telemetry.update();
+
         } finally {
             closeCamera();
         }
     }
 
-    /** Do something with the frame */
+    // do stuff with the frame
     private void onNewFrame(Bitmap frame) {
         annotateBitmap(frame);
         analyzeBitmap(frame);
@@ -183,7 +168,138 @@ public class VisionConcept extends LinearOpMode {
     }
 
     //----------------------------------------------------------------------------------------------
-    // Camera operations
+    // Vision Analysis Operations
+    //----------------------------------------------------------------------------------------------
+    private void annotateBitmap(Bitmap bitmap){
+        // plot x axis
+        int imageWidth = bitmap.getWidth();
+        for (int x = 0; x < imageWidth; x++) {
+            bitmap.setPixel(x,0,green);
+        }
+        // plot y axis
+        int imageHeight = bitmap.getHeight();
+        for (int y = 0; y < imageHeight; y++) {
+            bitmap.setPixel(0,y,RED);
+        }
+        // draw out area to analyze
+        // left vertical line
+        for (int y=minY; y < maxY; y++ ){
+            bitmap.setPixel(minX,y,WHITE);
+        }
+        // top horizontal line
+        for (int x=minX; x < maxX; x++){
+            bitmap.setPixel(x,maxY,WHITE);
+        }
+        // right vertical line
+        for (int y=maxY; y > minY; y--){
+            bitmap.setPixel(maxX,y,WHITE);
+        }
+        // bottom horizontal line
+        for (int x=maxX; x > minX; x--){
+            bitmap.setPixel(x,minY,WHITE);
+        }
+
+        // mark dividers
+        for (int y=maxY; y > minY; y--){
+            bitmap.setPixel(dividerA,y,WHITE);
+        }
+        for (int y=maxY; y > minY; y--){
+            bitmap.setPixel(dividerB,y,WHITE);
+        }
+    }
+
+    private void analyzeBitmap(Bitmap bitmap){
+        int color = 0;
+        int greenValue = 0;
+        int greenA = 0;
+        int greenB = 0;
+        int greenC = 0;
+        int greenAvgA = 0;
+        int greenAvgB = 0;
+        int greenAvgC = 0;
+        String marker = "DETECTED";
+        // loop thru image
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                // get color for this coordinate
+                color = bitmap.getPixel(x,y);
+                greenValue = Color.green(color);
+                // sort green value by which third of the bitmap it is located in
+                if (x < dividerA){
+                    greenA += greenValue;
+                }
+                else if (x > dividerA && x < dividerB){
+                    greenB += greenValue;
+                }
+                else {
+                    greenC += greenValue;
+                }
+            }
+        }
+        // let's make sure we can see the team marker
+        greenAvgA = (greenA / analyzedPixels);
+        greenAvgB = (greenB / analyzedPixels);
+        greenAvgC = (greenC / analyzedPixels);
+        if (greenAvgA < minAvgGreen && greenAvgB < minAvgGreen && greenAvgC < minAvgGreen) {
+            marker = "NOT DETECTED";
+            mostGreen = preferredPosition;
+        }
+
+        // tell me which one has the most green unless we think we don't see the team marker
+        if (marker != "NOT DETECTED") {
+            if( greenA >= greenB && greenA >= greenC)
+                mostGreen = "LEFT";
+            else if (greenB >= greenA && greenB >= greenC)
+                mostGreen = "CENTER";
+            else
+                mostGreen = "RIGHT";
+        }
+
+        // output
+        telemetry.addData("MARKER", marker);
+        telemetry.addData("LEFT", greenA);
+        telemetry.addData("CENTER", greenB);
+        telemetry.addData("RIGHT", greenC);
+        telemetry.addData("Section", mostGreen);
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Utilities
+    //----------------------------------------------------------------------------------------------
+
+    private void error(String msg) {
+        telemetry.log().add(msg);
+        telemetry.update();
+    }
+    private void error(String format, Object...args) {
+        telemetry.log().add(format, args);
+        telemetry.update();
+    }
+
+    private boolean contains(int[] array, int value) {
+        for (int i : array) {
+            if (i == value) return true;
+        }
+        return false;
+    }
+
+    private void saveBitmap(Bitmap bitmap) {
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd__hh-mm-ss");
+        String strDate = dateFormat.format(new Date());
+        File file = new File(captureDirectory, String.format(Locale.getDefault(), strDate + ".png", captureCounter++));
+        try {
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                telemetry.log().add("captured %s", file.getName());
+            }
+        } catch (IOException e) {
+            RobotLog.ee(TAG, e, "exception in saveBitmap()");
+            error("exception saving %s", file.getName());
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Stolen Camera Operations
     //----------------------------------------------------------------------------------------------
 
     private void initializeFrameQueue(int capacity) {
@@ -236,20 +352,20 @@ public class VisionConcept extends LinearOpMode {
                         /** The session is ready to go. Start requesting frames */
                         final CameraCaptureRequest captureRequest = camera.createCaptureRequest(imageFormat, size, fps);
                         session.startCapture(captureRequest,
-                            new CameraCaptureSession.CaptureCallback() {
-                                @Override public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
-                                    /** A new frame is available. The frame data has <em>not</em> been copied for us, and we can only access it
-                                     * for the duration of the callback. So we copy here manually. */
-                                    Bitmap bmp = captureRequest.createEmptyBitmap();
-                                    cameraFrame.copyToBitmap(bmp);
-                                    frameQueue.offer(bmp);
-                                }
-                            },
-                            Continuation.create(callbackHandler, new CameraCaptureSession.StatusCallback() {
-                                @Override public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
-                                    RobotLog.ii(TAG, "capture sequence %s reports completed: lastFrame=%d", cameraCaptureSequenceId, lastFrameNumber);
-                                }
-                            })
+                                new CameraCaptureSession.CaptureCallback() {
+                                    @Override public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
+                                        /** A new frame is available. The frame data has <em>not</em> been copied for us, and we can only access it
+                                         * for the duration of the callback. So we copy here manually. */
+                                        Bitmap bmp = captureRequest.createEmptyBitmap();
+                                        cameraFrame.copyToBitmap(bmp);
+                                        frameQueue.offer(bmp);
+                                    }
+                                },
+                                Continuation.create(callbackHandler, new CameraCaptureSession.StatusCallback() {
+                                    @Override public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
+                                        RobotLog.ii(TAG, "capture sequence %s reports completed: lastFrame=%d", cameraCaptureSequenceId, lastFrameNumber);
+                                    }
+                                })
                         );
                         synchronizer.finish(session);
                     } catch (CameraException|RuntimeException e) {
@@ -293,116 +409,4 @@ public class VisionConcept extends LinearOpMode {
         }
     }
 
-    //----------------------------------------------------------------------------------------------
-    // Utilities
-    //----------------------------------------------------------------------------------------------
-
-    private void error(String msg) {
-        telemetry.log().add(msg);
-        telemetry.update();
-    }
-    private void error(String format, Object...args) {
-        telemetry.log().add(format, args);
-        telemetry.update();
-    }
-
-    private boolean contains(int[] array, int value) {
-        for (int i : array) {
-            if (i == value) return true;
-        }
-        return false;
-    }
-
-    private void saveBitmap(Bitmap bitmap) {
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd__hh-mm-ss");
-        String strDate = dateFormat.format(new Date());
-        File file = new File(captureDirectory, String.format(Locale.getDefault(), strDate + ".png", captureCounter++));
-        try {
-            try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                telemetry.log().add("captured %s", file.getName());
-            }
-        } catch (IOException e) {
-            RobotLog.ee(TAG, e, "exception in saveBitmap()");
-            error("exception saving %s", file.getName());
-        }
-    }
-
-    private void analyzeBitmap(Bitmap bitmap){
-        int color = 0;
-        int greenValue = 0;
-        int greenA = 0;
-        int greenB = 0;
-        int greenC = 0;
-        String mostGreen;
-        // loop thru image
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                // get color for this coordinate
-                color = bitmap.getPixel(x,y);
-                greenValue = Color.green(color);
-                // sort green value by which third of the bitmap it is located in
-                if (x < dividerA){
-                    greenA += greenValue;
-                }
-                else if (x > dividerA && x < dividerB){
-                    greenB += greenValue;
-                }
-                else {
-                    greenC += greenValue;
-                }
-            }
-        }
-        // which section has the most green?
-        if( greenA >= greenB && greenA >= greenC)
-            mostGreen = "LEFT";
-        else if (greenB >= greenA && greenB >= greenC)
-            mostGreen = "CENTER";
-        else
-            mostGreen = "RIGHT";
-        // output
-        telemetry.addData("LEFT", greenA);
-        telemetry.addData("CENTER", greenB);
-        telemetry.addData("RIGHT", greenC);
-        telemetry.addData("Section", mostGreen);
-        telemetry.update();
-    }
-    private void annotateBitmap(Bitmap bitmap){
-        // plot x axis
-        int imageWidth = bitmap.getWidth();
-        for (int x = 0; x < imageWidth; x++) {
-            bitmap.setPixel(x,0,green);
-        }
-        // plot y axis
-        int imageHeight = bitmap.getHeight();
-        for (int y = 0; y < imageHeight; y++) {
-            bitmap.setPixel(0,y,RED);
-        }
-        // draw out area to analyze
-        // left vertical line
-        for (int y=minY; y < maxY; y++ ){
-            bitmap.setPixel(minX,y,WHITE);
-        }
-        // top horizontal line
-        for (int x=minX; x < maxX; x++){
-            bitmap.setPixel(x,maxY,WHITE);
-        }
-        // right vertical line
-        for (int y=maxY; y > minY; y--){
-            bitmap.setPixel(maxX,y,WHITE);
-        }
-        // bottom horizontal line
-        for (int x=maxX; x > minX; x--){
-            bitmap.setPixel(x,minY,WHITE);
-        }
-
-        // mark dividers
-        for (int y=maxY; y > minY; y--){
-            bitmap.setPixel(dividerA,y,WHITE);
-        }
-        for (int y=maxY; y > minY; y--){
-            bitmap.setPixel(dividerB,y,WHITE);
-        }
-
-    }
 }
