@@ -111,6 +111,18 @@ public class VisionConcept extends LinearOpMode {
      * if you're curious): no knowledge of multi-threading is needed here. */
     private Handler callbackHandler;
 
+    // analyzing related variables
+    int green = -16776961;
+    int RED = -65536;
+    int WHITE = 0xffffffff;
+    int minX = 190;
+    int maxX= 600;
+    int minY = 230;
+    int maxY= 350;
+    int analyzedWidth = (maxX-minX);
+    int dividerA = (minX + (analyzedWidth/3));
+    int dividerB = (minX + (analyzedWidth/3*2));
+
     //----------------------------------------------------------------------------------------------
     // Main OpMode entry
     //----------------------------------------------------------------------------------------------
@@ -165,6 +177,7 @@ public class VisionConcept extends LinearOpMode {
     /** Do something with the frame */
     private void onNewFrame(Bitmap frame) {
         annotateBitmap(frame);
+        analyzeBitmap(frame);
         saveBitmap(frame);
         frame.recycle(); // not strictly necessary, but helpful
     }
@@ -314,33 +327,51 @@ public class VisionConcept extends LinearOpMode {
             error("exception saving %s", file.getName());
         }
     }
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    private void interactBitmap(Bitmap bitmap){
-        Color color = new Color();
-        int x = 0;
-        int y = 0;
+
+    private void analyzeBitmap(Bitmap bitmap){
+        int color = 0;
+        int greenValue = 0;
+        int greenA = 0;
+        int greenB = 0;
+        int greenC = 0;
+        String mostGreen;
         // loop thru image
-        for (int imageWidth = bitmap.getWidth(); x < imageWidth; x++) {
-            for (int imageHeight = bitmap.getHeight(); y < imageHeight; y++) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    bitmap.getColor(x,y);
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                // get color for this coordinate
+                color = bitmap.getPixel(x,y);
+                greenValue = Color.green(color);
+                // sort green value by which third of the bitmap it is located in
+                if (x < dividerA){
+                    greenA += greenValue;
+                }
+                else if (x > dividerA && x < dividerB){
+                    greenB += greenValue;
+                }
+                else {
+                    greenC += greenValue;
                 }
             }
         }
+        // which section has the most green?
+        if( greenA >= greenB && greenA >= greenC)
+            mostGreen = "LEFT";
+        else if (greenB >= greenA && greenB >= greenC)
+            mostGreen = "CENTER";
+        else
+            mostGreen = "RIGHT";
+        // output
+        telemetry.addData("LEFT", greenA);
+        telemetry.addData("CENTER", greenB);
+        telemetry.addData("RIGHT", greenC);
+        telemetry.addData("Section", mostGreen);
+        telemetry.update();
     }
     private void annotateBitmap(Bitmap bitmap){
-        // init variables
-        int BLUE = -16776961;
-        int RED = -65536;
-        int WHITE = 0xffffffff;
-        int minX = 50;
-        int minY = 50;
-        int maxY=300;
-        int maxX=300;
         // plot x axis
         int imageWidth = bitmap.getWidth();
         for (int x = 0; x < imageWidth; x++) {
-            bitmap.setPixel(x,0,BLUE);
+            bitmap.setPixel(x,0,green);
         }
         // plot y axis
         int imageHeight = bitmap.getHeight();
@@ -363,6 +394,14 @@ public class VisionConcept extends LinearOpMode {
         // bottom horizontal line
         for (int x=maxX; x > minX; x--){
             bitmap.setPixel(x,minY,WHITE);
+        }
+
+        // mark dividers
+        for (int y=maxY; y > minY; y--){
+            bitmap.setPixel(dividerA,y,WHITE);
+        }
+        for (int y=maxY; y > minY; y--){
+            bitmap.setPixel(dividerB,y,WHITE);
         }
 
     }
