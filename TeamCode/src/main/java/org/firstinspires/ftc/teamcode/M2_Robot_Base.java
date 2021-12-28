@@ -14,7 +14,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
     public static final double duckPower = .50;
-    public static final double ENCODER_TO_INCHES = 147.5;
+    public static final double DRIVE_STRAIGHT_ENCODER_TO_INCHES = 118;
+    public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 67;
     final double autoDuckPower = .25;
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -36,6 +37,9 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     final double K_STRAFE = 0.02;
     BNO055IMU imu;
     final int lifterLevel1 =500;
+    final int lifterLevel2 =773;
+    final int lifterLevel3 =1265;
+
 
     //thing that happens when new is used (constructor)
     public M2_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -139,7 +143,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
     public void driveStraightInches(double inches, double desiredAngle, double power) throws InterruptedException{
-        driveStraight((int)(inches* ENCODER_TO_INCHES), desiredAngle,power);
+        driveStraight((int)(inches* DRIVE_STRAIGHT_ENCODER_TO_INCHES), desiredAngle,power);
     }
 
     // All of the drive straight code which allows us to stay on course
@@ -185,7 +189,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public void driveStrafeInches(double inches, double desiredAngle, double power) throws InterruptedException{
-        driveStrafe((int)(inches* ENCODER_TO_INCHES), desiredAngle,power);
+        driveStrafe((int)(inches* DRIVE_STRAFE_ENCODER_TO_INCHES), desiredAngle,power);
     }
 
     public void driveStrafe(int encoderClicks, double desiredAngle, double power) throws InterruptedException{
@@ -206,13 +210,13 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
         _frontRight.setPower(power);
         _backRight.setPower(-power);
-        _frontLeft.setPower(-power);
+         _frontLeft.setPower(-power);
         _backLeft.setPower(power);
 
-       // int averageEncoderClicks = ((Math.abs(_backLeft.getCurrentPosition())+ Math.abs(_frontLeft.getCurrentPosition()))/2);
-        int averageEncoderClicks = _backLeft.getCurrentPosition();
-        while ( Math.abs(encoderClicks) > averageEncoderClicks){
-             averageEncoderClicks = _backLeft.getCurrentPosition();
+        int averageEncoderClicks = ((Math.abs(_backLeft.getCurrentPosition())+ Math.abs(_frontLeft.getCurrentPosition()))/2);
+        //int averageEncoderClicks = _backLeft.getCurrentPosition();
+        while ( Math.abs(encoderClicks) > Math.abs(averageEncoderClicks)){
+             averageEncoderClicks = Math.abs(_backLeft.getCurrentPosition())+ Math.abs(_frontLeft.getCurrentPosition())/2;
           // information();
             _telemetry.addData(" absolute value of average encoder clicks", Math.abs(averageEncoderClicks));
             _telemetry.update();
@@ -227,9 +231,9 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
             _frontRight.setPower(power - driveCorrect);
-            _backRight.setPower(-power + driveCorrect);
+            _backRight.setPower(-power - driveCorrect);
             _frontLeft.setPower(-power + driveCorrect);
-            _backLeft.setPower(power - driveCorrect);
+            _backLeft.setPower(power + driveCorrect);
 
 
 
@@ -359,7 +363,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public void information(){
-        double convertedClicks = _encoderY.getCurrentPosition()* ENCODER_TO_INCHES;
+        double convertedClicks = _encoderY.getCurrentPosition()* DRIVE_STRAFE_ENCODER_TO_INCHES;
         _telemetry.addData("encoders (inches)",convertedClicks);
         _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);_telemetry.addData("front right power", _frontRight.getPower());
         _telemetry.addData("back right power", _backRight.getPower());
@@ -401,6 +405,16 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _lifter.setTargetPosition(lifterLevel1);
         _lifter.setPower(.5);
     }
+
+    public void setLifterLevel2(){
+        _lifter.setTargetPosition(lifterLevel2);
+        _lifter.setPower(.5);
+    }
+    public void setLifterLevel3(){
+        _lifter.setTargetPosition(lifterLevel3);
+        _lifter.setPower(.5);
+    }
+
 
     public void setLifterO(){
         _lifter.setTargetPosition(0);

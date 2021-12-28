@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="BLUE Preload Delivery")
-public class M2BlueDelivery extends LinearOpMode {
+@Autonomous(name="BLUE Delivery, NO DUCKS")
+public class M2BlueDeliveryWarehouse extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private M2_Robot_Base rb;
 
@@ -54,11 +54,11 @@ public class M2BlueDelivery extends LinearOpMode {
         sleep(1500);
 
         //line up and move towards the lifter
-        rb.driveStraightInches(17,0,-.4);
-        rb.driveStrafeInches(31,0,.6);
+        rb.driveStraightInches(20,0,.4);
+        rb.driveStrafeInches(32,0,.6);
 
         // A IS CLOSEST TO THE WAREHOUSE ON BLUE
-        switch("LEFT"){
+        switch("LEFT") {
 
 
             case "LEFT":
@@ -66,6 +66,7 @@ public class M2BlueDelivery extends LinearOpMode {
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
+
 
 
                 break;
@@ -78,16 +79,22 @@ public class M2BlueDelivery extends LinearOpMode {
 
                 break;
 
-            case "RIGHT" :
+            case "RIGHT":
                 rb.setLifterLevel3();
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
                 break;
         }
-        //move away from the cake
-        rb.driveStrafeInches(31,0,-.6);
-        rb.driveStraightInches(36,0,.4);
+
+        rb.driveStrafeInches(35,0,-.6);
+        rb.driveStraightInches(65,0,-.4);
+        rb.driveStrafeInches(25,0,.6);
+        sleep(1500);
+        rb.setLifterO();
+
+
+
 
 
 
