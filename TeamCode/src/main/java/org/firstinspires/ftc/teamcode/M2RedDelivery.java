@@ -29,86 +29,76 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@Disabled
-@TeleOp(name="Tank Drive", group="Iterative Opmode")
-public class TankDrive extends OpMode
-{
-    // Declare OpMode members.
+
+
+@Autonomous(name="RED Preload Delivery")
+public class M2RedDelivery extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    private M1_Robot_Base rb;
-    double leftPower;
-    double rightPower;
+    private M2_Robot_Base rb;
 
-
-
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
-    public void init() {
-        telemetry.addData("Status", "Initialized");
+    public void runOpMode() throws InterruptedException {
+        rb = new M2_Robot_Base(hardwareMap, telemetry);
 
-        //rb = new ArtemisBase(hardwareMap);
-        rb = new M1_Robot_Base(hardwareMap, telemetry);
-
-
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
-        runtime.reset();
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    @Override
-    public void loop() {
-
-        //slow button
-        if (gamepad1.left_bumper){
-            leftPower = -gamepad1.left_stick_y/4;
-            rightPower = -gamepad1.right_stick_y/4;
-        }
-        else{
-            //hey, it's negative because up on the joystick is negative, and we need to make sure that the number it returns is positive
-            leftPower = -gamepad1.left_stick_y/2;
-            rightPower = -gamepad1.right_stick_y/2;
-        }
-
-        rb.setSidePowers(leftPower, rightPower);
-        rb.performUpdates();
-
-
-        
-
-
-
-        telemetry.addData("rightPower", rightPower);
-        telemetry.addData("leftPower", leftPower);
+        //sleep to let the gyro initialize and chill
+        sleep(500);
+        telemetry.addData("ready","ready");
         telemetry.update();
+
+
+        waitForStart();
+        rb.setDriveReadyLifter();
+        sleep(1500);
+
+        //line up and move towards the lifter
+        rb.driveStraightInches(17,0,.4);
+        rb.driveStrafeInches(31,0,.6);
+
+        // A IS CLOSEST TO THE WAREHOUSE ON BLUE
+        switch("LEFT"){
+
+
+            case "LEFT":
+                rb.setDriveReadyLifter();
+                rb.setIntakeDischarge();
+                sleep(1500);
+                rb.setIntakeOff();
+
+
+                break;
+
+            case "CENTER":
+                rb.setLifterLevel2();
+                rb.setIntakeDischarge();
+                sleep(1500);
+                rb.setIntakeOff();
+
+                break;
+
+            case "RIGHT" :
+                rb.setLifterLevel3();
+                rb.setIntakeDischarge();
+                sleep(1500);
+                rb.setIntakeOff();
+                break;
+        }
+        //move away from the cake
+        rb.driveStrafeInches(25,0,-.6);
+        rb.driveStraightInches(30,0,-.4);
+        rb.turnToAngle(-30,.4);
+
+
+        rb.setLifterO();
+
+
+
+
+
+
+
+    }
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
-
-}

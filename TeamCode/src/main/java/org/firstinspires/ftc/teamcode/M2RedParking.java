@@ -30,14 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Disabled
-@Autonomous(name="StraightTest")
-public class StraightTest extends LinearOpMode {
+@Autonomous(name="RED Park")
+public class M2RedParking extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private M2_Robot_Base rb;
 
@@ -53,12 +51,19 @@ public class StraightTest extends LinearOpMode {
 
         waitForStart();
         rb.setDriveReadyLifter();
-        rb.driveStraightInches(24,0,.6);
-        sleep(2000);
+        sleep(1500);
+
+
+        rb.driveStraightInches(45,0,.4);
+        rb.driveStrafeInches(25,0,.6);
+        sleep(3000);
+        rb.setLifterO();
 
 
 
 
-        }
+
+
+    }
     }
 

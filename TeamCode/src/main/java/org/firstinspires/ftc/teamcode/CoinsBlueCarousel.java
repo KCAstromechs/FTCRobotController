@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
+@Disabled
 @Autonomous(name="Coins Blue Carousel")
 public class CoinsBlueCarousel extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();

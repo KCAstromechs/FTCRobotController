@@ -29,19 +29,22 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@Disabled
-@TeleOp(name="Tank Drive", group="Iterative Opmode")
-public class TankDrive extends OpMode
+
+@TeleOp(name="Purse Bot TeleOp", group="Iterative Opmode")
+public class PurseBotTeleOp extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private M1_Robot_Base rb;
+    private M2_Robot_Base rb;
     double leftPower;
     double rightPower;
+    double lifterPower;
+    double intakePower;
+    double trigger;
+
 
 
 
@@ -53,8 +56,8 @@ public class TankDrive extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        //rb = new ArtemisBase(hardwareMap);
-        rb = new M1_Robot_Base(hardwareMap, telemetry);
+
+        rb = new M2_Robot_Base(hardwareMap, telemetry);
 
 
     }
@@ -80,28 +83,72 @@ public class TankDrive extends OpMode
     @Override
     public void loop() {
 
+
+
+        //lifter
+        rb.changeLifterPosition((int)(-gamepad2.right_stick_y*48.0));
+
+
+
+        //duck
+        if (gamepad2.dpad_up){
+            rb.duckON();
+        }
+
+        if (gamepad2.dpad_down){
+            rb.duckReverse();
+        }
+
+        if (gamepad2.dpad_right){
+            rb.duckOFF();
+        }
+
+        //intake
+        if(gamepad2.a){
+            rb.setIntakeDischarge();
+        }
+        if (gamepad2.b){
+            rb.setIntakeOff();
+        }
+        if(gamepad2.y){
+            rb.setIntakeCollect();
+        }
+
         //slow button
         if (gamepad1.left_bumper){
-            leftPower = -gamepad1.left_stick_y/4;
-            rightPower = -gamepad1.right_stick_y/4;
+            leftPower = -gamepad1.left_stick_y;
+            rightPower = -gamepad1.right_stick_y;
         }
         else{
             //hey, it's negative because up on the joystick is negative, and we need to make sure that the number it returns is positive
             leftPower = -gamepad1.left_stick_y/2;
             rightPower = -gamepad1.right_stick_y/2;
         }
-
+        //tank
         rb.setSidePowers(leftPower, rightPower);
+
+        //strafing
+        trigger=(gamepad1.right_trigger-gamepad1.left_trigger);
+        rb.strafe(trigger);
+
+
+
+
+
+
+
+
+        if (gamepad2.left_bumper){
+           rb.setCapperUndelivered();
+       }
+
+
+        if (gamepad2.right_bumper){
+            rb.setCapperDelivered();
+        }
+
+
         rb.performUpdates();
-
-
-        
-
-
-
-        telemetry.addData("rightPower", rightPower);
-        telemetry.addData("leftPower", leftPower);
-        telemetry.update();
     }
 
     /*

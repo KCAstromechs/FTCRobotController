@@ -91,6 +91,10 @@ public class M2BlueDelivery extends LinearOpMode {
 
 
 
+        rb.setLifterO();
+
+
+
 
 
 
