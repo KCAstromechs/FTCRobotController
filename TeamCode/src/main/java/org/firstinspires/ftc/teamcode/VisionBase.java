@@ -34,9 +34,11 @@ import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.os.Handler;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.android.util.Size;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -67,10 +69,15 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
-class VisionBase {
+public class VisionBase {
+
+    enum TSEPosition {
+        LEFT,
+        CENTER,
+        RIGHT,
+        NOT_DETECTED
+    }
 
     //----------------------------------------------------------------------------------------------
     // Analyzing-Related Variables
@@ -81,19 +88,21 @@ class VisionBase {
     int RED = -65536;
     int WHITE = 0xffffffff;
     // mapping values
-    int minX = 190;
-    int maxX = 600;
-    int minY = 230;
-    int maxY= 350;
-    int analyzedWidth = (maxX-minX);
-    int analyzedHeight = (maxY-minY);
-    int analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
-    int dividerA = (minX + (analyzedWidth/3));
-    int dividerB = (minX + (analyzedWidth/3*2));
+    int minX = 0;
+    int maxX = 0;
+    int minY = 0;
+    int maxY = 0;
+    int analyzedWidth = 0;
+    int analyzedHeight = 0;
+    int analyzedPixels = 0;
+    int dividerA = 0;
+    int dividerB = 0;
     // other
-    int minAvgGreen = 30; // lowball value, properly calculate this with testing
-    String mostGreen;
-    String preferredPosition = "RIGHT";
+    TSEPosition mostGreen = TSEPosition.NOT_DETECTED;
+    TSEPosition leastBlue = TSEPosition.NOT_DETECTED;
+    TSEPosition mostGreenBlueDifference = TSEPosition.NOT_DETECTED;
+    HardwareMap hardwareMap;
+    Telemetry telemetry;
 
     //----------------------------------------------------------------------------------------------
     // Stolen Camera Variables
@@ -128,6 +137,11 @@ class VisionBase {
     // Utilization in Auto / Interact with this Class
     //----------------------------------------------------------------------------------------------
 
+    public VisionBase(HardwareMap _hardwareMap, Telemetry _telemetry) {
+        hardwareMap = _hardwareMap;
+        telemetry = _telemetry;
+    }
+
     // do this at the beginning
     public void initVision() {
         callbackHandler = CallbackLooper.getDefault().getHandler();
@@ -136,26 +150,43 @@ class VisionBase {
 
         initializeFrameQueue(2);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
+
+        telemetry.addData("VISION", "initialized");
+        telemetry.update();
     }
 
     // call this to run vision
-    public void runVision() {
-        // if something goes wrong and mostGreen is not updated, we will go to our preferred position
-        mostGreen = preferredPosition;
+    public TSEPosition findTSEPosition(int _minX, int _maxX, int _minY, int _maxY, boolean save) {
+        // setting up coords input as global
+        minX = _minX;
+        maxX = _maxX;
+        minY = _minY;
+        maxY = _maxY;
+        analyzedWidth = (maxX-minX);
+        analyzedHeight = (maxY-minY);
+        analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
+        dividerA = (minX + (analyzedWidth/3));
+        dividerB = (minX + (analyzedWidth/3*2));
+        // if something goes wrong with vision process, not detected will be returned
+        TSEPosition ret = TSEPosition.NOT_DETECTED;
         try {
-            // if we can't access our camera, stop running the code
             openCamera();
             if (camera == null) {
-                return;
+                return TSEPosition.NOT_DETECTED;
             }
             startCamera();
             if (cameraCaptureSession == null) {
-                return;
+                return TSEPosition.NOT_DETECTED;
             }
-            // grab our frame and then do something with it
-            Bitmap bmp = frameQueue.poll();
-            if (bmp != null) {
-                onNewFrame(bmp);
+
+            boolean haveBitmap = false;
+
+            while (!haveBitmap) {
+                Bitmap bmp = frameQueue.poll();
+                if (bmp != null) {
+                    ret = onNewFrame(bmp, save);
+                    haveBitmap = true;
+                }
             }
             // give info
             telemetry.update();
@@ -163,19 +194,24 @@ class VisionBase {
         } finally {
             closeCamera();
         }
+        return ret;
     }
 
     // do stuff with the frame
-    private void onNewFrame(Bitmap frame) {
-        analyzeBitmap(frame);
-        annotateBitmap(frame);
-        saveBitmap(frame);
+    private TSEPosition onNewFrame(Bitmap frame, boolean save) {
+        TSEPosition ret = analyzeBitmapForGreenBlueDifference(frame);
+        if (save == true) {
+            annotateBitmap(frame);
+            saveBitmap(frame);
+        }
         frame.recycle(); // not strictly necessary, but helpful
+        return ret;
     }
 
     //----------------------------------------------------------------------------------------------
     // Vision Analysis Operations
     //----------------------------------------------------------------------------------------------
+
     private void annotateBitmap(Bitmap bitmap){
         // plot x axis
         int imageWidth = bitmap.getWidth();
@@ -214,16 +250,15 @@ class VisionBase {
         }
     }
 
-    private void analyzeBitmap(Bitmap bitmap){
+    private TSEPosition analyzeBitmapForGreen(Bitmap bitmap){
         int color = 0;
         int greenValue = 0;
         int greenA = 0;
         int greenB = 0;
         int greenC = 0;
-        int greenAvgA = 0;
-        int greenAvgB = 0;
-        int greenAvgC = 0;
-        String marker = "DETECTED";
+        float greenAvgA = 0;
+        float greenAvgB = 0;
+        float greenAvgC = 0;
         // loop thru image
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
@@ -242,51 +277,124 @@ class VisionBase {
                 }
             }
         }
-        // let's make sure we can see the team marker
-        greenAvgA = (greenA / analyzedPixels);
-        greenAvgB = (greenB / analyzedPixels);
-        greenAvgC = (greenC / analyzedPixels);
-        if (greenAvgA < minAvgGreen && greenAvgB < minAvgGreen && greenAvgC < minAvgGreen) {
-            marker = "NOT DETECTED";
-            mostGreen = preferredPosition;
-        }
+        greenAvgA = ((float)greenA / (float)analyzedPixels);
+        greenAvgB = ((float)greenB / (float)analyzedPixels);
+        greenAvgC = ((float)greenC / (float)analyzedPixels);
 
-        // tell me which one has the most green unless we think we don't see the team marker
-        if (marker != "NOT DETECTED") {
-            if( greenA >= greenB && greenA >= greenC)
-                mostGreen = "LEFT";
-            else if (greenB >= greenA && greenB >= greenC)
-                mostGreen = "CENTER";
+        // tell me which one has the most green
+        if( greenAvgA >= greenAvgB && greenAvgA >= greenAvgC)
+            mostGreen = TSEPosition.LEFT;
+        else if (greenAvgB >= greenAvgA && greenAvgB >= greenAvgC)
+            mostGreen = TSEPosition.CENTER;
+        else
+            mostGreen = TSEPosition.RIGHT;
+
+        // output
+        /* telemetry.addData("LEFT", greenAvgA);
+        telemetry.addData("CENTER", greenAvgB);
+        telemetry.addData("RIGHT", greenAvgC);
+        telemetry.addData("Section", mostGreen); */
+
+        return mostGreen;
+    }
+
+    private TSEPosition analyzeBitmapForBlue(Bitmap bitmap){
+        int color = 0;
+        int blueValue = 0;
+        int blueA = 0;
+        int blueB = 0;
+        int blueC = 0;
+        float blueAvgA = 0;
+        float blueAvgB = 0;
+        float blueAvgC = 0;
+        // loop thru image
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                // get color for this coordinate
+                color = bitmap.getPixel(x,y);
+                blueValue = Color.blue(color);
+                // sort green value by which third of the bitmap it is located in
+                if (x < dividerA){
+                    blueA += blueValue;
+                }
+                else if (x > dividerA && x < dividerB){
+                    blueB += blueValue;
+                }
+                else {
+                    blueC += blueValue;
+                }
+            }
+        }
+        blueAvgA = ((float)blueA / (float)analyzedPixels);
+        blueAvgB = ((float)blueB / (float)analyzedPixels);
+        blueAvgC = ((float)blueC / (float)analyzedPixels);
+
+        // tell me which one has the LEAST BlUE
+        if( blueAvgA <= blueAvgB && blueAvgA <= blueAvgC)
+            leastBlue = TSEPosition.LEFT;
+        else if (blueAvgB <= blueAvgA && blueAvgB <= blueAvgC)
+            leastBlue = TSEPosition.CENTER;
+        else
+            leastBlue = TSEPosition.RIGHT;
+
+        // output
+        /* telemetry.addData("LEFT", blueAvgA);
+        telemetry.addData("CENTER", blueAvgB);
+        telemetry.addData("RIGHT", blueAvgC);
+        telemetry.addData("Section", leastBlue); */
+
+        return leastBlue;
+    }
+
+    private TSEPosition analyzeBitmapForGreenBlueDifference(Bitmap bitmap){
+        int color = 0;
+        int blueValue = 0;
+        int greenValue = 0;
+        int minColorDifference = 50; // difference between blue and green to be counted in the pixel count
+        int pixelCountA = 0;
+        int pixelCountB = 0;
+        int pixelCountC = 0;
+        int detectionThreshold = 50; // number of pixels counted to not count as "NOT DETECTED"
+
+        // loop thru image
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                // get color for this coordinate
+                color = bitmap.getPixel(x,y);
+                blueValue = Color.blue(color);
+                greenValue = Color.green(color);
+                if ((greenValue - blueValue) >= minColorDifference) {
+                    if (x < dividerA){
+                        pixelCountA += 1;
+                    }
+                    else if (x > dividerA && x < dividerB){
+                        pixelCountB += 1;
+                    }
+                    else {
+                        pixelCountC += 1;
+                    }
+                }
+            }
+        }
+        // tell me which one has the biggest amount of pixels that have specified blue green difference unless under threshold
+        if (pixelCountA > detectionThreshold || pixelCountB > detectionThreshold || pixelCountC > detectionThreshold) {
+            if(pixelCountA > pixelCountB && pixelCountA > pixelCountC)
+                mostGreenBlueDifference = TSEPosition.LEFT;
+            else if (pixelCountB > pixelCountA && pixelCountB > pixelCountC)
+                mostGreenBlueDifference = TSEPosition.CENTER;
+            else if (pixelCountC > pixelCountA && pixelCountC > pixelCountB)
+                mostGreenBlueDifference = TSEPosition.RIGHT;
             else
-                mostGreen = "RIGHT";
+                mostGreenBlueDifference = TSEPosition.NOT_DETECTED;
         }
 
         // output
-        telemetry.addData("MARKER", marker);
-        telemetry.addData("LEFT", greenA);
-        telemetry.addData("CENTER", greenB);
-        telemetry.addData("RIGHT", greenC);
-        telemetry.addData("Section", mostGreen);
-    }
+        /* telemetry.addData("LEFT", pixelCountA);
+        telemetry.addData("CENTER", pixelCountB);
+        telemetry.addData("RIGHT", pixelCountC);
+        telemetry.addData("Section", mostGreenBlueDifference); */
 
-    //----------------------------------------------------------------------------------------------
-    // Utilities
-    //----------------------------------------------------------------------------------------------
-
-    private void error(String msg) {
-        telemetry.log().add(msg);
-        telemetry.update();
-    }
-    private void error(String format, Object...args) {
-        telemetry.log().add(format, args);
-        telemetry.update();
-    }
-
-    private boolean contains(int[] array, int value) {
-        for (int i : array) {
-            if (i == value) return true;
-        }
-        return false;
+        return mostGreenBlueDifference;
     }
 
     private void saveBitmap(Bitmap bitmap) {
@@ -413,6 +521,26 @@ class VisionBase {
             camera.close();
             camera = null;
         }
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Utilities
+    //----------------------------------------------------------------------------------------------
+
+    private void error(String msg) {
+        telemetry.log().add(msg);
+        telemetry.update();
+    }
+    private void error(String format, Object...args) {
+        telemetry.log().add(format, args);
+        telemetry.update();
+    }
+
+    private boolean contains(int[] array, int value) {
+        for (int i : array) {
+            if (i == value) return true;
+        }
+        return false;
     }
 
 }
