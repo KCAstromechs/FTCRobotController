@@ -86,19 +86,18 @@ public class M2RedDelivery extends LinearOpMode {
                 break;
         }
         //move away from the cake
-        rb.driveStrafeInches(25,0,-.6);
-        rb.driveStraightInches(30,0,-.4);
-        rb.turnToAngle(-30,.4);
-
-
-        rb.setLifterO();
-
-
-
-
-
-
-
+        rb.driveStrafeInches(31,0,-.6);
+        rb.driveStraightInches(36,0,-.4);
+        //line up for duck
+        rb.turnToAngle(-30,.3);
+        rb.driveStraightInches(5,-30,-.4);
+        rb.turnToAngle(30,.3);
+        rb.deliverDuck(false, -.1);
+        //back up and move to storage unit
+        rb.driveStraightInches(5,30,.4);
+        rb.turnToAngle(0,.3);
+        rb.driveStrafeInches(18,0,.6);
+        rb.driveStraightInches(8,0,-.4);
     }
     }
 

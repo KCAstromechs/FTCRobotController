@@ -66,6 +66,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _lifter.setDirection(DcMotor.Direction.REVERSE);
         _backSpinner.setDirection(DcMotor.Direction.REVERSE);
         _lifter.setDirection(DcMotor.Direction.REVERSE);
+        _intake.setDirection(DcMotor.Direction.REVERSE);
 
         _backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         _frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -336,35 +337,40 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     /***
+     *@param robotPower
+     * will always be either .1 or -.1
+     * needed because we have two spinners
+     *
+     *
      *
      * @param isBlue
      * is used for determining whether the motor power should be positive or negative
      * true is for blue side autos
      * false is for red side autos
      */
-    public void deliverDuck(boolean isBlue){
+    public void deliverDuck(boolean isBlue, double robotPower){
         _frontSpinner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backSpinner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while(Math.abs(_frontSpinner.getCurrentPosition())<3400){
-            _telemetry.addData("wheel encoder right", _frontSpinner.getCurrentPosition());
-            _telemetry.addData("wheel encoder left", _backSpinner.getCurrentPosition());
-
+        while(Math.abs(_frontSpinner.getCurrentPosition())<3000 || Math.abs(_backSpinner.getCurrentPosition())<3000){
+            _telemetry.addData("front spinner", _frontSpinner.getCurrentPosition());
+            _telemetry.addData("back spinner", _backSpinner.getCurrentPosition());
             _telemetry.update();
+
             if (isBlue == true) {
-                _frontSpinner.setPower(autoDuckPower);
-                _backSpinner.setPower(-autoDuckPower);
-            }
-            else{
                 _frontSpinner.setPower(-autoDuckPower);
                 _backSpinner.setPower(autoDuckPower);
             }
-            _backLeft.setPower(-.1);
-            _frontLeft.setPower(-.1);
-            _backRight.setPower(-.1);
-            _frontRight.setPower(-.1);
+            else{
+                _frontSpinner.setPower(autoDuckPower);
+                _backSpinner.setPower(-autoDuckPower);
+            }
+            _backLeft.setPower(robotPower);
+            _frontLeft.setPower(robotPower);
+            _backRight.setPower(robotPower);
+            _frontRight.setPower(robotPower);
         }
         _backLeft.setPower(0);
         _frontLeft.setPower(0);
@@ -389,8 +395,8 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public void encoderTest(){
-        _telemetry.addData("clicks: carousel mover right", _frontSpinner.getCurrentPosition());
-        _telemetry.addData("clicks: carousel mover left", _backSpinner.getCurrentPosition());
+        _telemetry.addData("clicks: front spinner", _frontSpinner.getCurrentPosition());
+        _telemetry.addData("clicks: back spinner", _backSpinner.getCurrentPosition());
         _telemetry.addData("clicks: front left", _frontLeft.getCurrentPosition());
         _telemetry.addData("clicks: front right", _frontRight.getCurrentPosition());
         _telemetry.addData("clicks: back right", _backRight.getCurrentPosition());

@@ -38,7 +38,7 @@ public class EncoderTest extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private M1_Robot_Base rb;
+    private M2_Robot_Base rb;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -48,7 +48,7 @@ public class EncoderTest extends OpMode
         telemetry.addData("Status", "Initialized");
 
         //rb = new ArtemisBase(hardwareMap);
-        rb = new M1_Robot_Base(hardwareMap, telemetry);
+        rb = new M2_Robot_Base(hardwareMap, telemetry);
     }
 
     /*
