@@ -167,6 +167,7 @@ public class VisionBase {
         analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
         dividerA = (minX + (analyzedWidth/3));
         dividerB = (minX + (analyzedWidth/3*2));
+
         // if something goes wrong with vision process, not detected will be returned
         TSEPosition ret = TSEPosition.NOT_DETECTED;
         try {

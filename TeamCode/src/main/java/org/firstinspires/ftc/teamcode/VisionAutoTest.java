@@ -52,7 +52,7 @@ public class VisionAutoTest extends LinearOpMode {
         waitForStart();
 
         // now let's run vision, full image is 640 x 480
-        VisionBase.TSEPosition position = vision.findTSEPosition(190,600,230,320, true);
+        VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, true);
 
         if (position == VisionBase.TSEPosition.LEFT) {
             telemetry.addData("Final Answer", "LEFT");
