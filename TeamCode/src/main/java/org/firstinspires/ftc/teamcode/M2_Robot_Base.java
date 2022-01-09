@@ -241,7 +241,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             _frontLeft.setPower(-power + driveCorrect);
             _backLeft.setPower(power + driveCorrect);
 
-
+            // make +- strafe correct for angle
 
 
         }

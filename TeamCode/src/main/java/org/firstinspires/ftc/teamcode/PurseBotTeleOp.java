@@ -44,10 +44,7 @@ public class PurseBotTeleOp extends OpMode
     double lifterPower;
     double intakePower;
     double trigger;
-
-
-
-
+    double K = 1.5;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -114,29 +111,23 @@ public class PurseBotTeleOp extends OpMode
             rb.setIntakeCollect();
         }
 
-        //slow button
+        // if button toggle, switch speed
         if (gamepad1.left_bumper){
-            leftPower = -gamepad1.left_stick_y;
-            rightPower = -gamepad1.right_stick_y;
+            K = 3;
         }
-        else{
-            //hey, it's negative because up on the joystick is negative, and we need to make sure that the number it returns is positive
-            leftPower = -gamepad1.left_stick_y/2;
-            rightPower = -gamepad1.right_stick_y/2;
+        else if (gamepad1.right_bumper) {
+            K = 1.5;
         }
+
+        leftPower = -gamepad1.left_stick_y/K;
+        rightPower = -gamepad1.right_stick_y/K;
+
         //tank
         rb.setSidePowers(leftPower, rightPower);
 
         //strafing
         trigger=(gamepad1.right_trigger-gamepad1.left_trigger);
         rb.strafe(trigger);
-
-
-
-
-
-
-
 
         if (gamepad2.left_bumper){
            rb.setCapperUndelivered();
