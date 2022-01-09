@@ -155,7 +155,18 @@ public class VisionBase {
         telemetry.update();
     }
 
-    // call this to run vision
+    /**
+     * findTSEPosition has three main parts: setting up the area to be analyzed, grabbing a frame from the camera, and returning either LEFT, RIGHT, CENTER, or NOT_DETECTED
+     * The coordinate inputs are used to draw a box around the desired area. This box is broken into thirds defining LEFT, RIGHT, and CENTER.
+     * Once a frame is taken from the camera, onNewFrame is called. It will analyze for mostGreen, leastBlue, or the highest GreenBlueDifference. Currently it is set to find the highest GreenBlueDifference.
+     * After receiving an answer from one of these analyzing methods, the camera is closed and the position is returned.
+     * @param _minX Starting x coordinate to be analyzed
+     * @param _maxX Ending x coordinate to be analyzed
+     * @param _minY Starting y coordinate to be analyzed
+     * @param _maxY Ending y coordinate to be analyzed
+     * @param save Do you want the image to be saved after analyzing?
+     * @return TSEPosition : either LEFT, CENTER, RIGHT, or NOT_DETECTED
+     */
     public TSEPosition findTSEPosition(int _minX, int _maxX, int _minY, int _maxY, boolean save) {
         // setting up coords input as global
         minX = _minX;
@@ -180,17 +191,16 @@ public class VisionBase {
                 return TSEPosition.NOT_DETECTED;
             }
 
+            // loop until we receive an image from the camera
             boolean haveBitmap = false;
-
             while (!haveBitmap) {
                 Bitmap bmp = frameQueue.poll();
                 if (bmp != null) {
+                    // if we have a frame, run operations and break from the loop
                     ret = onNewFrame(bmp, save);
                     haveBitmap = true;
                 }
             }
-            // give info
-            telemetry.update();
 
         } finally {
             closeCamera();
