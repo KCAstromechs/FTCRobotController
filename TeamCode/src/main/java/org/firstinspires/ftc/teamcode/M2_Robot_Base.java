@@ -39,7 +39,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     BNO055IMU imu;
     final int lifterLevel1 =500;
     final int lifterLevel2 =773;
-    final int lifterLevel3 =1265;
+    final int lifterLevel3 =1365;
     final int testDistance = 2000;
     final int testDistanceWheels = 10;
 
@@ -592,6 +592,15 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
 
+
+
+
+
+
+
+
+
 }
+
 
 

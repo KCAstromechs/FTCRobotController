@@ -38,10 +38,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class M2BlueDelivery extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private M2_Robot_Base rb;
+    private VisionBase vision;
 
     @Override
     public void runOpMode() throws InterruptedException {
         rb = new M2_Robot_Base(hardwareMap, telemetry);
+        VisionBase vision = new VisionBase(hardwareMap, telemetry);
+        vision.initVision();
+
 
         //sleep to let the gyro initialize and chill
         sleep(500);
@@ -49,45 +53,71 @@ public class M2BlueDelivery extends LinearOpMode {
         telemetry.update();
 
 
+
         waitForStart();
         rb.setDriveReadyLifter();
         sleep(1500);
 
-        //line up and move towards the lifter
-        rb.driveStraightInches(17,0,-.4);
-        rb.driveStrafeInches(31,0,.6);
 
+        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, false);
         // A IS CLOSEST TO THE WAREHOUSE ON BLUE
-        switch("LEFT"){
-
-
-            case "LEFT":
+        switch (position) {
+            case LEFT:
+                telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
+                rb.driveStraightInches(20,0,-.4);
+                rb.driveStrafeInches(21,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-
+                rb.driveStrafeInches(19,0,-.6);
 
                 break;
 
-            case "CENTER":
+            case CENTER:
+                telemetry.addData("Final Answer", "CENTER");
                 rb.setLifterLevel2();
+                rb.driveStraightInches(22,0,-.4);
+                rb.driveStrafeInches(21,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-
+                rb.driveStrafeInches(21,0,-.6);
                 break;
 
-            case "RIGHT" :
+            case RIGHT:
+                telemetry.addData("Final Answer", "RIGHT");
                 rb.setLifterLevel3();
+                rb.driveStraightInches(22,0,-.4);
+                rb.driveStrafeInches(25,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
+                rb.driveStrafeInches(25,0,-.6);
+                break;
+
+            case NOT_DETECTED:
+                telemetry.addData("Final Answer", "NOT DETECTED");
+                rb.setLifterLevel3();
+                rb.driveStraightInches(22,0,-.4);
+                rb.driveStrafeInches(25,0,.6);
+                rb.setIntakeDischarge();
+                sleep(1500);
+                rb.setIntakeOff();
+                rb.driveStrafeInches(25,0,-.6);
                 break;
         }
+
+        telemetry.update();
+
+
+
+
+
         //move away from the cake
-        rb.driveStrafeInches(31,0,-.6);
-        rb.driveStraightInches(36,0,.4);
+
+        rb.driveStraightInches(41,0,.4);
+        rb.setDriveReadyLifter();
         //line up for duck
         rb.turnToAngle(30,.3);
         rb.driveStraightInches(5,30,.4);
@@ -98,11 +128,12 @@ public class M2BlueDelivery extends LinearOpMode {
         rb.turnToAngle(0,.3);
         rb.driveStrafeInches(18,0,.6);
         rb.driveStraightInches(8,0,.4);
-
-
-
         rb.setLifterO();
-        sleep(2000);
+        sleep(1500);
+
+
+
+
 
 
 
