@@ -122,12 +122,12 @@ public class PurseBotTeleOp extends OpMode
         leftPower = -gamepad1.left_stick_y/K;
         rightPower = -gamepad1.right_stick_y/K;
 
-        //tank
+        // logical tank, mechanical strafe
         rb.setSidePowers(leftPower, rightPower);
 
-        //strafing
+        // logical strafe, mechanical tank
         trigger=(gamepad1.right_trigger-gamepad1.left_trigger);
-        rb.strafe(trigger);
+        rb.strafe(trigger*.5);
 
         if (gamepad2.left_bumper){
            rb.setCapperUndelivered();
