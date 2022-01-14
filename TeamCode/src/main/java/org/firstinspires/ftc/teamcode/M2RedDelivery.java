@@ -52,22 +52,24 @@ public class M2RedDelivery extends LinearOpMode {
 
 
         waitForStart();
-        rb.setDriveReadyLifter();
-        sleep(1500);
+
 
         //VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, true);
         VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, false);
+
+        rb.setDriveReadyLifter();
+        sleep(1000);
         // A IS CLOSEST TO THE WAREHOUSE ON BLUE
         switch (position) {
             case LEFT:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
                 rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(19,0,.6);
+                rb.driveStrafeInches(24,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(19,0,-.6);
+                rb.driveStrafeInches(24,0,-.6);
 
                 break;
 
@@ -75,22 +77,22 @@ public class M2RedDelivery extends LinearOpMode {
                 telemetry.addData("Final Answer", "CENTER");
                 rb.setLifterLevel2();
                 rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(21,0,.6);
+                rb.driveStrafeInches(26,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(21,0,-.6);
+                rb.driveStrafeInches(26,0,-.6);
                 break;
 
             case RIGHT:
                 telemetry.addData("Final Answer", "RIGHT");
                 rb.setLifterLevel3();
                 rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(25,0,.6);
+                rb.driveStrafeInches(30,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(25,0,-.6);
+                rb.driveStrafeInches(30,0,-.6);
 
                 break;
 
@@ -98,20 +100,15 @@ public class M2RedDelivery extends LinearOpMode {
                 telemetry.addData("Final Answer", "NOT DETECTED");
                 rb.setLifterLevel3();
                 rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(25,0,.6);
+                rb.driveStrafeInches(30,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(25,0,-.6);
+                rb.driveStrafeInches(30,0,-.6);
                 break;
         }
 
         telemetry.update();
-
-
-
-
-        //line up and move towards the lifter
 
 
 
@@ -129,7 +126,7 @@ public class M2RedDelivery extends LinearOpMode {
         //back up and move to storage unit
         rb.driveStraightInches(5,30,.4);
         rb.turnToAngle(0,.3);
-        rb.driveStrafeInches(18,0,.6);
+        rb.driveStrafeInches(24,0,.6);
         rb.driveStraightInches(8,0,-.4);
         rb.setLifterO();
         sleep(1500);

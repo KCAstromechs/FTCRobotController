@@ -35,7 +35,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _intakePower;
     Telemetry _telemetry;
     final double K_TURN = 0.02;
-    final double K_STRAFE = 0.02;
+    final double K_STRAFE = 0.001;
     BNO055IMU imu;
     final int lifterLevel1 =500;
     final int lifterLevel2 =773;
@@ -212,11 +212,13 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
         _frontRight.setPower(power);
         _backRight.setPower(-power);
-         _frontLeft.setPower(-power);
+        _frontLeft.setPower(-power);
         _backLeft.setPower(power);
 
         int averageEncoderClicks = ((Math.abs(_backLeft.getCurrentPosition())+ Math.abs(_frontLeft.getCurrentPosition()))/2);
@@ -234,14 +236,16 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             //       e.g. yAngle = 171 and desiredAngle = -179
            //
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+            double strafeCorrect = (_frontRight.getCurrentPosition()-0.0)*K_STRAFE;  // target is 0
 
 
-            _frontRight.setPower(power - driveCorrect);
-            _backRight.setPower(-power - driveCorrect);
-            _frontLeft.setPower(-power + driveCorrect);
-            _backLeft.setPower(power + driveCorrect);
+            _frontRight.setPower(power - driveCorrect - strafeCorrect);
+            _backRight.setPower(-power - driveCorrect - strafeCorrect);
+            _frontLeft.setPower(-power + driveCorrect - strafeCorrect);
+            _backLeft.setPower(power + driveCorrect - strafeCorrect);
 
             // make +- strafe correct for angle
+            // all addition because they all need to turn the same way for strafeCorrect
 
 
         }

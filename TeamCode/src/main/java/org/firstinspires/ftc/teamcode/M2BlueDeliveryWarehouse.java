@@ -66,11 +66,11 @@ public class M2BlueDeliveryWarehouse extends LinearOpMode {
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
                 rb.driveStraightInches(27,0,.4);
-                rb.driveStrafeInches(21,0,.6);
+                rb.driveStrafeInches(26,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(21,0,-.6);
+                rb.driveStrafeInches(29,0,-.6);
 
                 break;
 
@@ -78,36 +78,36 @@ public class M2BlueDeliveryWarehouse extends LinearOpMode {
                 telemetry.addData("Final Answer", "CENTER");
                 rb.setLifterLevel2();
                 rb.driveStraightInches(28,0,.4);
-                rb.driveStrafeInches(22,0,.6);
+                rb.driveStrafeInches(28,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
 
-                rb.driveStrafeInches(26,0,-.6);
+                rb.driveStrafeInches(32,0,-.6);
                 break;
 
             case RIGHT:
                 telemetry.addData("Final Answer", "RIGHT");
                 rb.setLifterLevel3();
                 rb.driveStraightInches(27,0,.4);
-                rb.driveStrafeInches(24,0,.6);
+                rb.driveStrafeInches(32,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
 
-                rb.driveStrafeInches(23,0,-.6);
+                rb.driveStrafeInches(31,0,-.6);
                 break;
 
             case NOT_DETECTED:
                 telemetry.addData("Final Answer", "NOT DETECTED");
                 rb.setLifterLevel3();
                 rb.driveStraightInches(27,0,.4);
-                rb.driveStrafeInches(24,0,.6);
+                rb.driveStrafeInches(32,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
 
-                rb.driveStrafeInches(23,0,-.6);
+                rb.driveStrafeInches(31,0,-.6);
 
                 break;
         }
@@ -122,9 +122,9 @@ public class M2BlueDeliveryWarehouse extends LinearOpMode {
 
         //move away
 
-        rb.setDriveReadyLifter();
+
         rb.driveStraightInches(68,0,-.4);
-        rb.driveStrafeInches(20,0,.6);
+        rb.driveStrafeInches(29,0,.6);
         rb.setLifterO();
         sleep(1500);
 

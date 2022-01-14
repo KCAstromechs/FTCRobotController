@@ -55,7 +55,7 @@ public class M2RedParking extends LinearOpMode {
 
 
         rb.driveStraightInches(45,0,.4);
-        rb.driveStrafeInches(25,0,.6);
+        rb.driveStrafeInches(32,0,.6);
         sleep(3000);
         rb.setLifterO();
 
