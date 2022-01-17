@@ -34,11 +34,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="BLUE Delivery, NO DUCKS")
-public class M2BlueDeliveryWarehouse extends LinearOpMode {
+@Autonomous(name="M2 Stafe Speed Test")
+public class M2StrafeSpeedTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private M2_Robot_Base rb;
-    private VisionBase vision;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,85 +52,67 @@ public class M2BlueDeliveryWarehouse extends LinearOpMode {
 
 
         waitForStart();
-
-
-
-        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, false);
-
         rb.setDriveReadyLifter();
         sleep(1500);
+
+
+        //VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, true);
+        VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, false);
+
+        rb.setDriveReadyLifter();
+        sleep(1000);
         // A IS CLOSEST TO THE WAREHOUSE ON BLUE
         switch (position) {
             case LEFT:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
-                rb.driveStraightInches(25,0,.4);
+                rb.driveStraightInches(22,0,.4);
                 rb.driveStrafeInches(24,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(27,0,-.6);
+
 
                 break;
 
             case CENTER:
                 telemetry.addData("Final Answer", "CENTER");
                 rb.setLifterLevel2();
-                rb.driveStraightInches(25,0,.4);
-                rb.driveStrafeInches(24,0,.6);
+                rb.driveStraightInches(22,0,.4);
+                rb.driveStrafeInches(26,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
 
-                rb.driveStrafeInches(24,0,-.6);
                 break;
 
             case RIGHT:
                 telemetry.addData("Final Answer", "RIGHT");
                 rb.setLifterLevel3();
-                rb.driveStraightInches(25,0,.4);
-                rb.driveStrafeInches(27,0,.6);
+                rb.driveStraightInches(22,0,.4);
+                rb.driveStrafeInches(30,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
 
-                rb.driveStrafeInches(26,0,-.6);
+
                 break;
 
             case NOT_DETECTED:
                 telemetry.addData("Final Answer", "NOT DETECTED");
                 rb.setLifterLevel3();
-                rb.driveStraightInches(25,0,.4);
-                rb.driveStrafeInches(27,0,.6);
+                rb.driveStraightInches(22,0,.4);
+                rb.driveStrafeInches(30,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-
-                rb.driveStrafeInches(26,0,-.6);
 
                 break;
         }
 
         telemetry.update();
-        rb.setDriveReadyLifter();
-
-
-        //line up and move towards the lifter
-
-
-
-        //move away
-
-
-        rb.driveStraightInches(73,0,-.4);
-        rb.driveStrafeInches(24,0,.6);
         rb.setLifterO();
-        sleep(1500);
-
-
-
-
-
+        sleep(1000);
 
 
 

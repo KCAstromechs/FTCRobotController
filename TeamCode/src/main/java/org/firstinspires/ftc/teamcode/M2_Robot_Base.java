@@ -17,6 +17,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     public static final double duckPower = .50;
     public static final double DRIVE_STRAIGHT_ENCODER_TO_INCHES = 118;
     public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 67;
+    public static final double STRAFE_POWER_OFFSET = .3;
     final double autoDuckPower = .25;
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -38,7 +39,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     final double K_STRAFE = 0.001;
     BNO055IMU imu;
     final int lifterLevel1 =500;
-    final int lifterLevel2 =773;
+    final int lifterLevel2 =973;
     final int lifterLevel3 =1365;
     final int testDistance = 2000;
     final int testDistanceWheels = 10;
@@ -214,6 +215,8 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
         _frontRight.setPower(power);
@@ -239,14 +242,16 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             double strafeCorrect = (_frontRight.getCurrentPosition()-0.0)*K_STRAFE;  // target is 0
 
 
-            _frontRight.setPower(power - driveCorrect - strafeCorrect);
-            _backRight.setPower(-power - driveCorrect - strafeCorrect);
-            _frontLeft.setPower(-power + driveCorrect - strafeCorrect);
-            _backLeft.setPower(power + driveCorrect - strafeCorrect);
+            _frontRight.setPower(power - driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
+            _backRight.setPower(-power - driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
+            _frontLeft.setPower(-power + driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
+            _backLeft.setPower(power + driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
 
             // make +- strafe correct for angle
             // all addition because they all need to turn the same way for strafeCorrect
 
+            //strafe power offset helps even out the drives because the frontLeft and backRigth start too fast and make the robot overcorrect
+            //all positives because negative signs are weird and we want those motors to have slightly less power so they don't mov too fast and cause a large correcton
 
         }
 
