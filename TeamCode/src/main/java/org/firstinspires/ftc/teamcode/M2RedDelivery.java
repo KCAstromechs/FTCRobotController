@@ -55,7 +55,7 @@ public class M2RedDelivery extends LinearOpMode {
 
 
         //VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, true);
-        VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, true);
+        VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, false);
 
         rb.setDriveReadyLifter();
         sleep(1000);

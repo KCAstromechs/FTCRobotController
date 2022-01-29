@@ -57,7 +57,7 @@ public class M2BlueDelivery extends LinearOpMode {
         waitForStart();
 
 
-        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, true);
+        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, false);
         rb.setDriveReadyLifter();
         sleep(1000);
 

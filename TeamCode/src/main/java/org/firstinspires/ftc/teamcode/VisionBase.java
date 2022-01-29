@@ -51,6 +51,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
 import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -60,6 +62,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,6 +74,11 @@ import androidx.annotation.NonNull;
 
 
 public class VisionBase {
+
+    // difference between blue and green to be counted in the pixel count
+    public static final int MIN_COLOR_DIFFERENCE = 50;// number of pixels counted to not count as "NOT DETECTED"
+    public static final int DETECTION_THRESHOLD = 50;
+    int EXPOSURE = 15;
 
     enum TSEPosition {
         LEFT,
@@ -97,6 +105,8 @@ public class VisionBase {
     int analyzedPixels = 0;
     int dividerA = 0;
     int dividerB = 0;
+
+
     // other
     TSEPosition mostGreen = TSEPosition.NOT_DETECTED;
     TSEPosition leastBlue = TSEPosition.NOT_DETECTED;
@@ -119,6 +129,8 @@ public class VisionBase {
     private WebcamName cameraName;
     private Camera camera;
     private CameraCaptureSession cameraCaptureSession;
+    ExposureControl myExposureControl;
+    GainControl myGainControl;
 
     /** The queue into which all frames from the camera are placed as they become available.
      * Frames which are not processed by the OpMode are automatically discarded. */
@@ -151,7 +163,11 @@ public class VisionBase {
         initializeFrameQueue(2);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
 
+
+
+
         telemetry.addData("VISION", "initialized");
+
         telemetry.update();
     }
 
@@ -191,6 +207,20 @@ public class VisionBase {
                 return TSEPosition.NOT_DETECTED;
             }
 
+            myExposureControl= camera.getControl(ExposureControl.class);
+            myGainControl = camera.getControl(GainControl.class);
+
+
+            myExposureControl.setMode(ExposureControl.Mode.Manual);
+            myExposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
+            myGainControl.setGain(0);
+
+            long currentExposure = myExposureControl.getExposure(TimeUnit.MILLISECONDS);
+            int currentGain = myGainControl.getGain();
+
+            telemetry.addData("Exposure", currentExposure);
+            telemetry.addData("Gain", currentGain);
+
             // loop until we receive an image from the camera
             boolean haveBitmap = false;
             while (!haveBitmap) {
@@ -205,6 +235,8 @@ public class VisionBase {
         } finally {
             closeCamera();
         }
+
+
         return ret;
     }
 
@@ -361,11 +393,9 @@ public class VisionBase {
         int color = 0;
         int blueValue = 0;
         int greenValue = 0;
-        int minColorDifference = 50; // difference between blue and green to be counted in the pixel count
         int pixelCountA = 0;
         int pixelCountB = 0;
         int pixelCountC = 0;
-        int detectionThreshold = 50; // number of pixels counted to not count as "NOT DETECTED"
 
         // loop thru image
         for (int x = minX; x < maxX; x++) {
@@ -374,7 +404,7 @@ public class VisionBase {
                 color = bitmap.getPixel(x,y);
                 blueValue = Color.blue(color);
                 greenValue = Color.green(color);
-                if ((greenValue - blueValue) >= minColorDifference) {
+                if ((greenValue - blueValue) >= MIN_COLOR_DIFFERENCE) {
                     if (x < dividerA){
                         pixelCountA += 1;
                     }
@@ -388,7 +418,7 @@ public class VisionBase {
             }
         }
         // tell me which one has the biggest amount of pixels that have specified blue green difference unless under threshold
-        if (pixelCountA > detectionThreshold || pixelCountB > detectionThreshold || pixelCountC > detectionThreshold) {
+        if (pixelCountA > DETECTION_THRESHOLD || pixelCountB > DETECTION_THRESHOLD || pixelCountC > DETECTION_THRESHOLD) {
             if(pixelCountA > pixelCountB && pixelCountA > pixelCountC)
                 mostGreenBlueDifference = TSEPosition.LEFT;
             else if (pixelCountB > pixelCountA && pixelCountB > pixelCountC)
@@ -400,10 +430,10 @@ public class VisionBase {
         }
 
         // output
-        /* telemetry.addData("LEFT", pixelCountA);
+         telemetry.addData("LEFT", pixelCountA);
         telemetry.addData("CENTER", pixelCountB);
         telemetry.addData("RIGHT", pixelCountC);
-        telemetry.addData("Section", mostGreenBlueDifference); */
+        telemetry.addData("Section", mostGreenBlueDifference);
 
         return mostGreenBlueDifference;
     }

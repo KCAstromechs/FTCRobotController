@@ -418,10 +418,9 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     public void changeLifterPosition(int position){
         if(position!=0) {
-            int newTargetPosition = _lifter.getCurrentPosition
-                    () + position;
+            int newTargetPosition = _lifter.getCurrentPosition() + position;
             if (newTargetPosition > 1300) newTargetPosition = 1300;
-            if (newTargetPosition < -60) newTargetPosition = -60;
+            if (newTargetPosition < -30) newTargetPosition = -30;
             _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(.5);
         }

@@ -33,10 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
-@Autonomous(name="Vision Test Blue")
-public class VisionAutoTest extends LinearOpMode {
+@Autonomous(name="Vision Test Red")
+public class VisionAutoTestRed extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -53,7 +51,7 @@ public class VisionAutoTest extends LinearOpMode {
 
         // now let's run vision, full image is 640 x 480
         //VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, true);
-        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, true);
+        VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, true);
 
 
         if (position == VisionBase.TSEPosition.LEFT) {
