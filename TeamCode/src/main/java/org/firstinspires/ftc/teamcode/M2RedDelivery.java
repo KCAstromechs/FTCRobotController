@@ -64,12 +64,12 @@ public class M2RedDelivery extends LinearOpMode {
             case LEFT:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(24,0,.6);
+                rb.driveStraightInches(21,0,.4);
+                rb.driveStrafeInches(25,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(24,0,-.6);
+                rb.driveStrafeInches(25,0,-.6);
 
                 break;
 

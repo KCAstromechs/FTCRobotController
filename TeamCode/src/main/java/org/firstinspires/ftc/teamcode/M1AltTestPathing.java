@@ -34,17 +34,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="BLUE Preload Delivery")
-public class M2BlueDelivery extends LinearOpMode {
+@Autonomous(name="RED Delivery 2 block test")
+public class M1AltTestPathing extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    private M2_Robot_Base rb;
-    private VisionBase vision;
+    private Alt_M1_Robot_Base rb;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        rb = new M2_Robot_Base(hardwareMap, telemetry);
-        VisionBase vision = new VisionBase(hardwareMap, telemetry);
-        vision.initVision();
+        rb = new Alt_M1_Robot_Base(hardwareMap, telemetry);
 
 
         //sleep to let the gyro initialize and chill
@@ -53,85 +50,63 @@ public class M2BlueDelivery extends LinearOpMode {
         telemetry.update();
 
 
-
         waitForStart();
 
+        // A IS CLOSEST TO THE WAREHOUSE ON BLUE
 
-        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, false);
         rb.setDriveReadyLifter();
         sleep(1000);
-
-        // A IS CLOSEST TO THE WAREHOUSE ON BLUE
-        switch (position) {
-            case LEFT:
+        switch (3) {
+            case 1:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
-                rb.driveStraightInches(36,0,-.4);
-                rb.driveStrafeInches(25,0,.6);
+                rb.driveStraightInches(4,0,-.5);
+                rb.driveStrafeInches(5,0,.6);
+                rb.turnToAngle(60,.4);
+                rb.driveStraightInches(6,60,.5);
+                rb.turnToAngle(90,.4);
+                rb.driveStrafe(5,90,.4);
+
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(25,0,-.6);
+
+                
+
 
                 break;
 
-            case CENTER:
+            case 2:
                 telemetry.addData("Final Answer", "CENTER");
                 rb.setLifterLevel2();
-                rb.driveStraightInches(36,0,-.4);
-                rb.driveStrafeInches(28,0,.6);
+
+
+                rb.driveStraightInches(4,0,-.5);
+                rb.driveStrafeInches(5,0,.6);
+                rb.turnToAngle(30,.4);
+                rb.driveStrafeInches(25,30,.5);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(28,0,-.6);
+
                 break;
 
-            case RIGHT:
+            case 3:
                 telemetry.addData("Final Answer", "RIGHT");
                 rb.setLifterLevel3();
-                rb.driveStraightInches(36,0,-.4);
-                rb.driveStrafeInches(30,0,.6);
+                //delete in actual code idk
+                rb.driveStraightInches(4,0,-.5);
+                rb.driveStrafeInches(5,0,.6);
+                rb.turnToAngle(90,.4);
+                rb.driveStraightInches(20,90,.5);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(30,0,-.6);
-                break;
-
-            case NOT_DETECTED:
-                telemetry.addData("Final Answer", "NOT DETECTED");
-                rb.setLifterLevel3();
-                rb.driveStraightInches(36,0,-.4);
-                rb.driveStrafeInches(30,0,.6);
-                rb.setIntakeDischarge();
-                sleep(1500);
-                rb.setIntakeOff();
-                rb.driveStrafeInches(30,0,-.6);
+                //strafe away
                 break;
         }
-
-        telemetry.update();
-
-
-
-
-
-        //move away from the cake
-
-        rb.driveStraightInches(33,0,.4);
         rb.setDriveReadyLifter();
-        //line up for duck
-        rb.turnToAngle(30,.3);
-        rb.driveStraightInches(8,30,.4);
-        rb.turnToAngle(-30,.3);
-        rb.deliverDuck(true, .1);
-        //back up and move to storage unit
-        rb.driveStraightInches(2,-30,-.4);
-        rb.turnToAngle(0,.3);
-        rb.driveStrafeInches(23,0,.6);
-        rb.driveStraightInches(8,0,.4);
-        rb.setLifterO();
-        sleep(1500);
-
+        telemetry.update();
 
 
 

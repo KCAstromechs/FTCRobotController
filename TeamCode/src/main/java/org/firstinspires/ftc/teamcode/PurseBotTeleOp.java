@@ -83,7 +83,7 @@ public class PurseBotTeleOp extends OpMode
 
 
         //lifter
-        rb.changeLifterPosition((int)(-gamepad2.right_stick_y*48.0));
+        rb.changeLifterPosition((int)(-gamepad2.right_stick_y*100.0));
 
 
 
