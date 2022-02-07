@@ -38,52 +38,77 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 
-@Autonomous(name="BLUE Preload Delivery")
-public class M2BlueDelivery extends LinearOpMode {
+@Autonomous(name="RED DOUBLE Delivery")
+public class M2RedDoubleDeliveryWarehouse extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private M2_Robot_Base rb;
-    private VisionBase vision;
 
     @Override
     public void runOpMode() throws InterruptedException {
         rb = new M2_Robot_Base(hardwareMap, telemetry);
         VisionBase vision = new VisionBase(hardwareMap, telemetry);
         vision.initVision();
-
-
         //sleep to let the gyro initialize and chill
         sleep(500);
         telemetry.addData("ready","ready");
         telemetry.update();
 
 
-
         waitForStart();
 
 
-        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, false);
+
+
+        VisionBase.TSEPosition position = vision.findTSEPosition(85,566,84,213, false);
+        // A IS CLOSEST TO THE WAREHOUSE ON BLUE
+
         rb.setDriveReadyLifter();
         sleep(1000);
-
-        // A IS CLOSEST TO THE WAREHOUSE ON BLUE
         switch (position) {
             case LEFT:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
-                rb.driveStraightInches(36,0,-.4);
-                rb.driveStrafeInches(25,0,.6);
+                rb.driveStraightInches(33,0,-.6);
+                rb.driveStrafeInches(22,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(25,0,-.6);
+                rb.driveStrafeInches(20,0,-.6);
+
+//
+                rb.driveStraightInches(59,0,.6);
+                rb.driveStrafeInches(4,0,.6);
+                rb.turnToAngle(-90,.5);
+                rb.setLifterO();
+                rb.driveStrafeInches(4,-90,.6);
+                rb.setIntakeCollect();
+                sleep(1500);
+                rb.setIntakeOff();
+                rb.driveStrafeInches(4,-90,-.6);
+                rb.setDriveReadyLifter();
+                rb.turnToAngle(0,.5);
+                rb.driveStrafeInches(4,0,-.6);
+                rb.driveStraightInches(59F,0,-.6);
+
+
+
+                //repeating
+                rb.driveStrafeInches(22,0,.6);
+                rb.setIntakeDischarge();
+                sleep(1500);
+                rb.setIntakeOff();
+                rb.driveStrafeInches(20,0,-.6);
+
 
                 break;
 
             case CENTER:
                 telemetry.addData("Final Answer", "CENTER");
                 rb.setLifterLevel2();
-                rb.driveStraightInches(36,0,-.4);
-                rb.driveStrafeInches(28,0,.6);
+
+                //line up and move towards the lifter
+                rb.driveStraightInches(38,0,-.4);
+                rb.driveStrafeInches(25,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
@@ -93,49 +118,41 @@ public class M2BlueDelivery extends LinearOpMode {
             case RIGHT:
                 telemetry.addData("Final Answer", "RIGHT");
                 rb.setLifterLevel3();
-                rb.driveStraightInches(36,0,-.4);
+
+                //line up and move towards the lifter
+                rb.driveStraightInches(38,0,-.4);
                 rb.driveStrafeInches(30,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(30,0,-.6);
+                //strafe away
+                rb.driveStrafeInches(32,0,-.6);
                 break;
 
             case NOT_DETECTED:
                 telemetry.addData("Final Answer", "NOT DETECTED");
                 rb.setLifterLevel3();
-                rb.driveStraightInches(36,0,-.4);
+
+                //line up and move towards the lifter
+                rb.driveStraightInches(38,0,-.4);
                 rb.driveStrafeInches(30,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(30,0,-.6);
+                //strafe away
+                rb.driveStrafeInches(32,0,-.6);
                 break;
         }
-
+        rb.setDriveReadyLifter();
         telemetry.update();
 
 
 
-
-
-        //move away from the cake
-
-        rb.driveStraightInches(33,0,.4);
-        rb.setDriveReadyLifter();
-        //line up for duck
-        rb.turnToAngle(30,.3);
-        rb.driveStraightInches(8,30,.4);
-        rb.turnToAngle(-30,.3);
-        rb.deliverDuck(true, .1);
-        //back up and move to storage unit
-        rb.driveStraightInches(2,-30,-.4);
-        rb.turnToAngle(0,.3);
-        rb.driveStrafeInches(23,0,.6);
-        rb.driveStraightInches(8,0,.4);
+        rb.driveStraightInches( 58,0,.6);
+        rb.driveStrafeInches(24,0,.6);
+        sleep(1500);
         rb.setLifterO();
         sleep(1500);
-
 
 
 

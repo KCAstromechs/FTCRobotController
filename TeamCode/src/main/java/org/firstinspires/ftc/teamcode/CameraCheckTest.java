@@ -66,6 +66,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigationWebcam}.
  */
 
+@Disabled
 @TeleOp(name="Camera Check Test", group ="Concept")
 public class CameraCheckTest extends LinearOpMode {
 

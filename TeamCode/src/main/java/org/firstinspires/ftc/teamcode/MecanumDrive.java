@@ -29,16 +29,18 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 @TeleOp(name="Mecanum Drive", group="Iterative Opmode")
 public class MecanumDrive extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private M1_Robot_Base rb;
+    private ApolloBase rb;
     double leftPower;
     double rightPower;
     double trigger;
@@ -55,7 +57,7 @@ public class MecanumDrive extends OpMode
         telemetry.addData("Status", "Initialized");
 
 
-        rb = new M1_Robot_Base(hardwareMap, telemetry);
+        rb = new ApolloBase(hardwareMap);
 
 
     }

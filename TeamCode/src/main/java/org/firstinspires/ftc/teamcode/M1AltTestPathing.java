@@ -30,10 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+@Disabled
 @Autonomous(name="RED Delivery 2 block test")
 public class M1AltTestPathing extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
@@ -56,22 +58,75 @@ public class M1AltTestPathing extends LinearOpMode {
 
         rb.setDriveReadyLifter();
         sleep(1000);
-        switch (3) {
+        switch (1) {
             case 1:
-                telemetry.addData("Final Answer", "LEFT");
+              /*  telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
+                //get away from starting position
                 rb.driveStraightInches(4,0,-.5);
                 rb.driveStrafeInches(5,0,.6);
+                //turn to fit in between the tse and barrier
                 rb.turnToAngle(60,.4);
-                rb.driveStraightInches(6,60,.5);
-                rb.turnToAngle(90,.4);
-                rb.driveStrafe(5,90,.4);
+                rb.driveStraightInches(3,60,.5);
+                //turn in the direction to deliver the block
+                rb.turnToAngle(85,.4);
+                rb.driveStraightInches(26,85, .5);
+                //strafe to the shipping hub
+                rb.driveStrafeInches(7,85,.4);
+                //strafe away from the hub and move to position to get into the warehouse
+                rb.driveStrafeInches(7,85,-.4);
+                rb.driveStraightInches(26,85,-.6);
+                rb.turnToAngle(0,.5);
+                //go into the warehouse
+                //rb.driveStraightInches();
 
-                rb.setIntakeDischarge();
+
+
+             //   rb.setIntakeDischarge();
                 sleep(1500);
-                rb.setIntakeOff();
+              //  rb.setIntakeOff();
 
-                
+               */
+                telemetry.addData("Final Answer", "LEFT");
+                rb.setDriveReadyLifter();
+                rb.driveStraightInches(38,0,-.5);
+                rb.driveStrafeInches(24,0,.6);
+                //rb.setIntakeDischarge();
+                sleep(1500);
+               // rb.setIntakeOff();
+                rb.driveStrafeInches(22,0,-.6);
+                //into the warehouse
+
+
+                //risky stuff idk
+                //will be in all programs
+                rb.driveStraightInches(64,0,.5);
+                rb.driveStrafeInches(2,0,.6);
+                rb.turnToAngle(-90,.4);
+                rb.setLifterO();
+                rb.driveStrafeInches(4,-90,.6);
+                //rb.setIntakeOn();
+                //sleep(1500);
+               // rb.setIntakeOff();
+                rb.driveStrafeInches(4,-90,-.6);
+                rb.setDriveReadyLifter();
+                rb.turnToAngle(0,.4);
+                rb.driveStrafeInches(2,0,-.6);
+                rb.driveStraightInches(64,0,-.5);
+                //
+
+
+                //same delivery as first time
+                rb.driveStraightInches(38,0,-.5);
+                rb.driveStrafeInches(24,0,.6);
+                //rb.setIntakeDischarge();
+                sleep(1500);
+                // rb.setIntakeOff();
+                rb.driveStrafeInches(22,0,-.6);
+
+
+
+
 
 
                 break;
@@ -85,9 +140,9 @@ public class M1AltTestPathing extends LinearOpMode {
                 rb.driveStrafeInches(5,0,.6);
                 rb.turnToAngle(30,.4);
                 rb.driveStrafeInches(25,30,.5);
-                rb.setIntakeDischarge();
+               // rb.setIntakeDischarge();
                 sleep(1500);
-                rb.setIntakeOff();
+              //  rb.setIntakeOff();
 
                 break;
 
@@ -99,9 +154,9 @@ public class M1AltTestPathing extends LinearOpMode {
                 rb.driveStrafeInches(5,0,.6);
                 rb.turnToAngle(90,.4);
                 rb.driveStraightInches(20,90,.5);
-                rb.setIntakeDischarge();
+               // rb.setIntakeDischarge();
                 sleep(1500);
-                rb.setIntakeOff();
+               // rb.setIntakeOff();
                 //strafe away
                 break;
         }

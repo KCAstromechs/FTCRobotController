@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class ArtemisBase implements TankDriveable {
+public class ApolloBase implements TankDriveable, Strafeable {
 
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -12,9 +12,13 @@ public class ArtemisBase implements TankDriveable {
     DcMotor _frontRight;
     DcMotor _backRight;
 
+    double _leftPower;
+    double _rightPower;
+    double _strafePower;
 
 
-    public ArtemisBase(HardwareMap hardwareMap) {
+
+    public ApolloBase(HardwareMap hardwareMap) {
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
@@ -35,8 +39,7 @@ public class ArtemisBase implements TankDriveable {
      */
     @Override
     public void setLeftPower(double power){
-        _frontLeft.setPower(power);
-        _backLeft.setPower(power);
+        _leftPower = power;
     }
 
     /**
@@ -45,8 +48,7 @@ public class ArtemisBase implements TankDriveable {
      */
     @Override
     public void setRightPower(double power){
-        _frontRight.setPower(power);
-        _backRight.setPower(power);
+        _rightPower = power;
     }
 
     /**
@@ -62,4 +64,24 @@ public class ArtemisBase implements TankDriveable {
     }
 
 
+    @Override
+    public void strafe(double strafePower) {
+        _strafePower = strafePower;
+
+    }
+    public void performUpdates() {
+
+
+        _frontRight.setPower(_rightPower+_strafePower);
+        _backLeft.setPower(_leftPower+_strafePower);
+        _frontLeft.setPower(-_rightPower+_strafePower);
+        _backRight.setPower(-_leftPower+_strafePower);
+
+
+        //powers = sticks used to determine what side of the robot the motor is on from collector in the front
+        //- means that the motor is corkscrewing backwards
+
+        //strafe right is + due to mechanical front being positive (left is opposite)
+
+    }
 }

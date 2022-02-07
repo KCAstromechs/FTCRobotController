@@ -22,9 +22,9 @@ public class Alt_M1_Robot_Base extends AstromechsRobotBase implements TankDrivea
     DcMotor _backRight;
     DcMotor _encoderY;
     DcMotor _carouselMover;
-    DcMotor _intake;
+
     DcMotor _lifter;
-    Servo _capper;
+
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -45,14 +45,14 @@ public class Alt_M1_Robot_Base extends AstromechsRobotBase implements TankDrivea
 
         //underscore means it's a private variable
         _telemetry = telemetry;
-        _capper = hardwareMap.get(Servo.class, "capper");
+
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
         _backRight = hardwareMap.get(DcMotor.class,"backRight");
         _encoderY = hardwareMap.get(DcMotor.class,"encoderY");
         _lifter= hardwareMap.get(DcMotor.class, "lifter");
-        _intake = hardwareMap.get(DcMotor.class, "intake");
+
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
 
@@ -392,20 +392,6 @@ public class Alt_M1_Robot_Base extends AstromechsRobotBase implements TankDrivea
         _lifter.setPower(.5);
     }
 
-    public void setIntakeCollect(){
-        _intakePower = .8;
-        _intake.setPower(_intakePower);
-    }
-
-    public void setIntakeDischarge(){
-        _intakePower = -.8;
-        _intake.setPower(_intakePower);
-    }
-
-    public void setIntakeOff(){
-        _intakePower = 0;
-        _intake.setPower(_intakePower);
-    }
 
     public void duckON(){
         _carouselMover.setPower(duckPower);
@@ -419,13 +405,6 @@ public class Alt_M1_Robot_Base extends AstromechsRobotBase implements TankDrivea
         _carouselMover.setPower(-duckPower);
     }
 
-    public void setCapperDelivered(){
-        _capper.setPosition(.97);
-    }
-
-    public void setCapperUndelivered(){
-        _capper.setPosition(.5);
-    }
     @Override
     public void performUpdates() {
         //if strafePower (trigger) is 0 then it will act as a tank drive
