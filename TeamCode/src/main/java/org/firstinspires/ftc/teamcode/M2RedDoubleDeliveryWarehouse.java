@@ -68,7 +68,7 @@ public class M2RedDoubleDeliveryWarehouse extends LinearOpMode {
             case LEFT:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
-                rb.driveStraightInches(33,0,-.6);
+                rb.driveStraightInches(33,0,-.5);
                 rb.driveStrafeInches(22,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
@@ -76,7 +76,7 @@ public class M2RedDoubleDeliveryWarehouse extends LinearOpMode {
                 rb.driveStrafeInches(20,0,-.6);
 
 //
-                rb.driveStraightInches(59,0,.6);
+                rb.driveStraightInches(59,0,.5);
                 rb.driveStrafeInches(4,0,.6);
                 rb.turnToAngle(-90,.5);
                 rb.setLifterO();
@@ -88,7 +88,7 @@ public class M2RedDoubleDeliveryWarehouse extends LinearOpMode {
                 rb.setDriveReadyLifter();
                 rb.turnToAngle(0,.5);
                 rb.driveStrafeInches(4,0,-.6);
-                rb.driveStraightInches(59F,0,-.6);
+                rb.driveStraightInches(59F,0,-.5);
 
 
 
@@ -148,7 +148,7 @@ public class M2RedDoubleDeliveryWarehouse extends LinearOpMode {
 
 
 
-        rb.driveStraightInches( 58,0,.6);
+        rb.driveStraightInches( 58,0,.5);
         rb.driveStrafeInches(24,0,.6);
         sleep(1500);
         rb.setLifterO();

@@ -75,11 +75,6 @@ import androidx.annotation.NonNull;
 
 public class VisionBase {
 
-    // difference between blue and green to be counted in the pixel count
-    public static final int MIN_COLOR_DIFFERENCE = 50;// number of pixels counted to not count as "NOT DETECTED"
-    public static final int DETECTION_THRESHOLD = 50;
-    int EXPOSURE = 15;
-
     enum TSEPosition {
         LEFT,
         CENTER,
@@ -105,7 +100,12 @@ public class VisionBase {
     int analyzedPixels = 0;
     int dividerA = 0;
     int dividerB = 0;
+    double pixelSkip = 3; // the bigger this is, the less pixels will be analyzed
 
+    // difference between blue and green to be counted in the pixel count
+    public static final int MIN_COLOR_DIFFERENCE = 50;// number of pixels counted to not count as "NOT DETECTED"
+    public double DETECTION_THRESHOLD = 50 / Math.pow(pixelSkip,2);
+    int EXPOSURE = 15;
 
     // other
     TSEPosition mostGreen = TSEPosition.NOT_DETECTED;
@@ -398,10 +398,10 @@ public class VisionBase {
         int pixelCountC = 0;
 
         // loop thru image
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
+        for (int x = minX; x < maxX; x+=pixelSkip) {
+            for (int y = minY; y < maxY; y+=pixelSkip) {
                 // get color for this coordinate
-                color = bitmap.getPixel(x,y);
+                color = bitmap.getPixel(x, y);
                 blueValue = Color.blue(color);
                 greenValue = Color.green(color);
                 if ((greenValue - blueValue) >= MIN_COLOR_DIFFERENCE) {
