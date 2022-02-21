@@ -134,12 +134,18 @@ public class PurseBotTeleOp extends OpMode
         rb.strafe(trigger*.5);
 
         if (gamepad2.left_bumper){
-           rb.setCapperUndelivered();
+           rb.setCapperCollect();
        }
-
+        if(gamepad2.dpad_left){
+            rb.setCapperLineUpPosition();
+        }
 
         if (gamepad2.right_bumper){
             rb.setCapperDelivered();
+        }
+
+        if (gamepad2.x){
+            rb.setCapperUndelivered();
         }
 
 

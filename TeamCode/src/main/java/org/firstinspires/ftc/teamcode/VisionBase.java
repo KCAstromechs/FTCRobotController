@@ -100,17 +100,16 @@ public class VisionBase {
     int analyzedPixels = 0;
     int dividerA = 0;
     int dividerB = 0;
-    double pixelSkip = 3; // the bigger this is, the less pixels will be analyzed
+    double pixelSkip = 1; // the bigger this is, the less pixels will be analyzed
 
     // difference between blue and green to be counted in the pixel count
-    public static final int MIN_COLOR_DIFFERENCE = 50;// number of pixels counted to not count as "NOT DETECTED"
+    public static final int MIN_COLOR_DIFFERENCE = 50;
     public double DETECTION_THRESHOLD = 50 / Math.pow(pixelSkip,2);
-    int EXPOSURE = 15;
+    int EXPOSURE = 50;
 
     // other
-    TSEPosition mostGreen = TSEPosition.NOT_DETECTED;
-    TSEPosition leastBlue = TSEPosition.NOT_DETECTED;
-    TSEPosition mostGreenBlueDifference = TSEPosition.NOT_DETECTED;
+    long frameCount = 0;
+    TSEPosition position = TSEPosition.NOT_DETECTED;
     HardwareMap hardwareMap;
     Telemetry telemetry;
 
@@ -163,8 +162,32 @@ public class VisionBase {
         initializeFrameQueue(2);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
 
+        openCamera();
+        /*
+        if (camera == null) {
+            return TSEPosition.NOT_DETECTED;
+        }
+        */
+        startCamera();
+        /*
+        if (cameraCaptureSession == null) {
+            return TSEPosition.NOT_DETECTED;
+        }
+         */
+
+        myExposureControl= camera.getControl(ExposureControl.class);
+        myGainControl = camera.getControl(GainControl.class);
 
 
+        myExposureControl.setMode(ExposureControl.Mode.Manual);
+        myExposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
+        myGainControl.setGain(0);
+
+        long currentExposure = myExposureControl.getExposure(TimeUnit.MILLISECONDS);
+        int currentGain = myGainControl.getGain();
+
+        telemetry.addData("Exposure", currentExposure);
+        telemetry.addData("Gain", currentGain);
 
         telemetry.addData("VISION", "initialized");
 
@@ -198,28 +221,6 @@ public class VisionBase {
         // if something goes wrong with vision process, not detected will be returned
         TSEPosition ret = TSEPosition.NOT_DETECTED;
         try {
-            openCamera();
-            if (camera == null) {
-                return TSEPosition.NOT_DETECTED;
-            }
-            startCamera();
-            if (cameraCaptureSession == null) {
-                return TSEPosition.NOT_DETECTED;
-            }
-
-            myExposureControl= camera.getControl(ExposureControl.class);
-            myGainControl = camera.getControl(GainControl.class);
-
-
-            myExposureControl.setMode(ExposureControl.Mode.Manual);
-            myExposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
-            myGainControl.setGain(0);
-
-            long currentExposure = myExposureControl.getExposure(TimeUnit.MILLISECONDS);
-            int currentGain = myGainControl.getGain();
-
-            telemetry.addData("Exposure", currentExposure);
-            telemetry.addData("Gain", currentGain);
 
             // loop until we receive an image from the camera
             boolean haveBitmap = false;
@@ -229,6 +230,7 @@ public class VisionBase {
                     // if we have a frame, run operations and break from the loop
                     ret = onNewFrame(bmp, save);
                     haveBitmap = true;
+                    telemetry.addData("Frame Count", frameCount);
                 }
             }
 
@@ -242,7 +244,7 @@ public class VisionBase {
 
     // do stuff with the frame
     private TSEPosition onNewFrame(Bitmap frame, boolean save) {
-        TSEPosition ret = analyzeBitmapForGreenBlueDifference(frame);
+        TSEPosition ret = analyzeBitmapRGB(frame);
         if (save == true) {
             annotateBitmap(frame);
             saveBitmap(frame);
@@ -326,11 +328,11 @@ public class VisionBase {
 
         // tell me which one has the most green
         if( greenAvgA >= greenAvgB && greenAvgA >= greenAvgC)
-            mostGreen = TSEPosition.LEFT;
+            position = TSEPosition.LEFT;
         else if (greenAvgB >= greenAvgA && greenAvgB >= greenAvgC)
-            mostGreen = TSEPosition.CENTER;
+            position = TSEPosition.CENTER;
         else
-            mostGreen = TSEPosition.RIGHT;
+            position = TSEPosition.RIGHT;
 
         // output
         /* telemetry.addData("LEFT", greenAvgA);
@@ -338,7 +340,7 @@ public class VisionBase {
         telemetry.addData("RIGHT", greenAvgC);
         telemetry.addData("Section", mostGreen); */
 
-        return mostGreen;
+        return position;
     }
 
     private TSEPosition analyzeBitmapForBlue(Bitmap bitmap){
@@ -374,11 +376,11 @@ public class VisionBase {
 
         // tell me which one has the LEAST BlUE
         if( blueAvgA <= blueAvgB && blueAvgA <= blueAvgC)
-            leastBlue = TSEPosition.LEFT;
+            position = TSEPosition.LEFT;
         else if (blueAvgB <= blueAvgA && blueAvgB <= blueAvgC)
-            leastBlue = TSEPosition.CENTER;
+            position = TSEPosition.CENTER;
         else
-            leastBlue = TSEPosition.RIGHT;
+            position = TSEPosition.RIGHT;
 
         // output
         /* telemetry.addData("LEFT", blueAvgA);
@@ -386,7 +388,7 @@ public class VisionBase {
         telemetry.addData("RIGHT", blueAvgC);
         telemetry.addData("Section", leastBlue); */
 
-        return leastBlue;
+        return position;
     }
 
     private TSEPosition analyzeBitmapForGreenBlueDifference(Bitmap bitmap){
@@ -420,22 +422,73 @@ public class VisionBase {
         // tell me which one has the biggest amount of pixels that have specified blue green difference unless under threshold
         if (pixelCountA > DETECTION_THRESHOLD || pixelCountB > DETECTION_THRESHOLD || pixelCountC > DETECTION_THRESHOLD) {
             if(pixelCountA > pixelCountB && pixelCountA > pixelCountC)
-                mostGreenBlueDifference = TSEPosition.LEFT;
+                position = TSEPosition.LEFT;
             else if (pixelCountB > pixelCountA && pixelCountB > pixelCountC)
-                mostGreenBlueDifference = TSEPosition.CENTER;
+                position = TSEPosition.CENTER;
             else if (pixelCountC > pixelCountA && pixelCountC > pixelCountB)
-                mostGreenBlueDifference = TSEPosition.RIGHT;
+                position = TSEPosition.RIGHT;
             else
-                mostGreenBlueDifference = TSEPosition.NOT_DETECTED;
+                position = TSEPosition.NOT_DETECTED;
         }
 
         // output
-         telemetry.addData("LEFT", pixelCountA);
+        telemetry.addData("LEFT", pixelCountA);
         telemetry.addData("CENTER", pixelCountB);
         telemetry.addData("RIGHT", pixelCountC);
-        telemetry.addData("Section", mostGreenBlueDifference);
+        telemetry.addData("Section", position);
 
-        return mostGreenBlueDifference;
+        return position;
+    }
+
+    private TSEPosition analyzeBitmapRGB(Bitmap bitmap){
+        int color = 0;
+        int blueValue = 0;
+        int greenValue = 0;
+        int redValue = 0;
+        int pixelCountA = 0;
+        int pixelCountB = 0;
+        int pixelCountC = 0;
+
+        // loop thru image
+        for (int x = minX; x < maxX; x+=pixelSkip) {
+            for (int y = minY; y < maxY; y+=pixelSkip) {
+                // get color for this coordinate
+                color = bitmap.getPixel(x, y);
+                blueValue = Color.blue(color);
+                greenValue = Color.green(color);
+                redValue = Color.red(color);
+                if (((greenValue - redValue) >= MIN_COLOR_DIFFERENCE) && (greenValue > blueValue)) {
+                    if (x < dividerA){
+                        pixelCountA += 1;
+                    }
+                    else if (x > dividerA && x < dividerB){
+                        pixelCountB += 1;
+                    }
+                    else {
+                        pixelCountC += 1;
+                    }
+                }
+            }
+        }
+        // tell me which one has the biggest amount of pixels that have specified blue green difference unless under threshold
+        if (pixelCountA > DETECTION_THRESHOLD || pixelCountB > DETECTION_THRESHOLD || pixelCountC > DETECTION_THRESHOLD) {
+            if(pixelCountA > pixelCountB && pixelCountA > pixelCountC)
+                position = TSEPosition.LEFT;
+            else if (pixelCountB > pixelCountA && pixelCountB > pixelCountC)
+                position = TSEPosition.CENTER;
+            else if (pixelCountC > pixelCountA && pixelCountC > pixelCountB)
+                position = TSEPosition.RIGHT;
+            else
+                position = TSEPosition.NOT_DETECTED;
+        }
+
+        // output
+        telemetry.addData("LEFT", pixelCountA);
+        telemetry.addData("CENTER", pixelCountB);
+        telemetry.addData("RIGHT", pixelCountC);
+        telemetry.addData("Section", position);
+
+        return position;
     }
 
     private void saveBitmap(Bitmap bitmap) {
@@ -514,6 +567,7 @@ public class VisionBase {
                                         Bitmap bmp = captureRequest.createEmptyBitmap();
                                         cameraFrame.copyToBitmap(bmp);
                                         frameQueue.offer(bmp);
+                                        frameCount+=1;
                                     }
                                 },
                                 Continuation.create(callbackHandler, new CameraCaptureSession.StatusCallback() {

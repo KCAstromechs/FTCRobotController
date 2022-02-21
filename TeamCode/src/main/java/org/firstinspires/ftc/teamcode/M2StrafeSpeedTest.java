@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Disabled
+
 @Autonomous(name="M2 Stafe Speed Test")
 public class M2StrafeSpeedTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
@@ -57,62 +57,10 @@ public class M2StrafeSpeedTest extends LinearOpMode {
         rb.setDriveReadyLifter();
         sleep(1500);
 
+        rb.driveStrafeInches(24,0,.6);
+        sleep(30000);
+        rb.driveStraightInches(24,0,-.6);
 
-        //VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, true);
-        VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, false);
-
-        rb.setDriveReadyLifter();
-        sleep(1000);
-        // A IS CLOSEST TO THE WAREHOUSE ON BLUE
-        switch (position) {
-            case LEFT:
-                telemetry.addData("Final Answer", "LEFT");
-                rb.setDriveReadyLifter();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(24,0,.6);
-                rb.setIntakeDischarge();
-                sleep(1500);
-                rb.setIntakeOff();
-
-
-                break;
-
-            case CENTER:
-                telemetry.addData("Final Answer", "CENTER");
-                rb.setLifterLevel2();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(26,0,.6);
-                rb.setIntakeDischarge();
-                sleep(1500);
-                rb.setIntakeOff();
-
-                break;
-
-            case RIGHT:
-                telemetry.addData("Final Answer", "RIGHT");
-                rb.setLifterLevel3();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(30,0,.6);
-                rb.setIntakeDischarge();
-                sleep(1500);
-                rb.setIntakeOff();
-
-
-                break;
-
-            case NOT_DETECTED:
-                telemetry.addData("Final Answer", "NOT DETECTED");
-                rb.setLifterLevel3();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(30,0,.6);
-                rb.setIntakeDischarge();
-                sleep(1500);
-                rb.setIntakeOff();
-
-                break;
-        }
-
-        telemetry.update();
         rb.setLifterO();
         sleep(1000);
 

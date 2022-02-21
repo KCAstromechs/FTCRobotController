@@ -16,8 +16,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     public static final double duckPower = .50;
     public static final double DRIVE_STRAIGHT_ENCODER_TO_INCHES = 118;
-    public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 67;
-    public static final double STRAFE_POWER_OFFSET = .3;
+    public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98; //might need to revisit
     final double autoDuckPower = .25;
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -35,7 +34,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _lifterPower;
     double _intakePower;
     Telemetry _telemetry;
-    final double K_TURN = 0.02;
+    final double K_TURN = 0.05;
     final double K_STRAFE = 0.001;
     BNO055IMU imu;
     final int lifterLevel1 =500;
@@ -89,8 +88,8 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _frontSpinner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _backSpinner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _frontSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _lifter.setTargetPosition(0);
         _lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -210,13 +209,9 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         }
         float zAngle = 0.0f;
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
         _frontRight.setPower(power);
@@ -224,13 +219,9 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setPower(-power);
         _backLeft.setPower(power);
 
-        int averageEncoderClicks = ((Math.abs(_backLeft.getCurrentPosition())+ Math.abs(_frontLeft.getCurrentPosition()))/2);
-        //int averageEncoderClicks = _backLeft.getCurrentPosition();
-        while ( Math.abs(encoderClicks) > Math.abs(averageEncoderClicks)){
-             averageEncoderClicks = Math.abs(_backLeft.getCurrentPosition())+ Math.abs(_frontLeft.getCurrentPosition())/2;
-          // information();
-            _telemetry.addData(" absolute value of average encoder clicks", Math.abs(averageEncoderClicks));
-            _telemetry.update();
+
+
+        while ( Math.abs(_frontLeft.getCurrentPosition()) < Math.abs(encoderClicks)){
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
             if(useCheat) {
                 zAngle = (float) normalizeAngle(zAngle + 180);
@@ -239,13 +230,16 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             //       e.g. yAngle = 171 and desiredAngle = -179
            //
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
-            double strafeCorrect = (_frontRight.getCurrentPosition()-0.0)*K_STRAFE;  // target is 0
+            double strafeCorrect = (_frontRight.getCurrentPosition()-0.0)*K_STRAFE;  // target is 0, finds the change in the y encoder value and converts it to a power value to modify the power parameter. Subracts zero because that's the number we want it to be at
 
 
-            _frontRight.setPower(power - driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
-            _backRight.setPower(-power - driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
-            _frontLeft.setPower(-power + driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
-            _backLeft.setPower(power + driveCorrect - strafeCorrect + STRAFE_POWER_OFFSET);
+            _frontRight.setPower(power - driveCorrect - strafeCorrect);
+            _backRight.setPower(-power - driveCorrect - strafeCorrect);
+            _frontLeft.setPower(-power + driveCorrect - strafeCorrect);
+            _backLeft.setPower(power + driveCorrect - strafeCorrect);
+
+
+            information();
 
             // make +- strafe correct for angle
             // all addition because they all need to turn the same way for strafeCorrect
@@ -392,11 +386,11 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     public void information(){
         double convertedClicks = _frontRight.getCurrentPosition()* DRIVE_STRAFE_ENCODER_TO_INCHES;
         _telemetry.addData("encoders (inches)",convertedClicks);
-        _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);_telemetry.addData("front right power", _frontRight.getPower());
+        _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         _telemetry.addData("back right power", _backRight.getPower());
         _telemetry.addData("front left power", _frontLeft.getPower());
         _telemetry.addData("back left power", _backLeft.getPower());
-        _telemetry.addData("front right power", _frontRight.getCurrentPosition());
+        _telemetry.addData("front right power", _frontRight.getPower());
 
 
 
@@ -456,7 +450,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public void setIntakeDischarge(){
-        _intakePower = -.8;
+        _intakePower = -.5;
         _intake.setPower(_intakePower);
     }
 
@@ -484,9 +478,20 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _capper.setPosition(.97);
     }
 
-    public void setCapperUndelivered(){
-        _capper.setPosition(.5);
+    public void setCapperCollect(){
+        _capper.setPosition(.7);
     }
+
+    public void setCapperLineUpPosition(){
+        _capper.setPosition(.52);
+    }
+
+
+    public void setCapperUndelivered(){
+        _capper.setPosition(.15);
+    }
+
+
     @Override
     public void performUpdates() {
 

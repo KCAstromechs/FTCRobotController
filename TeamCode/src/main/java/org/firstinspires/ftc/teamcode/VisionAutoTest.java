@@ -57,7 +57,7 @@ public class VisionAutoTest extends LinearOpMode {
 
         // now let's run vision, full image is 640 x 480
         //VisionBase.TSEPosition position = vision.findTSEPosition(20,620,20,460, true);
-        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, true);
+        VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, false);
 
 
         if (position == VisionBase.TSEPosition.LEFT) {
