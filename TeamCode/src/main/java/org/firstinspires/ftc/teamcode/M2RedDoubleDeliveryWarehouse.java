@@ -145,7 +145,7 @@ public class M2RedDoubleDeliveryWarehouse extends LinearOpMode {
         //collect
         rb.setIntakeCollect();
         rb.driveStrafeInches(11,-90,.6);
-        sleep(1500);
+        sleep(750);
         rb.setIntakeOff();
         //back up from freight piles and turn away
         rb.driveStrafeInches(9,-90,-.6);
@@ -167,7 +167,7 @@ public class M2RedDoubleDeliveryWarehouse extends LinearOpMode {
 
 
 
-        rb.driveStraightInches( 62,0,.5);
+        rb.driveStraightInches( 57,0,.8);
         sleep(1500);
         rb.setLifterO();
         sleep(500);

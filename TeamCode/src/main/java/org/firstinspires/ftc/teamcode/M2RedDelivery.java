@@ -68,47 +68,47 @@ public class M2RedDelivery extends LinearOpMode {
             case LEFT:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
-                rb.driveStraightInches(21,0,.4);
-                rb.driveStrafeInches(33,0,.6);
+                rb.driveStraightInches(24,0,.6);
+                rb.driveStrafeInches(29,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(33,0,-.6);
+                rb.driveStrafeInches(11,0,-.8);
 
                 break;
 
             case CENTER:
                 telemetry.addData("Final Answer", "CENTER");
                 rb.setLifterLevel2();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(32,0,.6);
+                rb.driveStraightInches(24,0,.6);
+                rb.driveStrafeInches(30,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(31,0,-.6);
+                rb.driveStrafeInches(12,0,-.8);
                 break;
 
             case RIGHT:
                 telemetry.addData("Final Answer", "RIGHT");
                 rb.setLifterLevel3();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(35,0,.6);
+                rb.driveStraightInches(24,0,.6);
+                rb.driveStrafeInches(35,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(34,0,-.6);
+                rb.driveStrafeInches(15,0,-.8);
 
                 break;
 
             case NOT_DETECTED:
                 telemetry.addData("Final Answer", "NOT DETECTED");
                 rb.setLifterLevel3();
-                rb.driveStraightInches(22,0,.4);
-                rb.driveStrafeInches(35,0,.6);
+                rb.driveStraightInches(24,0,.6);
+                rb.driveStrafeInches(35,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(34,0,-.6);
+                rb.driveStrafeInches(15,0,-.8);
                 break;
         }
 
@@ -120,18 +120,16 @@ public class M2RedDelivery extends LinearOpMode {
 
         //move away from the cake
 
-        rb.driveStraightInches(41,0,-.4);
+        rb.driveStraightInches(41,0,-.6);
         rb.setDriveReadyLifter();
-        //line up for duck
-        rb.turnToAngle(-30,.3);
-        rb.driveStraightInches(6,-30,-.4);
-        rb.turnToAngle(30,.3);
+        rb.turnToAngle(40,.4);
+        rb.driveStraightInches(5,40,-.6);
         rb.deliverDuck(false, -.1);
         //back up and move to storage unit
-        rb.driveStraightInches(3,30,.4);
-        rb.turnToAngle(0,.3);
-        rb.driveStrafeInches(29,0,.6);
-        rb.driveStraightInches(8,0,-.4);
+        rb.driveStraightInches(3,40,.6);
+        rb.turnToAngle(0,.4);
+        rb.driveStrafeInches(17,0,.8);
+        rb.driveStraightInches(4,0,-.6);
         rb.setLifterO();
         sleep(1500);
     }

@@ -68,12 +68,12 @@ public class M2RedDeliveryWarehouse extends LinearOpMode {
             case LEFT:
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
-                rb.driveStraightInches(38,0,-.4);
-                rb.driveStrafeInches(32,0,.6);
+                rb.driveStraightInches(33,0,-.6);
+                rb.driveStrafeInches(30,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(30,0,-.6);
+                rb.driveStrafeInches(30,0,-.8);
 
                 break;
 
@@ -82,12 +82,12 @@ public class M2RedDeliveryWarehouse extends LinearOpMode {
                 rb.setLifterLevel2();
 
                 //line up and move towards the lifter
-                rb.driveStraightInches(38,0,-.4);
-                rb.driveStrafeInches(33,0,.6);
+                rb.driveStraightInches(33,0,-.6);
+                rb.driveStrafeInches(33,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(32,0,-.6);
+                rb.driveStrafeInches(32,0,-.8);
                 break;
 
             case RIGHT:
@@ -95,13 +95,13 @@ public class M2RedDeliveryWarehouse extends LinearOpMode {
                 rb.setLifterLevel3();
 
                 //line up and move towards the lifter
-                rb.driveStraightInches(38,0,-.4);
-                rb.driveStrafeInches(38,0,.6);
+                rb.driveStraightInches(33,0,-.6);
+                rb.driveStrafeInches(38,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
                 //strafe away
-                rb.driveStrafeInches(40,0,-.6);
+                rb.driveStrafeInches(40,0,-.8);
                 break;
 
             case NOT_DETECTED:
@@ -109,13 +109,13 @@ public class M2RedDeliveryWarehouse extends LinearOpMode {
                 rb.setLifterLevel3();
 
                 //line up and move towards the lifter
-                rb.driveStraightInches(38,0,-.4);
-                rb.driveStrafeInches(38,0,.6);
+                rb.driveStraightInches(33,0,-.6);
+                rb.driveStrafeInches(38,0,.8);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
                 //strafe away
-                rb.driveStrafeInches(40,0,-.6);
+                rb.driveStrafeInches(40,0,-.8);
                 break;
         }
         rb.setDriveReadyLifter();
@@ -123,9 +123,9 @@ public class M2RedDeliveryWarehouse extends LinearOpMode {
 
 
 
-        rb.driveStraightInches( 58,0,.4);
-        rb.driveStrafeInches(32,0,.6);
-        sleep(1500);
+        rb.driveStraightInches( 62,0,.6);
+        rb.driveStrafeInches(32,0,.8);
+        sleep(500);
         rb.setLifterO();
         sleep(1500);
 

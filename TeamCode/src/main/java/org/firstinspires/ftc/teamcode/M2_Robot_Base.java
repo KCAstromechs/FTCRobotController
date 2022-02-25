@@ -17,6 +17,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     public static final double duckPower = .50;
     public static final double DRIVE_STRAIGHT_ENCODER_TO_INCHES = 118;
     public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98; //might need to revisit
+    public static final int DUCK_DELIVERY_ROTATION_CLICKS =2500;
     final double autoDuckPower = .25;
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -357,7 +358,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while(Math.abs(_frontSpinner.getCurrentPosition())<3000 || Math.abs(_backSpinner.getCurrentPosition())<3000){
+        while(Math.abs(_frontSpinner.getCurrentPosition())<DUCK_DELIVERY_ROTATION_CLICKS || Math.abs(_backSpinner.getCurrentPosition())<DUCK_DELIVERY_ROTATION_CLICKS){
             _telemetry.addData("front spinner", _frontSpinner.getCurrentPosition());
             _telemetry.addData("back spinner", _backSpinner.getCurrentPosition());
             _telemetry.update();

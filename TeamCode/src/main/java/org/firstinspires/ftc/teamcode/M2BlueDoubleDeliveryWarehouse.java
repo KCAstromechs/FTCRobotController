@@ -65,14 +65,14 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
                 telemetry.addData("Final Answer", "LEFT");
                 rb.setDriveReadyLifter();
                 //move to the hub
-                rb.driveStraightInches(33,0,-.5);
-                rb.driveStrafeInches(32,0,.6);
+                rb.driveStraightInches(27,0,.5);
+                rb.driveStrafeInches(30,0,.6);
                 //deliver
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
                 //drive back to the wall
-                rb.driveStrafeInches(30,0,-.6);
+                rb.driveStrafeInches(32,0,-.6);
 
 
 
@@ -84,12 +84,12 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
                 rb.setLifterLevel2();
 
                 //line up and move towards the lifter
-                rb.driveStraightInches(33,0,-.4);
-                rb.driveStrafeInches(32,0,.6);
+                rb.driveStraightInches(26,0,.4);
+                rb.driveStrafeInches(30,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(30,0,-.6);
+                rb.driveStrafeInches(34,0,-.6);
 
                 break;
 
@@ -98,7 +98,7 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
                 rb.setLifterLevel3();
 
                 //line up and move towards the lifter
-                rb.driveStraightInches(33,0,-.4);
+                rb.driveStraightInches(27,0,.4);
                 rb.driveStrafeInches(37,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
@@ -116,13 +116,13 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
                 rb.setLifterLevel3();
 
                 //line up and move towards the lifter
-                rb.driveStraightInches(33,0,-.4);
-                rb.driveStrafeInches(37,0,.6);
+                rb.driveStraightInches(27,0,.4);
+                rb.driveStrafeInches(35,0,.6);
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
                 //strafe away
-                rb.driveStrafeInches(35,0,-.6);
+                rb.driveStrafeInches(37,0,-.6);
                 //insert new code here
 
 
@@ -132,7 +132,7 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
 
         //TODO: exist
         //drive into the warehouse
-        rb.driveStraightInches(62,0,.5);
+        rb.driveStraightInches(68,0,-.5);
         rb.driveStrafeInches(8,0,.6);
         //turn in the direction of the freight
         rb.setLifterO();
@@ -141,29 +141,29 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
         //collect
         rb.setIntakeCollect();
         rb.driveStrafeInches(11,90,.6);
-        sleep(1500);
+        sleep(750);
         rb.setIntakeOff();
         //back up from freight piles and turn away
         rb.driveStrafeInches(9,90,-.6);
         rb.setLifterLevel3();
         rb.turnToAngle(0,.4);
         //move into position for delivering the block
-        rb.driveStrafeInches(8,0,-.6);
-        rb.driveStraightInches(62, 0,-.5);
+        rb.driveStrafeInches(10,0,-.6);
+        rb.driveStraightInches(60, 0,.5);
 
-        rb.driveStrafeInches(36,0,.6);
+        rb.driveStrafeInches(32,0,.6);
         rb.setIntakeDischarge();
         sleep(2000);
         rb.setIntakeOff();
         //strafe away
-        rb.driveStrafeInches(38,0,-.6);
+        rb.driveStrafeInches(40,0,-.6);
 
         rb.setDriveReadyLifter();
         telemetry.update();
 
 
 
-        rb.driveStraightInches( 62,0,.5);
+        rb.driveStraightInches(60,0,-.8);
         sleep(1500);
         rb.setLifterO();
         sleep(500);
