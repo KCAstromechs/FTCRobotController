@@ -415,7 +415,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         if(position!=0) {
             int newTargetPosition = _lifter.getCurrentPosition() + position;
             if (newTargetPosition > 1300) newTargetPosition = 1300;
-            if (newTargetPosition < -30) newTargetPosition = -30;
+            if (newTargetPosition < -50) newTargetPosition = -50;
             _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(1);
         }
@@ -451,7 +451,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public void setIntakeDischarge(){
-        _intakePower = -.5;
+        _intakePower = -.6;
         _intake.setPower(_intakePower);
     }
 
@@ -472,7 +472,7 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     public void duckReverse(){
         _frontSpinner.setPower(-duckPower);
-        _backSpinner.setPower(-duckPower);
+        _backSpinner.setPower(duckPower);
     }
 
     public void setCapperDelivered(){

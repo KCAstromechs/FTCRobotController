@@ -120,7 +120,7 @@ public class PurseBotTeleOp extends OpMode
             K = 3;
         }
         else if (gamepad1.right_bumper) {
-            K = 1.5;
+            K = 1;
         }
 
         leftPower = -gamepad1.left_stick_y/K;
@@ -131,7 +131,7 @@ public class PurseBotTeleOp extends OpMode
 
         // logical strafe, mechanical tank
         trigger=(gamepad1.right_trigger-gamepad1.left_trigger);
-        rb.strafe(trigger*.5);
+        rb.strafe(trigger/K);
 
         if (gamepad2.left_bumper){
            rb.setCapperCollect();
