@@ -479,8 +479,9 @@ public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _capper.setPosition(.97);
     }
 
+
     public void setCapperCollect(){
-        _capper.setPosition(.7);
+        _capper.setPosition(.72);
     }
 
     public void setCapperLineUpPosition(){

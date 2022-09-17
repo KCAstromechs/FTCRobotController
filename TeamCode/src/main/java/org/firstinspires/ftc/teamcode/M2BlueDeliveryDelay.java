@@ -59,7 +59,7 @@ public class M2BlueDeliveryDelay extends LinearOpMode {
 
         VisionBase.TSEPosition position = vision.findTSEPosition(85,530,80,190, false);
         rb.setDriveReadyLifter();
-        sleep(10000);
+        sleep(10000); //10000
 
         // A IS CLOSEST TO THE WAREHOUSE ON BLUE
         switch (position) {

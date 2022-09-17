@@ -72,7 +72,7 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
                 sleep(1500);
                 rb.setIntakeOff();
                 //drive back to the wall
-                rb.driveStrafeInches(30,0,-.6);
+                rb.driveStrafeInches(28,0,-.6);
 
 
 
@@ -89,7 +89,7 @@ public class M2BlueDoubleDeliveryWarehouse extends LinearOpMode {
                 rb.setIntakeDischarge();
                 sleep(1500);
                 rb.setIntakeOff();
-                rb.driveStrafeInches(32,0,-.6);
+                rb.driveStrafeInches(29,0,-.6);
 
                 break;
 
