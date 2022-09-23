@@ -15,8 +15,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
-    public static final double duckPower = .50;
-    final double autoDuckPower = .25;
+
     //Important Set-Up Stuff
     DcMotor _frontLeft;
     DcMotor _backLeft;

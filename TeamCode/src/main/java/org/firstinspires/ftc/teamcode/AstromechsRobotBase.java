@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 /**
  * shape
  * this can never be a robot base, but every subclass is
- * every subclass is required to have everything in this thing
+ * every subclass is required to have everything in this thing!
  */
 
 public abstract class AstromechsRobotBase {

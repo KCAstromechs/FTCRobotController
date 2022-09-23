@@ -10,22 +10,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
     {
         // Declare OpMode members.
         private ElapsedTime runtime = new ElapsedTime();
-        private DcMotor encoder1 = null;
-        private DcMotor encoder2 = null;
+        public M1_Robot_Base rb;
+
 
         @Override
         public void init() {
             telemetry.addData("Status", "Initialized");
-            encoder1 = hardwareMap.get(DcMotor.class, "encoder1");
-            encoder2 = hardwareMap.get(DcMotor.class, "encoder2");
-
-            // RESET ENCODERS
-            encoder1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            encoder2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            // START THE ENCODERS
-            encoder1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            encoder2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             // Tell the driver that initialization is complete.
             telemetry.addData("Status", "Initialized");
@@ -53,9 +43,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
          */
         @Override
         public void loop() {
-            telemetry.addData("encoder1", encoder1.getCurrentPosition());
-            telemetry.addData("encoder2", encoder2.getCurrentPosition());
-            telemetry.update();
+            rb.encoderTest();
         }
 
         /*

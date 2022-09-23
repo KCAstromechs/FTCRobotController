@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- * used for robots that have the capability to strafe, is used as an addition to a tank drive
+ * used for robots that have the capability to strafe, is used as an addition to a tank drive.
  */
 public interface Strafeable {
 

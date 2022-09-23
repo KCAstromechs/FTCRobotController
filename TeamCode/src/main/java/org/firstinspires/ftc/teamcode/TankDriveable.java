@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- * used for robots that utilize a tank drive
+ * used for robots that utilize a tank drive.
  */
 public interface TankDriveable {
 
