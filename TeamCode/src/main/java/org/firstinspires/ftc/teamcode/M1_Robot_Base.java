@@ -15,14 +15,14 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
+    //FRONT LEFT IS ENCODER Y, FRONT RIGHT IS ENCODER X
 
     //Important Set-Up Stuff
     DcMotor _frontLeft;
     DcMotor _backLeft;
     DcMotor _frontRight;
     DcMotor _backRight;
-    DcMotor _encoderY;
-    DcMotor _encoderX;
+    Servo _collector;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -39,8 +39,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
         _backRight = hardwareMap.get(DcMotor.class,"backRight");
-        _encoderY = hardwareMap.get(DcMotor.class,"encoderY");
-        _encoderX = hardwareMap.get(DcMotor.class,"encoderX");
+        _collector = hardwareMap.get(Servo.class,"collector");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
 
@@ -58,8 +57,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _encoderX.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 
 
@@ -68,24 +66,31 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _encoderX.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
 
 
         // GYRO INITIALIZE
+        /*
         float zAngle;
         float yAngle;
         float xAngle;
         xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
         yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
         zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+         */
         BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();IMUParams.mode = BNO055IMU.SensorMode.IMU;
         IMUParams.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 
         imu.initialize(IMUParams);
         while(!imu.isGyroCalibrated());
 
+
+
     }
+
+
 
     /**
      * sets the power of the left side of the robot
@@ -124,6 +129,15 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
+    public void collectorClose(){
+        _collector.setPosition(1);
+    }
+
+    public void collectorOpen(){
+        _collector.setPosition(.6);
+
+    }
+
 
     public void driveStraightInches(double inches, double desiredAngle, double power) throws InterruptedException{
         driveStraight((int)(inches*147.5), desiredAngle,power);
@@ -140,8 +154,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             desiredAngle = normalizeAngle(desiredAngle+180);
         }
         float zAngle = 0.0f;
-        _encoderY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _encoderY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
         _frontRight.setPower(power);
@@ -149,7 +163,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setPower(power);
         _backLeft.setPower(power);
 
-        while ( Math.abs(encoderClicks) > Math.abs(_encoderY.getCurrentPosition() )){
+        while ( Math.abs(encoderClicks) > Math.abs(_frontLeft.getCurrentPosition() )){
             information();
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
             if(useCheat) {
@@ -183,8 +197,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         float xAngle;
 
         //follow one motor's encoder count
-        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
         // intialize all of the angles
@@ -256,7 +270,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
     
     public void information(){
-        double convertedClicks = _encoderY.getCurrentPosition()*147.5;
+        double convertedClicks = _frontLeft.getCurrentPosition()*147.5;
         _telemetry.addData("encoders (inches)",convertedClicks);
         _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
 
@@ -266,8 +280,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     public void encoderTest(){
 
-        _telemetry.addData("clicks: front left", _frontLeft.getCurrentPosition());
-        _telemetry.addData("clicks: front right", _frontRight.getCurrentPosition());
+        _telemetry.addData("clicks: ENCODER Y", _frontLeft.getCurrentPosition());
+        _telemetry.addData("clicks: encoder X", _frontRight.getCurrentPosition());
         _telemetry.addData("clicks: back right", _backRight.getCurrentPosition());
         _telemetry.addData("clicks: back left", _backLeft.getCurrentPosition());
         _telemetry.update();
@@ -284,14 +298,14 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
         _frontRight.setPower(_rightPower-_strafePower);
-        _backLeft.setPower(_leftPower+_strafePower);
-        _frontLeft.setPower(-_rightPower-_strafePower);
-        _backRight.setPower(-_leftPower+_strafePower);
+        _backLeft.setPower(_leftPower-_strafePower);
+        _frontLeft.setPower(_leftPower+_strafePower);
+        _backRight.setPower(_rightPower+_strafePower);
 
 
         //powers = sticks used to determine what side of the robot the motor is on from collector in the front
         //- means that the motor is corkscrewing backwards
 
-        //strafe right is + due to mechanical front being positive (left is opposite)
+
     }
 }

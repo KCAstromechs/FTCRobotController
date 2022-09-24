@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="TANK", group="Iterative Opmode")
-public class TankPlease extends OpMode
+public class M1TankTeleOp extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -18,10 +18,19 @@ public class TankPlease extends OpMode
 
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
+
         rb = new M1_Robot_Base(hardwareMap, telemetry);
-        // Tell the driver that initialization is complete.
+
+
+        double waitTime = getRuntime()+ 1.;
+        //while(getRuntime()<waitTime);
+
+                // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+
+
 
 
     }
@@ -65,6 +74,17 @@ public class TankPlease extends OpMode
         // logical strafe, mechanical tank
         trigger=(gamepad1.right_trigger-gamepad1.left_trigger);
         rb.strafe(trigger/K);
+
+
+
+        //COLLECTOR
+        if (gamepad1.a){
+            rb.collectorOpen();
+        }
+
+        if (gamepad1.b){
+            rb.collectorClose();
+        }
 
 
 

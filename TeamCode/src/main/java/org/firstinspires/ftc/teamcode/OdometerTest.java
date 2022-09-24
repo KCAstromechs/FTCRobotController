@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
         @Override
         public void init() {
-            telemetry.addData("Status", "Initialized");
+
 
             // Tell the driver that initialization is complete.
             telemetry.addData("Status", "Initialized");
