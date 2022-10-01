@@ -23,6 +23,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     DcMotor _frontRight;
     DcMotor _backRight;
     Servo _collector;
+    double COLLECTOR_CLOSED = 1;
+    double COLLECTOR_OPEN = .6;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -90,11 +92,72 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
+    public M1_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry, boolean isFC) {
+
+        //underscore means it's a private variable
+        _telemetry = telemetry;
+        _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
+        _backRight = hardwareMap.get(DcMotor.class,"backRight");
+        _collector = hardwareMap.get(Servo.class,"collector");
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
 
 
+        _frontRight.setDirection(DcMotor.Direction.REVERSE);
+        _backRight.setDirection(DcMotor.Direction.REVERSE);
+
+
+        _backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // RESET ENCODERS
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+
+        // START THE ENCODERS
+        _frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+
+        // GYRO INITIALIZE
+        /*
+        float zAngle;
+        float yAngle;
+        float xAngle;
+        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
+        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+         */
+        BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();IMUParams.mode = BNO055IMU.SensorMode.IMU;
+        IMUParams.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+
+        imu.initialize(IMUParams);
+        while(!imu.isGyroCalibrated());
+
+
+
+    }
+
+
+//-------------------------------------------------------------------------------------------------------------
+//INTERFACE METHODS
+//-------------------------------------------------------------------------------------------------------------
     /**
      * sets the power of the left side of the robot
-     * @param power
+     * @param power will end up being the value from the joysticks in most cases
      */
     @Override
     public void setLeftPower(double power){
@@ -103,7 +166,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     /**
      * sets the power of the right side of the robot
-     * @param power
+     * @param power will end up being the value from the joysticks in most cases
      */
     @Override
     public void setRightPower(double power){
@@ -122,6 +185,10 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         setRightPower(rightPower);
     }
 
+    /***
+     * Will be used to allow strafing in teleop programs
+     * @param strafePower equivalent to the "trigger" variable in the mecanum drive
+     */
     @Override
     public void strafe(double strafePower){
         _strafePower=strafePower;
@@ -129,48 +196,95 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
+//----------------------------------------------------------------------------------------------------------------
+// MECHANISM CONTROL
+//-------------------------------------------------------------------------------------------------------------------
+
+    /***
+     * puts the collector into the "closed" position, in which it would be holding a cone
+     */
     public void collectorClose(){
-        _collector.setPosition(1);
+        _collector.setPosition(COLLECTOR_CLOSED);
     }
-
+    /***
+     * puts the collector into the "open" position, in which it would be ready to collect a cone
+     */
     public void collectorOpen(){
-        _collector.setPosition(.6);
+        _collector.setPosition(COLLECTOR_OPEN);
 
     }
 
+//-----------------------------------------------------------------------------------------------------------------
+//AUTONOMOUS MOVEMENT
+//---------------------------------------------------------------------------------------------------------------
 
-    public void driveStraightInches(double inches, double desiredAngle, double power) throws InterruptedException{
+    /***
+     * @param inches number of inches you want the robot to move
+     * @param desiredAngle given angle you want the robot to move in
+     * @param power power you want the robot to make the movement in
+     * @throws InterruptedException
+     *
+     * This particular method uses the other driveStraight methods, but it does the conversion of encoder clicks
+     * by multiplying the inches you want by a factor to convert.
+     */
+    public void driveStraightInches(double inches, double desiredAngle, double power){
         driveStraight((int)(inches*147.5), desiredAngle,power);
     }
 
-    // All of the drive straight code which allows us to stay on course
-    public void driveStraight(int encoderClicks, double desiredAngle, double power) throws InterruptedException{
+    /***
+     *
+     * @param encoderClicks number of encoder clicks the robot will move
+     * @param desiredAngle angle the robot will move in
+     * @param power power the robot will use to move in given angle and direction
+     * @throws InterruptedException
+     *
+     * runs drivestraight in the cases that the robot is not using a degree measurement that falls within the angle discontinuity
+     */
+    public void driveStraight(int encoderClicks, double desiredAngle, double power) {
         driveStraight (encoderClicks, desiredAngle,  power, false);
     }
 
-    public void driveStraight(int encoderClicks, double desiredAngle, double power, boolean useCheat) throws InterruptedException {
+    /***
+     *
+     * @param encoderClicks distance desired, measured in encoder clicks
+     * @param desiredAngle angle the robot will move in, measured in degrees
+     * @param power power the robot will use to move in direction and distance, lower powers are more accurate
+     * @param useCheat determine whether or not the robot is trying to move at an angle
+     * @throws InterruptedException
+     */
+    public void driveStraight(int encoderClicks, double desiredAngle, double power, boolean useCheat) {
 
+        //normalizes the angle and effectively moves where the discontinutity is for the purpose of this singlusar movement
         if(useCheat){
             desiredAngle = normalizeAngle(desiredAngle+180);
         }
+        //reset the gyro and the motors
         float zAngle = 0.0f;
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Thread.sleep(250);
+        while(Math.abs(_frontLeft.getCurrentPosition())>10){}
 
+
+        //set the motors to the desired power, they will keep running during all the logic with the encoders
         _frontRight.setPower(power);
         _backRight.setPower(power);
         _frontLeft.setPower(power);
         _backLeft.setPower(power);
 
+
+        //checks if the current number of encoder clicks is less than what we want. this will keep running until the current encoder clicks are more than what we want
         while ( Math.abs(encoderClicks) > Math.abs(_frontLeft.getCurrentPosition() )){
             information();
+            //normalizes the angle
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
             if(useCheat) {
                 zAngle = (float) normalizeAngle(zAngle + 180);
             }
             // TODO: Issue with angles crossing the circle discontinutiy
             //       e.g. yAngle = 171 and desiredAngle = -179
+
+
+            //drivecorrect finds the number of degrees we are off from the current course we want, and then multiples it by a factor that is robot specific, which will allow the robot to move back to the desired angle
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
             _frontRight.setPower(power - driveCorrect);
             _backRight.setPower(power - driveCorrect);
@@ -178,13 +292,18 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             _backLeft.setPower(power + driveCorrect);
 
         }
-
+        //turns all the motors off after the desired distance is reached
         _frontRight.setPower(0);
         _backRight.setPower(0);
         _frontLeft.setPower(0);
         _backLeft.setPower(0);
     }
 
+    /***
+     * @param desiredAngle angle you want the front of the robot to face at the end of the turn
+     * @param power power you want the robot to use to make the turn, lower powers are more precise
+     * @throws InterruptedException
+     */
     public void turnToAngle( double desiredAngle, double power ) throws InterruptedException {
         turnToAngle( desiredAngle, power, false );
     }
@@ -199,7 +318,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         //follow one motor's encoder count
         _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Thread.sleep(250);
+        while(Math.abs(_backLeft.getCurrentPosition())>10){}
+
 
         // intialize all of the angles
         zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;  // 0-90-180-
@@ -268,6 +388,10 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
         return Math.abs(a1 - (a2+360));
     }
+
+//----------------------------------------------------------------------------------------------------------------------------------
+//TELEMETRY AND TROUBLESHOOTING
+//-----------------------------------------------------------------------------------------------------------------------------------
     
     public void information(){
         double convertedClicks = _frontLeft.getCurrentPosition()*147.5;

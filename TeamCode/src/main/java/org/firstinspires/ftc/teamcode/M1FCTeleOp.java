@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.PI;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,7 +26,7 @@ public class M1FCTeleOp extends OpMode
     double rightPower;
     double trigger;
     BNO055IMU imu;
-    double K = 1.5;
+
 
 
 
@@ -77,30 +79,34 @@ public class M1FCTeleOp extends OpMode
      */
     @Override
     public void loop() {
+        double yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS).secondAngle;  // 0-90-180-
+
+        double robotX = (gamepad1.right_stick_x*Math.cos(yAngle))+(gamepad1.right_stick_y*Math.cos(yAngle+(PI/2)));
+        double robotY = (gamepad1.right_stick_x*Math.sin(yAngle))+(gamepad1.right_stick_y*Math.sin(yAngle+(PI/2)));
+
+        if((Math.abs(robotX+robotY))>1){
+            frontLeft.setPower((robotX+robotY)/(robotX+robotY));
+            frontRight.setPower((robotX-robotY) /(robotX+robotY));
+            backRight.setPower((robotX+robotY) /(robotX+robotY));
+            backLeft.setPower((robotX-robotY) /(robotX+robotY));
+        }
+
+        else if(Math.abs((robotX-robotY))>1){
+            frontLeft.setPower((robotX+robotY)/(robotX-robotY));
+            frontRight.setPower((robotX-robotY)/(robotX-robotY));
+            backRight.setPower((robotX+robotY)/(robotX-robotY));
+            backLeft.setPower((robotX-robotY)/(robotX-robotY));
+        }
+
+        else {
+            frontLeft.setPower((robotX+robotY));
+            frontRight.setPower((robotX-robotY));
+            backRight.setPower((robotX+robotY));
+            backLeft.setPower((robotX-robotY));
+
+        }
 
 
-        // PART 1 - THE MATH
-
-        double  yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
-        // STEP 1
-        double thetaAngle = Math.atan2(-gamepad1.left_stick_y,gamepad1.left_stick_x);
-        telemetry.addData("thetaAngle:", thetaAngle);
-        // STEP 2
-        double gammaAngle = thetaAngle - yAngle;
-        telemetry.addData("gammaAngle:", gammaAngle);
-        // STEP 3
-        double hyp = Math.sqrt(gamepad1.left_stick_y * gamepad1.left_stick_y + gamepad1.left_stick_x *gamepad1.left_stick_x);
-        telemetry.addData("hyp:", hyp);
-        // STEP 4
-        double robotY = hyp * Math.sin(gammaAngle);
-        double robotX = hyp * Math.cos(gammaAngle);
-
-        // PART 2 - THE APPLICATION
-
-        frontRight.setPower(robotY - robotX - (gamepad1.right_stick_x) - gamepad2.right_stick_x);
-        backRight.setPower(robotY + robotX - (gamepad1.right_stick_x) - gamepad2.right_stick_x);
-        frontLeft.setPower(robotY + robotX + (gamepad1.right_stick_x) + gamepad2.right_stick_x);
-        backLeft.setPower(robotY - robotX + (gamepad1.right_stick_x) + gamepad2.right_stick_x);
 
 
 
