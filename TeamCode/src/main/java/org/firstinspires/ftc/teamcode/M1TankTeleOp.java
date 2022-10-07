@@ -86,6 +86,9 @@ public class M1TankTeleOp extends OpMode
             rb.collectorClose();
         }
 
+        //LIFTER
+
+        rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
 
 
         rb.performUpdates();

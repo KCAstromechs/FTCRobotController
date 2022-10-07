@@ -22,9 +22,13 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     DcMotor _backLeft;
     DcMotor _frontRight;
     DcMotor _backRight;
+    DcMotor _lifter;
     Servo _collector;
     double COLLECTOR_CLOSED = 1;
     double COLLECTOR_OPEN = .6;
+    int LOW_HEIGHT = 0;
+    int MID_HEIGHT = 0;
+    int HIGH_HEIGHT = 0;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -41,6 +45,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
         _backRight = hardwareMap.get(DcMotor.class,"backRight");
+        _lifter = hardwareMap.get(DcMotor.class,"lifter");
         _collector = hardwareMap.get(Servo.class,"collector");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
@@ -59,6 +64,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
 
@@ -68,6 +74,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _lifter.setTargetPosition(0);
+        _lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
 
@@ -212,6 +220,41 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     public void collectorOpen(){
         _collector.setPosition(COLLECTOR_OPEN);
 
+    }
+
+    public void lifterLow(){
+        _lifter.setTargetPosition(LOW_HEIGHT);
+        _lifter.setPower(.5);
+    }
+
+    public void lifterMedium(){
+        _lifter.setTargetPosition(MID_HEIGHT);
+        _lifter.setPower(.5);
+    }
+
+    public void lifterHigh(){
+        _lifter.setTargetPosition(HIGH_HEIGHT);
+        _lifter.setPower(.5);
+
+    }
+
+    public void lifterZero(){
+        _lifter.setTargetPosition(0);
+        _lifter.setPower(.5);
+    }
+
+    public void lifterControl(int position){
+        if(position!=0) {
+            int newTargetPosition = _lifter.getCurrentPosition() + position;
+            if (newTargetPosition > 1300) newTargetPosition = 1300;
+            if (newTargetPosition < -10) newTargetPosition = -10;
+            _lifter.setTargetPosition(newTargetPosition);
+            _lifter.setPower(1);
+        }
+        _telemetry.addData("lifter target", _lifter.getTargetPosition());
+        _telemetry.addData("lifter encoder", _lifter.getCurrentPosition());
+        _telemetry.addData("position", position);
+        _telemetry.update();
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -408,6 +451,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _telemetry.addData("clicks: encoder X", _frontRight.getCurrentPosition());
         _telemetry.addData("clicks: back right", _backRight.getCurrentPosition());
         _telemetry.addData("clicks: back left", _backLeft.getCurrentPosition());
+        _telemetry.addData("clicks: lifter", _lifter.getCurrentPosition());
         _telemetry.update();
     }
 
