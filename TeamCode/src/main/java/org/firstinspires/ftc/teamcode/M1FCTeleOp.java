@@ -80,6 +80,11 @@ public class M1FCTeleOp extends OpMode
     @Override
     public void loop() {
         double yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS).secondAngle;  // 0-90-180-
+        
+        // negative value -> go left -> positive power to left wheels, negative power to right wheels
+        // positive value -> go right -> positive power to right wheels, negative power to left wheels
+        // without other movement ex: frontRight.setPower(turnPower);
+        double turnPower = (gamepad1.left_stick_x);
 
         double robotX = (gamepad1.right_stick_x*Math.cos(yAngle))+(gamepad1.right_stick_y*Math.cos(yAngle+(PI/2)));
         double robotY = (gamepad1.right_stick_x*Math.sin(yAngle))+(gamepad1.right_stick_y*Math.sin(yAngle+(PI/2)));
@@ -105,9 +110,6 @@ public class M1FCTeleOp extends OpMode
             backLeft.setPower((robotX-robotY));
 
         }
-
-
-
 
 
     }
