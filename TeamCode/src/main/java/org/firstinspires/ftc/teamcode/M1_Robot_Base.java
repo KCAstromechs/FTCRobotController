@@ -25,7 +25,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     DcMotor _lifter;
     Servo _collector;
     double COLLECTOR_CLOSED = 1;
-    double COLLECTOR_OPEN = .6;
+    double COLLECTOR_OPEN = .9;
     int LOW_HEIGHT = 0;
     int MID_HEIGHT = 0;
     int HIGH_HEIGHT = 0;
@@ -52,6 +52,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
         _frontRight.setDirection(DcMotor.Direction.REVERSE);
         _backRight.setDirection(DcMotor.Direction.REVERSE);
+        _lifter.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         _backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -82,6 +83,18 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
         // GYRO INITIALIZE
         /*
+
+
+         */
+        BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();IMUParams.mode = BNO055IMU.SensorMode.IMU;
+        IMUParams.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+
+        
+
+
+        imu.initialize(IMUParams);
+        while(!imu.isGyroCalibrated());
+
         float zAngle;
         float yAngle;
         float xAngle;
@@ -89,12 +102,6 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
         zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
 
-         */
-        BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();IMUParams.mode = BNO055IMU.SensorMode.IMU;
-        IMUParams.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-
-        imu.initialize(IMUParams);
-        while(!imu.isGyroCalibrated());
 
 
 
@@ -246,7 +253,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     public void lifterControl(int position){
         if(position!=0) {
             int newTargetPosition = _lifter.getCurrentPosition() + position;
-            if (newTargetPosition > 1300) newTargetPosition = 1300;
+            if (newTargetPosition > 2560) newTargetPosition = 2560;
             if (newTargetPosition < -10) newTargetPosition = -10;
             _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(1);
@@ -455,6 +462,19 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _telemetry.update();
     }
 
+    public void gyroTest(){
+        float zAngle;
+        float yAngle;
+        float xAngle;
+        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
+        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+        _telemetry.addData("x angle", xAngle );
+        _telemetry.addData("y angle", yAngle);
+        _telemetry.addData("z angle", zAngle);
+    }
+
     public void performUpdates() {
         //if strafePower (trigger) is 0 then it will act as a tank drive
         /*
@@ -465,10 +485,11 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
          */
 
 
-        _frontRight.setPower(_rightPower-_strafePower);
-        _backLeft.setPower(_leftPower-_strafePower);
-        _frontLeft.setPower(_leftPower+_strafePower);
-        _backRight.setPower(_rightPower+_strafePower);
+        _frontRight.setPower(_rightPower+_strafePower);
+        _backLeft.setPower(_leftPower+_strafePower);
+        _frontLeft.setPower(-_rightPower+_strafePower);
+        _backRight.setPower(-_leftPower+_strafePower);
+
 
 
         //powers = sticks used to determine what side of the robot the motor is on from collector in the front

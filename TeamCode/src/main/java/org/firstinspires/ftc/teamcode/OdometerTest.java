@@ -12,10 +12,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         private ElapsedTime runtime = new ElapsedTime();
         public M1_Robot_Base rb;
 
-
         @Override
         public void init() {
-
+            rb = new M1_Robot_Base(hardwareMap, telemetry);
 
             // Tell the driver that initialization is complete.
             telemetry.addData("Status", "Initialized");
