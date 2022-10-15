@@ -89,7 +89,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();IMUParams.mode = BNO055IMU.SensorMode.IMU;
         IMUParams.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 
-        
+
 
 
         imu.initialize(IMUParams);
@@ -98,9 +98,10 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         float zAngle;
         float yAngle;
         float xAngle;
-        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
-        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
-        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+
 
 
 
@@ -147,15 +148,15 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
         // GYRO INITIALIZE
-        /*
+
         float zAngle;
         float yAngle;
         float xAngle;
-        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
-        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
-        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
 
-         */
+
         BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();IMUParams.mode = BNO055IMU.SensorMode.IMU;
         IMUParams.angleUnit = BNO055IMU.AngleUnit.RADIANS;
 
@@ -326,7 +327,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         while ( Math.abs(encoderClicks) > Math.abs(_frontLeft.getCurrentPosition() )){
             information();
             //normalizes the angle
-            zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             if(useCheat) {
                 zAngle = (float) normalizeAngle(zAngle + 180);
             }
@@ -372,7 +373,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
         // intialize all of the angles
-        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;  // 0-90-180-
+        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;  // 0-90-180-
         // use the cheat?
         if(useCheat){
             zAngle = (float)normalizeAngle(zAngle+180);
@@ -395,7 +396,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
         // while the
         while (angleDifference(desiredAngle, zAngle) > 5) {
-            zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             information();
 
             if(useCheat) {
@@ -446,7 +447,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     public void information(){
         double convertedClicks = _frontLeft.getCurrentPosition()*147.5;
         _telemetry.addData("encoders (inches)",convertedClicks);
-        _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+        _telemetry.addData("z angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
 
 
         _telemetry.update();
@@ -463,16 +464,18 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public void gyroTest(){
-        float zAngle;
-        float yAngle;
-        float xAngle;
-        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
-        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle;
-        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
 
-        _telemetry.addData("x angle", xAngle );
-        _telemetry.addData("y angle", yAngle);
-        _telemetry.addData("z angle", zAngle);
+        float firstAngle;
+        float secondAngle;
+        float thirdAngle;
+        firstAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        secondAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+        thirdAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+
+
+        _telemetry.addData("first angle", firstAngle );
+        _telemetry.addData("second angle", secondAngle);
+        _telemetry.addData("third angle", thirdAngle);
     }
 
     public void performUpdates() {
