@@ -33,8 +33,9 @@ public class M1FCTeleOp extends OpMode
 
     @Override
     public void init() {
-        imu = hardwareMap.get(BNO055IMU.class,"imu");
+
         rb = new M1_Robot_Base(hardwareMap, telemetry);
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class,"backLeft");
@@ -49,7 +50,7 @@ public class M1FCTeleOp extends OpMode
         double waitTime = getRuntime()+ 1.;
         //while(getRuntime()<waitTime);
 
-                // Tell the driver that initialization is complete.
+        // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

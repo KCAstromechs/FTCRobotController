@@ -30,16 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-
-@Autonomous(name="Chester Red", group="Robot")
-public class ChesterRed extends LinearOpMode {
+@Autonomous(name="Strafe Space", group="Robot")
+public class StrafeTest extends LinearOpMode {
 
     public M1_Robot_Base rb;
     private ElapsedTime runtime = new ElapsedTime();
@@ -57,33 +53,7 @@ public class ChesterRed extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        switch(1){
-        case 1:
-            rb.lifterLow();
-            rb.driveStraightInches(7, 0, .4);
-            rb.driveStrafeInches(46,0,-.6);
-            sleep(750);
-            rb.collectorOpen();
-            sleep(250);
-            rb.driveStrafeInches(3,0,.5);
-            rb.driveStraightInches(9,0,.4);
-            rb.lifterCS4();
-            rb.turnToAngle(90,.3);
-            rb.driveStraightInches(18,90,-.4);
-            rb.driveStrafeInches(3,90,-.5);
-            rb.collectorClose();
-            sleep(500);
-            rb.lifterHigh();
-
-
-
-
-            break;
-
-
-            case 2:
-            case 3:
-        }
+        rb.driveStrafeInches(40,0,-.7);
 
 
 

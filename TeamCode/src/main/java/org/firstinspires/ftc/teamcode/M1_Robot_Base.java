@@ -26,14 +26,21 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     Servo _collector;
     double COLLECTOR_CLOSED = 1;
     double COLLECTOR_OPEN = .9;
-    int LOW_HEIGHT = 0;
-    int MID_HEIGHT = 0;
-    int HIGH_HEIGHT = 0;
+    int ZERO_HEIGHT = 0;
+    int LOW_HEIGHT = 1050;
+    int MID_HEIGHT = 1765;
+    int HIGH_HEIGHT = 2262;
+    int CONE_STACK_LEVEL_1 = 0;
+    int CONE_STACK_LEVEL_2 = 334;
+    int CONE_STACK_LEVEL_3 = 463;
+    int CONE_STACK_LEVEL_4 = 502;
     double _leftPower;
     double _rightPower;
     double _strafePower;
     Telemetry _telemetry;
     final double K_TURN = 0.02;
+    final double K_STRAFE = 0.001;
+    public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98;
     BNO055IMU imu;
 
     //thing that happens when new is used (constructor)
@@ -246,6 +253,30 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
+    public void lifterCS4(){
+        _lifter.setTargetPosition(CONE_STACK_LEVEL_4);
+        _lifter.setPower(.5);
+
+    }
+
+    public void lifterCS3(){
+        _lifter.setTargetPosition(CONE_STACK_LEVEL_3);
+        _lifter.setPower(.5);
+
+    }
+
+    public void lifterCS2(){
+        _lifter.setTargetPosition(CONE_STACK_LEVEL_2);
+        _lifter.setPower(.5);
+
+    }
+
+    public void lifterCS1(){
+        _lifter.setTargetPosition(CONE_STACK_LEVEL_1);
+        _lifter.setPower(.5);
+
+    }
+
     public void lifterZero(){
         _lifter.setTargetPosition(0);
         _lifter.setPower(.5);
@@ -311,9 +342,9 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         }
         //reset the gyro and the motors
         float zAngle = 0.0f;
-        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        while(Math.abs(_frontLeft.getCurrentPosition())>10){}
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        while(Math.abs(_frontRight.getCurrentPosition())>10){}
 
 
         //set the motors to the desired power, they will keep running during all the logic with the encoders
@@ -324,7 +355,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
         //checks if the current number of encoder clicks is less than what we want. this will keep running until the current encoder clicks are more than what we want
-        while ( Math.abs(encoderClicks) > Math.abs(_frontLeft.getCurrentPosition() )){
+        while ( Math.abs(encoderClicks) > Math.abs(_frontRight.getCurrentPosition() )){
             information();
             //normalizes the angle
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
@@ -349,6 +380,68 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setPower(0);
         _backLeft.setPower(0);
     }
+
+    public void driveStrafeInches(double inches, double desiredAngle, double power) throws InterruptedException{
+        driveStrafe((int)(inches* DRIVE_STRAFE_ENCODER_TO_INCHES), desiredAngle,power);
+    }
+
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power) throws InterruptedException{
+        driveStrafe (encoderClicks, desiredAngle,  power, false);
+    }
+
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power, boolean useCheat) throws InterruptedException {
+
+        if(useCheat){
+            desiredAngle = normalizeAngle(desiredAngle+180);
+        }
+        float zAngle = 0.0f;
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Thread.sleep(250);
+
+        _frontRight.setPower(power);
+        _backRight.setPower(-power);
+        _frontLeft.setPower(-power);
+        _backLeft.setPower(power);
+
+
+
+        while ( Math.abs(_frontLeft.getCurrentPosition()) < Math.abs(encoderClicks)){
+            zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+            if(useCheat) {
+                zAngle = (float) normalizeAngle(zAngle + 180);
+            }
+            // TODO: Issue with angles crossing the circle discontinutiy
+            //       e.g. yAngle = 171 and desiredAngle = -179
+            //
+            double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+            double strafeCorrect = (_frontRight.getCurrentPosition()-0.0)*K_STRAFE;  // target is 0, finds the change in the y encoder value and converts it to a power value to modify the power parameter. Subracts zero because that's the number we want it to be at
+
+
+            _frontRight.setPower(power - driveCorrect - strafeCorrect);
+            _backRight.setPower(-power - driveCorrect - strafeCorrect);
+            _frontLeft.setPower(-power + driveCorrect - strafeCorrect);
+            _backLeft.setPower(power + driveCorrect - strafeCorrect);
+
+
+            information();
+
+            // make +- strafe correct for angle
+            // all addition because they all need to turn the same way for strafeCorrect
+
+
+            //all positives because negative signs are weird and we want those motors to have slightly less power so they don't mov too fast and cause a large correcton
+
+        }
+
+        _frontRight.setPower(0);
+        _backRight.setPower(0);
+        _frontLeft.setPower(0);
+        _backLeft.setPower(0);
+        }
+
 
     /***
      * @param desiredAngle angle you want the front of the robot to face at the end of the turn
