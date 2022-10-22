@@ -60,20 +60,57 @@ public class ChesterRed extends LinearOpMode {
         switch(1){
         case 1:
             rb.lifterLow();
-            rb.driveStraightInches(7, 0, .4);
-            rb.driveStrafeInches(46,0,-.6);
-            sleep(750);
+            rb.driveStraightInches(8, 0, .4);
+            rb.driveStrafeInches(45,0,-.4);
+            sleep(250);
             rb.collectorOpen();
             sleep(250);
-            rb.driveStrafeInches(3,0,.5);
-            rb.driveStraightInches(9,0,.4);
+            rb.driveStrafeInches(3,0,.4);
+            rb.driveStraightInches(7,0,.3);
             rb.lifterCS4();
             rb.turnToAngle(90,.3);
-            rb.driveStraightInches(18,90,-.4);
-            rb.driveStrafeInches(3,90,-.5);
+            rb.driveStraightInches(21,90,-.3);
+            rb.driveStrafeInches(7,90,-.4);
             rb.collectorClose();
-            sleep(500);
+            sleep(250);
+            rb.lifterLow();
+            rb.driveStrafeInches(11,90,.4);
+            rb.turnToAngle(-90,-.3);
+            rb.driveStrafeInches(21,-90,-.4);
             rb.lifterHigh();
+            rb.driveStraightInches(13,-90,.2);
+            sleep(250);
+            rb.driveStrafeInches(5,-90,-.3);
+            sleep(1500);
+            rb.collectorOpen();
+            sleep(250);
+            rb.driveStrafeInches(5,-90,.4);
+            rb.lifterCS3();
+            rb.driveStraightInches(13,-90,-.4);
+            rb.turnToAngle(90,.4);
+            rb.driveStrafeInches(32,90,-.4);
+            rb.collectorClose();
+            sleep(250);
+            rb.lifterLow();
+            rb.driveStrafeInches(8,90,.4);
+            rb.turnToAngle(-90,-.4);
+            rb.driveStrafeInches(22,-90,-.4);
+            rb.lifterHigh();
+            rb.driveStraightInches(9,-90,.4);
+            sleep(250);
+            rb.driveStrafeInches(4,-90,-.3);
+            sleep(1000);
+            rb.collectorOpen();
+            sleep(250);
+            rb.driveStraightInches(10,-90,-.4);
+            rb.lifterZero();
+            rb.turnToAngle(0,.3);
+            rb.driveStraightInches(12,0,.4);
+
+
+
+
+
 
 
 

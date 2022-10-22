@@ -29,11 +29,11 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     int ZERO_HEIGHT = 0;
     int LOW_HEIGHT = 1050;
     int MID_HEIGHT = 1765;
-    int HIGH_HEIGHT = 2262;
+    int HIGH_HEIGHT = 2400;
     int CONE_STACK_LEVEL_1 = 0;
     int CONE_STACK_LEVEL_2 = 334;
-    int CONE_STACK_LEVEL_3 = 463;
-    int CONE_STACK_LEVEL_4 = 502;
+    int CONE_STACK_LEVEL_3 = 300;
+    int CONE_STACK_LEVEL_4 = 350;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -580,16 +580,27 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backRight.setPower(_rightPower+_strafePower);
          */
 
+/*
+        _frontRight.setPower(_rightPower-_strafePower);
+        _backLeft.setPower(_leftPower-_strafePower);
+        _frontLeft.setPower(-_rightPower-_strafePower);
+        _backRight.setPower(-_leftPower-_strafePower);
 
-        _frontRight.setPower(_rightPower+_strafePower);
-        _backLeft.setPower(_leftPower+_strafePower);
-        _frontLeft.setPower(-_rightPower+_strafePower);
-        _backRight.setPower(-_leftPower+_strafePower);
+ */
 
 
 
-        //powers = sticks used to determine what side of the robot the motor is on from collector in the front
-        //- means that the motor is corkscrewing backwards
+        _frontRight.setPower(-_leftPower-_strafePower);
+        _frontLeft.setPower(_leftPower-_strafePower);
+        _backRight.setPower(_rightPower-_strafePower);
+        _backLeft.setPower(-_rightPower-_strafePower);
+
+
+
+
+
+
+        //powers = sticks used to determine what side of the robot the motor is on from collector in the fro//- means that the motor is corkscrewing backwards
 
 
     }

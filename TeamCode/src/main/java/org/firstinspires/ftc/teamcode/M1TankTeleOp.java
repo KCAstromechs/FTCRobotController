@@ -62,7 +62,7 @@ public class M1TankTeleOp extends OpMode
             K = 3;
         }
         else if (gamepad1.right_bumper) {
-            K = 1;
+            K = 1.5;
         }
 
         leftPower = -gamepad1.left_stick_y/K;
