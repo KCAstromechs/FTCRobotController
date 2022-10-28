@@ -116,7 +116,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public M1_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry, boolean isFC) {
-
+       //yeah I know it's redundant i just need to use the variable
+        isFC = true;
         //underscore means it's a private variable
         _telemetry = telemetry;
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
