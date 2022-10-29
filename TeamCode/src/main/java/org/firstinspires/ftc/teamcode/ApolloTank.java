@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
-@TeleOp(name="TANK", group="Iterative Opmode")
+@TeleOp(name="APOLLO TANK", group="Iterative Opmode")
 public class ApolloTank extends OpMode
 {
     // Declare OpMode members.

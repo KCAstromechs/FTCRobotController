@@ -30,16 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-
-@Autonomous(name="Chester Red Side Red Terminal", group="Robot")
-public class ChesterRed extends LinearOpMode {
+@Autonomous(name="Chester Red Side Blue Terminal", group="Robot")
+public class ChesterRedBlueTerminal extends LinearOpMode {
 
     public M1_Robot_Base rb;
     private ElapsedTime runtime = new ElapsedTime();
@@ -49,6 +45,7 @@ public class ChesterRed extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         rb = new M1_Robot_Base(hardwareMap, telemetry);
 
+
         rb.collectorClose();
         telemetry.addData("status:", "ready");
         telemetry.update();
@@ -57,50 +54,60 @@ public class ChesterRed extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         rb.lifterLow();
-        rb.driveStraightInches(8, 0, .4);
+        //drive and deliver to the low junction
+        rb.driveStraightInches(15, 0, -.4);
         rb.driveStrafeInches(45,0,-.4);
         sleep(250);
         rb.collectorOpen();
         sleep(250);
-        rb.driveStrafeInches(3,0,.4);
-        rb.driveStraightInches(7,0,.4);
+        //move towards pile
+
+        rb.driveStrafeInches(6,0,.4);
+        rb.driveStraightInches(4,0,-.4);
+        rb.lifterLow();
+        //turn towards pile
+        rb.turnToAngle(-85,.3);
+        rb.driveStraightInches(24,-85,.4);
         rb.lifterCS4();
-        rb.turnToAngle(90,.3);
-        rb.driveStraightInches(22,90,-.4);
-        rb.driveStrafeInches(7,90,-.5);
+        rb.driveStrafeInches(5,-85,-.5);
+        //collect
         rb.collectorClose();
         sleep(250);
         rb.lifterLow();
-        rb.driveStrafeInches(11,90,.5);
-        rb.turnToAngle(-90,-.3);
-        rb.driveStrafeInches(21,-90,-.5);
+        //back away and turn
+        rb.driveStrafeInches(13,-85,.5);
+        rb.turnToAngle(95,-.3);
+
+        rb.driveStrafeInches(23,90,-.5);
         rb.lifterHigh();
-        rb.driveStraightInches(11,-90,.4);
+        rb.driveStraightInches(9,90,-.4);
         sleep(250);
-        rb.driveStrafeInches(2.5,-90,-.4);
+        rb.driveStrafeInches(3.5,90,-.4);
         sleep(1500);
         rb.collectorOpen();
+
         sleep(250);
-        rb.driveStrafeInches(2.5,-90,.4);
+        rb.driveStrafeInches(3.5,90,.4);
         rb.lifterCS3();
-        rb.driveStraightInches(10,-90,-.4);
-        rb.turnToAngle(90,.4);
-        rb.driveStrafeInches(35,90,-.4);
+        rb.driveStraightInches(7,90,.4);
+        rb.turnToAngle(-90,.4);
+        rb.driveStrafeInches(33,-90,-.4);
         rb.collectorClose();
+        /*
         sleep(250);
         rb.lifterLow();
-        rb.driveStrafeInches(10,90,.4);
-        rb.turnToAngle(-90,-.4);
-        rb.driveStrafeInches(22,-90,-.4);
+        rb.driveStrafeInches(10,-85,.4);
+        rb.turnToAngle(90,-.4);
+        rb.driveStrafeInches(22,90,-.4);
         rb.lifterHigh();
-        rb.driveStraightInches(9,-90,.4);
+        rb.driveStraightInches(9,90,-.4);
         sleep(250);
-        rb.driveStrafeInches(3,-90,-.4);
+        rb.driveStrafeInches(3,90,-.4);
         sleep(1000);
         rb.collectorOpen();
         sleep(250);
-        rb.driveStrafeInches(2,-90,.4);
-        rb.driveStraightInches(8,-90,-.4);
+        rb.driveStrafeInches(2,90,.4);
+        rb.driveStraightInches(8,90,.4);
         rb.lifterZero();
         rb.turnToAngle(0,.3);
 
@@ -108,20 +115,22 @@ public class ChesterRed extends LinearOpMode {
 
 
             case 1:
-            rb.driveStraightInches(16,0,.4);
+            rb.driveStraightInches(16,0,-.4);
             break;
 
             case 2:
-                rb.driveStraightInches(1,0,.4);
+                rb.driveStraightInches(1,0,-.4);
             break;
 
             case 3:
-            rb.driveStraightInches(14,0,-.4);
+            rb.driveStraightInches(14,0,.4);
             break;
 
 
 
         }
+
+         */
 
 
 
