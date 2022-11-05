@@ -22,7 +22,7 @@ public class VisionTest extends LinearOpMode {
         waitForStart();
 
         // now let's run vision, full image is 640 x 480
-        VisionBase.COLOR color = vision.findTSEPosition(20,620,20,460, true);
+        VisionBase.COLOR color = vision.findRGB(240,285,360,445, true);
 
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");

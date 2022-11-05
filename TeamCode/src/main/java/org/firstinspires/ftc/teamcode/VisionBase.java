@@ -23,6 +23,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
 import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -72,6 +74,8 @@ public class VisionBase {
     HardwareMap hardwareMap;
     Telemetry telemetry;
 
+    int EXPOSURE = 80;
+
     //----------------------------------------------------------------------------------------------
     // Stolen Camera Variables
     //----------------------------------------------------------------------------------------------
@@ -87,6 +91,8 @@ public class VisionBase {
     private WebcamName cameraName;
     private Camera camera;
     private CameraCaptureSession cameraCaptureSession;
+    ExposureControl myExposureControl;
+    GainControl myGainControl;
 
     /** The queue into which all frames from the camera are placed as they become available.
      * Frames which are not processed by the OpMode are automatically discarded. */
@@ -119,11 +125,27 @@ public class VisionBase {
         initializeFrameQueue(2);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
 
+        openCamera();
+        startCamera();
+
+        myExposureControl= camera.getControl(ExposureControl.class);
+        myGainControl = camera.getControl(GainControl.class);
+
+        myExposureControl.setMode(ExposureControl.Mode.Manual);
+        myExposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
+        myGainControl.setGain(20);
+
+        long currentExposure = myExposureControl.getExposure(TimeUnit.MILLISECONDS);
+        int currentGain = myGainControl.getGain();
+
+        telemetry.addData("Exposure", currentExposure);
+        telemetry.addData("Gain", currentGain);
+
         telemetry.addData("VISION", "initialized");
         telemetry.update();
     }
 
-    public COLOR findTSEPosition(int _minX, int _maxX, int _minY, int _maxY, boolean save) {
+    public COLOR findRGB(int _minX, int _maxX, int _minY, int _maxY, boolean save) {
         // setting up coords input as global
         minX = _minX;
         maxX = _maxX;
@@ -216,6 +238,7 @@ public class VisionBase {
         int pixelCountG = 0;
         int pixelCountB = 0;
         int detectionThreshold = 50;
+        int minColorDifference = 50;
 
         // loop thru image
         for (int x = minX; x < maxX; x++) {
@@ -227,11 +250,11 @@ public class VisionBase {
                 blueValue = Color.blue(color);
                 // color
                 if (redValue > detectionThreshold || greenValue > detectionThreshold || blueValue > detectionThreshold) {
-                    if (redValue > greenValue && redValue > blueValue)
+                    if (redValue > greenValue + minColorDifference && redValue > blueValue + minColorDifference)
                         pixelCountR++;
-                    else if (greenValue > redValue && greenValue > blueValue)
+                    else if (greenValue > redValue + minColorDifference && greenValue > blueValue + minColorDifference)
                         pixelCountG++;
-                    else if (blueValue > redValue && blueValue >greenValue)
+                    else if (blueValue > redValue + minColorDifference && blueValue > greenValue + minColorDifference)
                         pixelCountB++;
                 }
 
