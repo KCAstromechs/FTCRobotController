@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,10 +13,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static java.lang.Thread.sleep;
 
 public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
 
     //FRONT LEFT IS ENCODER Y, FRONT RIGHT IS ENCODER X
+    //type this into command to set up the wifi connect:
+    // AppData\Local\Android\Sdk\platform-tools\adb connect 192.168.43.1:5555
+
 
     //Important Set-Up Stuff
     DcMotor _frontLeft;
@@ -38,6 +43,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _rightPower;
     double _strafePower;
     Telemetry _telemetry;
+    OpMode _callingOpMode;
     final double K_TURN = 0.02;
     final double K_STRAFE = 0.001;
     public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98;
@@ -279,7 +285,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     }
 
     public void lifterZero(){
-        _lifter.setTargetPosition(0);
+        _lifter.setTargetPosition(ZERO_HEIGHT);
         _lifter.setPower(.5);
     }
 
@@ -287,7 +293,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         if(position!=0) {
             int newTargetPosition = _lifter.getCurrentPosition() + position;
             if (newTargetPosition > 2560) newTargetPosition = 2560;
-            if (newTargetPosition < -10) newTargetPosition = -10;
+            if (newTargetPosition < -50) newTargetPosition = -50;
             _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(1);
         }
@@ -296,6 +302,32 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _telemetry.addData("position", position);
         _telemetry.update();
     }
+
+    public void lifterResetDown () throws InterruptedException{
+        _lifter.setPower(-.2);
+        Thread.sleep(500);
+        _lifter.setPower(0);
+        _lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Thread.sleep(20);
+        _lifter.setTargetPosition(0);
+        _lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
+
+    public void lifterResetUp() throws InterruptedException{
+        _lifter.setPower(.2);
+        Thread.sleep(500);
+        _lifter.setPower(0);
+        _lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Thread.sleep(20);
+        _lifter.setTargetPosition(0);
+        _lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+    }
+
 
 //-----------------------------------------------------------------------------------------------------------------
 //AUTONOMOUS MOVEMENT
@@ -400,7 +432,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Thread.sleep(250);
+        sleep(250);
 
         _frontRight.setPower(power);
         _backRight.setPower(-power);
@@ -496,7 +528,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
             if(useCheat) {
                 zAngle = (float)normalizeAngle(zAngle + 180);
             }
-            Thread.sleep(10);
+            sleep(10);
         }
 
         _frontRight.setPower(0);

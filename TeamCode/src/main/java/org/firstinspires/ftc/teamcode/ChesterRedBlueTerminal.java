@@ -55,82 +55,87 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         waitForStart();
         rb.lifterLow();
         //drive and deliver to the low junction
-        rb.driveStraightInches(15, 0, -.4);
-        rb.driveStrafeInches(45,0,-.4);
+        rb.driveStraightInches(8,0,.4);
+        rb.driveStrafeInches(7,0,-.5);
         sleep(250);
         rb.collectorOpen();
         sleep(250);
-        //move towards pile
-
-        rb.driveStrafeInches(6,0,.4);
-        rb.driveStraightInches(4,0,-.4);
-        rb.lifterLow();
-        //turn towards pile
+        //realign against the wall
+        rb.driveStrafeInches(8,0,.5);
+        //drive toward the blue junction and turn to face the pile
+        rb.driveStraightInches(8,0,-.4);
         rb.turnToAngle(-85,.3);
-        rb.driveStraightInches(24,-85,.4);
+        //drive towards pile
+        rb.driveStraightInches(46,-85,.4);
         rb.lifterCS4();
-        rb.driveStrafeInches(5,-85,-.5);
-        //collect
+        rb.driveStrafeInches(34,-85,-.4);
+        sleep(250);
         rb.collectorClose();
         sleep(250);
         rb.lifterLow();
-        //back away and turn
-        rb.driveStrafeInches(13,-85,.5);
-        rb.turnToAngle(95,-.3);
-
-        rb.driveStrafeInches(23,90,-.5);
-        rb.lifterHigh();
-        rb.driveStraightInches(9,90,-.4);
-        sleep(250);
-        rb.driveStrafeInches(3.5,90,-.4);
-        sleep(1500);
-        rb.collectorOpen();
-
-        sleep(250);
-        rb.driveStrafeInches(3.5,90,.4);
-        rb.lifterCS3();
-        rb.driveStraightInches(7,90,.4);
-        rb.turnToAngle(-90,.4);
-        rb.driveStrafeInches(33,-90,-.4);
-        rb.collectorClose();
-        /*
-        sleep(250);
-        rb.lifterLow();
-        rb.driveStrafeInches(10,-85,.4);
-        rb.turnToAngle(90,-.4);
-        rb.driveStrafeInches(22,90,-.4);
-        rb.lifterHigh();
-        rb.driveStraightInches(9,90,-.4);
-        sleep(250);
-        rb.driveStrafeInches(3,90,-.4);
-        sleep(1000);
-        rb.collectorOpen();
-        sleep(250);
-        rb.driveStrafeInches(2,90,.4);
-        rb.driveStraightInches(8,90,.4);
-        rb.lifterZero();
+        rb.driveStrafeInches(24,-85,.5);
         rb.turnToAngle(0,.3);
+        //go towards the high
 
-        switch(2){
+        rb.driveStraightInches(18,0,.4);
+        rb.lifterHigh();
+        rb.driveStrafeInches(6,0,-.4);
+        sleep(1250);
+        rb.collectorOpen();
+        sleep(250);
+        //strafe back and scoot, then turn towards the pile again
+        rb.driveStrafeInches(6,0,.5);
+        rb.lifterLow();
+        rb.driveStraightInches(10,0,-.4);
+        rb.turnToAngle(-85,.3);
+        rb.lifterCS3();
+        rb.driveStrafeInches(29,-85,-.5);
+        sleep(250);
+        rb.collectorClose();
+        sleep(250);
+        rb.lifterLow();
+        sleep(250);
+        rb.driveStrafeInches(24,-85,.5);
+        rb.turnToAngle(0,.3);
+        //go towards the high
 
+        rb.driveStraightInches(16,0,.4);
+        rb.lifterHigh();
+        rb.driveStrafeInches(6,0,-.4);
+        sleep(1250);
+        rb.collectorOpen();
+        sleep(250);
+        //strafe back and scoot, then turn towards the pile again
+        rb.driveStrafeInches(4,0,.5);
+        rb.lifterZero();
+        sleep(250);
 
+        switch(3){
             case 1:
-            rb.driveStraightInches(16,0,-.4);
-            break;
-
+                rb.driveStraightInches(12,0,.4);
+                break;
             case 2:
-                rb.driveStraightInches(1,0,-.4);
-            break;
-
+                rb.driveStraightInches(8,0,-.4);
+                break;
             case 3:
-            rb.driveStraightInches(14,0,.4);
-            break;
-
-
+                rb.driveStraightInches(22,0,-.4);
+                break;
+            case 4:
+                rb.driveStraightInches(22,0,-.4);
+                break;
 
         }
 
-         */
+
+
+
+
+
+
+
+
+
+
 
 
 
