@@ -32,14 +32,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-
-@Autonomous(name="Chester Red Side Red Terminal", group="Robot")
-public class ChesterRed extends LinearOpMode {
+@Autonomous(name="Lifter Level Test ", group="Robot")
+public class LifterTest extends LinearOpMode {
 
     public M1_Robot_Base rb;
     private ElapsedTime runtime = new ElapsedTime();
@@ -49,80 +46,21 @@ public class ChesterRed extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         rb = new M1_Robot_Base(hardwareMap, telemetry);
 
-        rb.collectorClose();
         telemetry.addData("status:", "ready");
         telemetry.update();
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
         rb.lifterLow();
-        rb.driveStraightInches(8, 0, .4);
-        rb.driveStrafeInches(45,0,-.4);
-        sleep(250);
-        rb.collectorOpen();
-        sleep(250);
-        rb.driveStrafeInches(3,0,.4);
-        rb.driveStraightInches(7,0,.4);
-        rb.lifterCS4();
-        rb.turnToAngle(90,.3);
-        rb.driveStraightInches(22,90,-.4);
-        rb.driveStrafeInches(7,90,-.5);
-        rb.collectorClose();
-        sleep(250);
-        rb.lifterLow();
-        rb.driveStrafeInches(11,90,.5);
-        rb.turnToAngle(-90,-.3);
-        rb.driveStrafeInches(21,-90,-.5);
+        sleep(5000);
+        rb.lifterMedium();
+        sleep(5000);
         rb.lifterHigh();
-        rb.driveStraightInches(11,-90,.4);
-        sleep(250);
-        rb.driveStrafeInches(2.5,-90,-.4);
-        sleep(1250);
-        rb.collectorOpen();
-        sleep(250);
-        rb.driveStrafeInches(2.5,-90,.4);
-        rb.lifterCS3();
-        rb.driveStraightInches(10,-90,-.4);
-        rb.turnToAngle(90,.4);
-        rb.driveStrafeInches(35,90,-.4);
-        rb.collectorClose();
-        sleep(250);
-        rb.lifterLow();
-        rb.driveStrafeInches(10,90,.4);
-        rb.turnToAngle(-90,-.4);
-        rb.driveStrafeInches(22,-90,-.4);
-        rb.lifterHigh();
-        rb.driveStraightInches(9,-90,.4);
-        sleep(250);
-        rb.driveStrafeInches(3,-90,-.4);
-        sleep(1000);
-        rb.collectorOpen();
-        sleep(250);
-        rb.driveStrafeInches(2,-90,.4);
-        rb.driveStraightInches(8,-90,-.4);
+        sleep(5000);
         rb.lifterZero();
-        rb.turnToAngle(0,.3);
-        sleep(250);
-
-        switch(2){
-
-
-            case 1:
-            rb.driveStraightInches(16,0,.4);
-            break;
-
-            case 2:
-                rb.driveStraightInches(1,0,.4);
-            break;
-
-            case 3:
-            rb.driveStraightInches(14,0,-.4);
-            break;
-
-
-
-        }
+        sleep(5000);
 
 
 

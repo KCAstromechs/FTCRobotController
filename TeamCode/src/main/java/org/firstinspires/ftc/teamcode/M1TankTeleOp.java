@@ -22,6 +22,7 @@ public class M1TankTeleOp extends OpMode
         rb = new M1_Robot_Base(hardwareMap, telemetry);
 
 
+
         double waitTime = getRuntime()+ 1.;
         //while(getRuntime()<waitTime);
 
@@ -84,6 +85,22 @@ public class M1TankTeleOp extends OpMode
 
         if (gamepad2.b){
             rb.collectorClose();
+        }
+
+        if(gamepad2.x){
+            try {
+                rb.lifterResetDown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(gamepad2.y){
+            try {
+                rb.lifterResetUp();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         //LIFTER
