@@ -67,8 +67,6 @@ public class VisionBase {
     int analyzedWidth = 0;
     int analyzedHeight = 0;
     int analyzedPixels = 0;
-    int dividerA = 0;
-    int dividerB = 0;
     // other
     COLOR mostRGB = COLOR.NOT_DETECTED;
     HardwareMap hardwareMap;
@@ -134,8 +132,6 @@ public class VisionBase {
         analyzedWidth = (maxX-minX);
         analyzedHeight = (maxY-minY);
         analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
-        dividerA = (minX + (analyzedWidth/3));
-        dividerB = (minX + (analyzedWidth/3*2));
 
         // if something goes wrong with vision process, not detected will be returned
         COLOR ret = COLOR.NOT_DETECTED;
@@ -209,58 +205,48 @@ public class VisionBase {
         for (int x=maxX; x > minX; x--){
             bitmap.setPixel(x,minY,WHITE);
         }
-
-        // mark dividers
-        for (int y=maxY; y > minY; y--){
-            bitmap.setPixel(dividerA,y,WHITE);
-        }
-        for (int y=maxY; y > minY; y--){
-            bitmap.setPixel(dividerB,y,WHITE);
-        }
     }
 
     private COLOR mostRGB(Bitmap bitmap){
         int color = 0;
-        int blueValue = 0;
+        int redValue = 0;
         int greenValue = 0;
-        int minColorDifference = 50; // difference between blue and green to be counted in the pixel count
-        int pixelCountA = 0;
+        int blueValue = 0;
+        int pixelCountR = 0;
+        int pixelCountG = 0;
         int pixelCountB = 0;
-        int pixelCountC = 0;
-        int detectionThreshold = 50; // number of pixels counted to not count as "NOT DETECTED"
+        int detectionThreshold = 50;
 
         // loop thru image
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
                 // get color for this coordinate
                 color = bitmap.getPixel(x,y);
-                blueValue = Color.blue(color);
+                redValue = Color.red(color);
                 greenValue = Color.green(color);
-                if ((greenValue - blueValue) >= minColorDifference) {
-                    if (x < dividerA){
-                        pixelCountA += 1;
-                    }
-                    else if (x > dividerA && x < dividerB){
-                        pixelCountB += 1;
-                    }
-                    else {
-                        pixelCountC += 1;
-                    }
+                blueValue = Color.blue(color);
+                // color
+                if (redValue > detectionThreshold || greenValue > detectionThreshold || blueValue > detectionThreshold) {
+                    if (redValue > greenValue && redValue > blueValue)
+                        pixelCountR++;
+                    else if (greenValue > redValue && greenValue > blueValue)
+                        pixelCountG++;
+                    else if (blueValue > redValue && blueValue >greenValue)
+                        pixelCountB++;
                 }
+
             }
         }
-        /**
-        // tell me which one has the biggest amount of pixels that have specified blue green difference unless under threshold
-        if (pixelCountA > detectionThreshold || pixelCountB > detectionThreshold || pixelCountC > detectionThreshold) {
-            if(pixelCountA > pixelCountB && pixelCountA > pixelCountC)
-                mostGreenBlueDifference = TSEPosition.LEFT;
-            else if (pixelCountB > pixelCountA && pixelCountB > pixelCountC)
-                mostGreenBlueDifference = TSEPosition.CENTER;
-            else if (pixelCountC > pixelCountA && pixelCountC > pixelCountB)
-                mostGreenBlueDifference = TSEPosition.RIGHT;
+        if (pixelCountR > detectionThreshold || pixelCountG > detectionThreshold || pixelCountB > detectionThreshold) {
+            if(pixelCountR > pixelCountG && pixelCountR > pixelCountB)
+                mostRGB = COLOR.RED;
+            else if (pixelCountG > pixelCountR && pixelCountG > pixelCountB)
+                mostRGB = COLOR.GREEN;
+            else if (pixelCountB > pixelCountR && pixelCountB > pixelCountG)
+                mostRGB = COLOR.BLUE;
             else
-                mostGreenBlueDifference = TSEPosition.NOT_DETECTED;
-        }**/
+                mostRGB = COLOR.NOT_DETECTED;
+        }
         return mostRGB;
     }
 
