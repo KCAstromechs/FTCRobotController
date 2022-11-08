@@ -238,7 +238,7 @@ public class VisionBase {
         int pixelCountG = 0;
         int pixelCountB = 0;
         int detectionThreshold = 50;
-        int minColorDifference = 50;
+        int minColorDifference = 20;
 
         // loop thru image
         for (int x = minX; x < maxX; x++) {
@@ -252,7 +252,7 @@ public class VisionBase {
                 if (redValue > detectionThreshold || greenValue > detectionThreshold || blueValue > detectionThreshold) {
                     if (redValue > greenValue + minColorDifference && redValue > blueValue + minColorDifference)
                         pixelCountR++;
-                    else if (greenValue > redValue + minColorDifference && greenValue > blueValue + minColorDifference)
+                    else if (greenValue > redValue + minColorDifference && greenValue > blueValue)
                         pixelCountG++;
                     else if (blueValue > redValue + minColorDifference && blueValue > greenValue + minColorDifference)
                         pixelCountB++;
