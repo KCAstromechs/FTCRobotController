@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
+import static java.lang.Math.PI;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static java.lang.Thread.sleep;
 
@@ -42,6 +43,15 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _leftPower;
     double _rightPower;
     double _strafePower;
+    double _inputX;
+    double _inputY;
+    double _turnPower;
+    double _dpadPower = 0.5;
+    double FCSpeedK = 3;
+    double FCSpeedSlowK = 5;
+    boolean FCSlowMode = false;
+    boolean _dpad = false;
+    double _direction = 0;
     Telemetry _telemetry;
     OpMode _callingOpMode;
     final double K_TURN = 0.02;
@@ -213,6 +223,29 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _strafePower=strafePower;
 
 
+    }
+
+    public void FCDrive(double inputX, double inputY, double turnPower){
+        _inputX = inputX;
+        _inputY = inputY;
+        _turnPower = turnPower;
+
+    }
+
+    public void FCSlowMode(boolean slow){
+        FCSlowMode = slow;
+    }
+
+    public void dpadTurn (boolean dpad){
+        _dpad = dpad;
+    }
+
+    public void dpadDirection (double direction){
+        _direction = direction;
+    }
+
+    public void dpadInverse (){
+        _direction *= -1;
     }
 
 //----------------------------------------------------------------------------------------------------------------
@@ -618,12 +651,43 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _backLeft.setPower(-_rightPower-_strafePower);
 
 
-
-
-
-
         //powers = sticks used to determine what side of the robot the motor is on from collector in the fro//- means that the motor is corkscrewing backwards
 
 
+    }
+
+    public void performFCUpdates(){
+        float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+        double K;
+        if (FCSlowMode = true){
+            K = FCSpeedSlowK;
+        }
+        else{
+            K = FCSpeedK;
+        }
+
+        double robotX = (_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)));
+        double robotY = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
+
+        double fLPower = ((-robotX + robotY) + _turnPower - (_dpadPower*_direction)) / K;
+        double fRPower = ((-robotX - robotY) - _turnPower + (_dpadPower*_direction)) / K;
+        double bRPower = ((-robotX + robotY) - _turnPower + (_dpadPower*_direction)) / K;
+        double bLPower = ((-robotX - robotY) + _turnPower - (_dpadPower*_direction)) / K;
+
+        double highestPowerF = Math.max(Math.abs(fLPower), Math.abs(fRPower));
+        double highestPowerB = Math.max(Math.abs(bRPower), Math.abs(bLPower));
+        double highestPower = Math.max(highestPowerB, highestPowerF);
+
+        if (highestPower > 1) {
+            fLPower /= highestPower;
+            fRPower /= highestPower;
+            bRPower /= highestPower;
+            bLPower /= highestPower;
+        }
+
+        _frontLeft.setPower(fLPower);
+        _frontRight.setPower(fRPower);
+        _backRight.setPower(bRPower);
+        _backLeft.setPower(bLPower);
     }
 }

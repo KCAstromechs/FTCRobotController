@@ -17,24 +17,16 @@ public class M1FCTeleOp extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     public M1_Robot_Base rb;
-    DcMotor frontLeft;
-    DcMotor backLeft;
-    DcMotor frontRight;
-    DcMotor backRight;
     double fieldAngle;
     BNO055IMU imu;
-    double K = 3;
     double desiredAngle;
-    double direction = 0;
     boolean dpad = false;
-    double dpadPower = 0.5;
     double errorK = 0.015;
 
     @Override
     public void init() {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         rb = new M1_Robot_Base(hardwareMap, telemetry, true);
-
 
         // original angle
         fieldAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
@@ -75,21 +67,16 @@ public class M1FCTeleOp extends OpMode {
 
         if (dpad = true) {
             if (Math.abs(zAngle - desiredAngle) < errorK) {
-                direction = 0;
+                rb.dpadDirection(0);
                 dpad = false;
+                rb.dpadTurn(false);
             }
         }
 
-        // if button toggle, switch speed
-        if (gamepad1.left_bumper) {
-            K = 5;
-        } else if (gamepad1.right_bumper) {
-            K = 3;
-        }
-
-        // testing idea
+        // dpad turning
         if (gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right) {
             dpad = true;
+            rb.dpadTurn(true);
             // what is our desired angle?
             if (gamepad1.dpad_up) {
                 desiredAngle = 0;
@@ -109,48 +96,32 @@ public class M1FCTeleOp extends OpMode {
 
             // are we at the angle?
             if (Math.abs(zAngle - desiredAngle) < errorK){
-                direction = 0;
+                rb.dpadDirection(0);
             }
             // which direction is fastest?
             else if (desiredAngle < zAngle) {
-                direction = 1;
+                rb.dpadDirection(1);
             } else if (desiredAngle > zAngle){
-                direction = -1;
+                rb.dpadDirection(-1);
             }
             // discontinuity - are we going the shortest path?
             if (Math.abs(zAngle-desiredAngle) > PI) {
-                direction *= -1;
+                rb.dpadInverse();
             }
         }
+        // if button toggle, switch speed
+        if (gamepad1.left_bumper) {
+            rb.FCSlowMode(true);
+        } else if (gamepad1.right_bumper) {
+            rb.FCSlowMode(false);
+        }
 
+        // FC Drive
         double turnPower = (gamepad1.left_stick_x);
-
         double inputX = gamepad1.right_stick_x;
         double inputY = -gamepad1.right_stick_y;
 
-        double robotX = (inputX * Math.cos(zAngle)) + (inputY * Math.cos(zAngle + (PI / 2)));
-        double robotY = (inputX * Math.sin(zAngle)) + (inputY * Math.sin(zAngle + (PI / 2)));
-
-        double fLPower = ((-robotX + robotY) + turnPower - (dpadPower*direction)) / K;
-        double fRPower = ((-robotX - robotY) - turnPower + (dpadPower*direction)) / K;
-        double bRPower = ((-robotX + robotY) - turnPower + (dpadPower*direction)) / K;
-        double bLPower = ((-robotX - robotY) + turnPower - (dpadPower*direction)) / K;
-
-        double highestPowerF = Math.max(Math.abs(fLPower), Math.abs(fRPower));
-        double highestPowerB = Math.max(Math.abs(bRPower), Math.abs(bLPower));
-        double highestPower = Math.max(highestPowerB, highestPowerF);
-
-        if (highestPower > 1) {
-            fLPower /= highestPower;
-            fRPower /= highestPower;
-            bRPower /= highestPower;
-            bLPower /= highestPower;
-        }
-
-        frontLeft.setPower(fLPower);
-        frontRight.setPower(fRPower);
-        backRight.setPower(bRPower);
-        backLeft.setPower(bLPower);
+        rb.FCDrive(inputX,inputY,turnPower);
 
         //COLLECTOR
         if (gamepad2.a){
@@ -183,9 +154,9 @@ public class M1FCTeleOp extends OpMode {
 
 
         rb.performUpdates();
+        rb.performFCUpdates();
         telemetry.addData("Desired Angle:", desiredAngle);
         telemetry.addData("zAngle:", zAngle);
-        telemetry.addData("Direction:", direction);
         telemetry.update();
 
     }
