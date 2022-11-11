@@ -150,7 +150,7 @@ public class M1FCTeleOp extends OpMode {
 
         //LIFTER
         rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
-        
+
         rb.performFCUpdates();
 
     }

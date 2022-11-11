@@ -16,7 +16,7 @@ import static java.lang.Math.PI;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static java.lang.Thread.sleep;
 
-public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable {
+public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable, FieldCentric {
 
     //FRONT LEFT IS ENCODER Y, FRONT RIGHT IS ENCODER X
     //type this into command to set up the wifi connect:
@@ -47,8 +47,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _inputY;
     double _turnPower;
     double _dpadPower = 0.5;
-    double FCSpeedK = 3;
-    double FCSpeedSlowK = 5;
+    double FCSpeedK = 1.5;
+    double FCSpeedSlowK = 3;
     boolean FCSlowMode = false;
     boolean _dpad = false;
     double _direction = 0;
