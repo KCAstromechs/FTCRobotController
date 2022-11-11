@@ -34,20 +34,7 @@ public class M1FCTeleOp extends OpMode {
     public void init() {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         rb = new M1_Robot_Base(hardwareMap, telemetry, true);
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-        BNO055IMU.Parameters IMUParams = new BNO055IMU.Parameters();
-        IMUParams.mode = BNO055IMU.SensorMode.IMU;
-        IMUParams.angleUnit = BNO055IMU.AngleUnit.RADIANS;
 
-        imu.initialize(IMUParams);
-        while (!imu.isGyroCalibrated()) ;
-
-
-        double waitTime = getRuntime() + 1.;
-        //while(getRuntime()<waitTime);
 
         // original angle
         fieldAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
