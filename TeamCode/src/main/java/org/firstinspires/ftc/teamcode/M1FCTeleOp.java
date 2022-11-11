@@ -165,6 +165,37 @@ public class M1FCTeleOp extends OpMode {
         backRight.setPower(bRPower);
         backLeft.setPower(bLPower);
 
+        //COLLECTOR
+        if (gamepad2.a){
+            rb.collectorOpen();
+        }
+
+        if (gamepad2.b){
+            rb.collectorClose();
+        }
+
+        if(gamepad2.x){
+            try {
+                rb.lifterResetDown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(gamepad2.y){
+            try {
+                rb.lifterResetUp();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //LIFTER
+
+        rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
+
+
+        rb.performUpdates();
         telemetry.addData("Desired Angle:", desiredAngle);
         telemetry.addData("zAngle:", zAngle);
         telemetry.addData("Direction:", direction);
