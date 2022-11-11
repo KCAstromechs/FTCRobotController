@@ -134,18 +134,21 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     public M1_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry, boolean isFC) {
        //yeah I know it's redundant i just need to use the variable
         isFC = true;
+
         //underscore means it's a private variable
         _telemetry = telemetry;
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         _backLeft = hardwareMap.get(DcMotor.class,"backLeft");
         _backRight = hardwareMap.get(DcMotor.class,"backRight");
+        _lifter = hardwareMap.get(DcMotor.class,"lifter");
         _collector = hardwareMap.get(Servo.class,"collector");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
 
         _frontRight.setDirection(DcMotor.Direction.REVERSE);
         _backRight.setDirection(DcMotor.Direction.REVERSE);
+        _lifter.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         _backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -158,15 +161,16 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
+        _lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         // START THE ENCODERS
-        _frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _lifter.setTargetPosition(0);
+        _lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
 
