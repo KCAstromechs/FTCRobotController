@@ -30,12 +30,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 
 @Autonomous(name="Chester Red Side Red Terminal", group="Robot")
@@ -47,7 +43,12 @@ public class ChesterRed extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        VisionBase vision = new VisionBase(hardwareMap, telemetry);
+
+        // do this before match start
+        vision.initVision();
         rb = new M1_Robot_Base(hardwareMap, telemetry);
+
 
         rb.collectorClose();
         telemetry.addData("status:", "ready");
@@ -56,71 +57,92 @@ public class ChesterRed extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        VisionBase.COLOR color = vision.findRGB(284,350,308,400, true);
+
+        if (color == VisionBase.COLOR.RED) {
+            telemetry.addData("Final Answer", "RED");
+        }
+        else if (color == VisionBase.COLOR.GREEN) {
+            telemetry.addData("Final Answer", "GREEN");
+        }
+        else if (color == VisionBase.COLOR.BLUE) {
+            telemetry.addData("Final Answer", "BLUE");
+        }
+        else {
+            telemetry.addData("Final Answer", "NOT DETECTED");
+        }
+        telemetry.update();
+
+
         rb.lifterLow();
-        rb.driveStraightInches(8, 0, .4);
-        rb.driveStrafeInches(45,0,-.4);
+        //drive and deliver to the low junction
+        rb.driveStraightInches(16,0,-.4);
+        rb.driveStrafeInches(6,0,-.5);
         sleep(250);
         rb.collectorOpen();
         sleep(250);
-        rb.driveStrafeInches(3,0,.4);
-        rb.driveStraightInches(7,0,.4);
-        rb.lifterCS4();
+        //realign against the wall
+        rb.driveStrafeInches(6,0,.5);
+        //drive toward the blue junction and turn to face the pile
+        rb.driveStraightInches(8,0,.4);
         rb.turnToAngle(90,.3);
-        rb.driveStraightInches(22,90,-.4);
-        rb.driveStrafeInches(7,90,-.5);
+        //drive towards pile
+        rb.driveStraightInches(46,90,-.4);
+        rb.lifterCS4();
+        rb.driveStrafeInches(40,90,-.4);
+        sleep(250);
         rb.collectorClose();
         sleep(250);
         rb.lifterLow();
-        rb.driveStrafeInches(11,90,.5);
-        rb.turnToAngle(-90,-.3);
-        rb.driveStrafeInches(21,-90,-.5);
+        rb.driveStrafeInches(30,90,.5);
+        rb.turnToAngle(0,.3);
+        //go towards the high
+
+        rb.driveStraightInches(16,0,-.4);
         rb.lifterHigh();
-        rb.driveStraightInches(11,-90,.4);
-        sleep(250);
-        rb.driveStrafeInches(2.5,-90,-.4);
+        rb.driveStrafeInches(5,0,-.4);
         sleep(1250);
         rb.collectorOpen();
         sleep(250);
-        rb.driveStrafeInches(2.5,-90,.4);
+        //strafe back and scoot, then turn towards the pile again
+        rb.driveStrafeInches(5,0,.5);
+        rb.lifterLow();
+        rb.driveStraightInches(10,0,.4);
+        rb.turnToAngle(85,.3);
         rb.lifterCS3();
-        rb.driveStraightInches(10,-90,-.4);
-        rb.turnToAngle(90,.4);
-        rb.driveStrafeInches(35,90,-.4);
+        rb.driveStrafeInches(32,90,-.5);
+        sleep(250);
         rb.collectorClose();
         sleep(250);
         rb.lifterLow();
-        rb.driveStrafeInches(10,90,.4);
-        rb.turnToAngle(-90,-.4);
-        rb.driveStrafeInches(22,-90,-.4);
-        rb.lifterHigh();
-        rb.driveStraightInches(9,-90,.4);
         sleep(250);
-        rb.driveStrafeInches(3,-90,-.4);
-        sleep(1000);
+        rb.driveStrafeInches(28,90,.5);
+        rb.turnToAngle(0,.3);
+        //go towards the high
+
+        rb.driveStraightInches(17,0,-.4);
+        rb.lifterHigh();
+        rb.driveStrafeInches(5,0,-.4);
+        sleep(1250);
         rb.collectorOpen();
         sleep(250);
-        rb.driveStrafeInches(2,-90,.4);
-        rb.driveStraightInches(8,-90,-.4);
+        //strafe back and scoot, then turn towards the pile again
+        rb.driveStrafeInches(5,0,.5);
         rb.lifterZero();
-        rb.turnToAngle(0,.3);
         sleep(250);
 
-        switch(2){
-
-
-            case 1:
-            rb.driveStraightInches(16,0,.4);
-            break;
-
-            case 2:
-                rb.driveStraightInches(1,0,.4);
-            break;
-
-            case 3:
-            rb.driveStraightInches(14,0,-.4);
-            break;
-
-
+        switch(color){
+            case RED:
+                rb.driveStraightInches(4,0,-.4);
+                break;
+            case GREEN:
+            case NOT_DETECTED:
+                rb.driveStraightInches(8,0,.4);
+                break;
+            case BLUE:
+                rb.driveStraightInches(29,0,.4);
+                break;
 
         }
 
@@ -128,8 +150,19 @@ public class ChesterRed extends LinearOpMode {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
     }
 
 
-    }
+}
 
