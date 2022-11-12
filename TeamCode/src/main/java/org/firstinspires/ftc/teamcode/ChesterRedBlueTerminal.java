@@ -43,6 +43,10 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        VisionBase vision = new VisionBase(hardwareMap, telemetry);
+
+        // do this before match start
+        vision.initVision();
         rb = new M1_Robot_Base(hardwareMap, telemetry);
 
 
@@ -53,6 +57,25 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+
+        VisionBase.COLOR color = vision.findRGB(284,350,308,400, true);
+
+        if (color == VisionBase.COLOR.RED) {
+            telemetry.addData("Final Answer", "RED");
+        }
+        else if (color == VisionBase.COLOR.GREEN) {
+            telemetry.addData("Final Answer", "GREEN");
+        }
+        else if (color == VisionBase.COLOR.BLUE) {
+            telemetry.addData("Final Answer", "BLUE");
+        }
+        else {
+            telemetry.addData("Final Answer", "NOT DETECTED");
+        }
+        telemetry.update();
+
+
         rb.lifterLow();
         //drive and deliver to the low junction
         rb.driveStraightInches(8,0,.4);
@@ -110,19 +133,18 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         rb.lifterZero();
         sleep(250);
 
-        switch(3){
-            case 1:
+        switch(color){
+            case RED:
                 rb.driveStraightInches(12,0,.4);
                 break;
-            case 2:
+            case GREEN:
+            case NOT_DETECTED:
                 rb.driveStraightInches(8,0,-.4);
                 break;
-            case 3:
+            case BLUE:
                 rb.driveStraightInches(22,0,-.4);
                 break;
-            case 4:
-                rb.driveStraightInches(22,0,-.4);
-                break;
+
 
         }
 

@@ -107,6 +107,18 @@ public class M1TankTeleOp extends OpMode
 
         rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
 
+        if(gamepad2.dpad_up){
+            rb.lifterHigh();
+        }
+        if(gamepad2.dpad_right){
+            rb.lifterMedium();
+        }
+        if(gamepad2.dpad_down){
+            rb.lifterLow();
+        }
+        if(gamepad2.dpad_left){
+            rb.lifterZero();
+        }
 
         rb.performUpdates();
     }
