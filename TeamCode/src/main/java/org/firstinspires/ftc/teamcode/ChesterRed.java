@@ -89,13 +89,12 @@ public class ChesterRed extends LinearOpMode {
         rb.turnToAngle(95,.3);
         //drive towards pile
         rb.driveStraightInches(50,95,-.3);
+        rb.lifterCS4();
         telemetry.addData("here", "here");
         telemetry.update();
-        rb.lifterCS4();
+        rb.driveStrafeInches(40,95,-.4);
         telemetry.addData("i should be moving","no");
         telemetry.update();
-        rb.driveStraightInches(4,95,.3);
-        rb.driveStrafeInches(40,95,-.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
