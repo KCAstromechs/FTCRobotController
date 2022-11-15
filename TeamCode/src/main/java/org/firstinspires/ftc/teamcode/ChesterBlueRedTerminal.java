@@ -58,7 +58,7 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(284,350,308,400, true);
+        VisionBase.COLOR color = vision.findRGB(205,245,270,340, false);
 
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -77,60 +77,39 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
 
         rb.lifterLow();
         //drive and deliver to the low junction
-        rb.driveStraightInches(16,0,-.4);
-        rb.driveStrafeInches(8,0,-.5);
+        rb.driveStraightInches(16,0,-.3);
+        rb.driveStrafeInches(8,0,-.4);
         sleep(250);
         rb.collectorOpen();
         sleep(250);
         //realign against the wall
-        rb.driveStrafeInches(4,0,.5);
+        rb.driveStrafeInches(4,0,.4);
         //drive toward the blue junction and turn to face the pile
-        rb.driveStraightInches(8,0,.4);
+        rb.driveStraightInches(8,0,.3);
         rb.turnToAngle(90,.3);
         //drive towards pile
-        rb.driveStraightInches(46,90,-.4);
+        rb.driveStraightInches(46,90,-.3);
         rb.lifterCS4();
         rb.driveStrafeInches(38,90,-.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
         rb.lifterLow();
-        rb.driveStrafeInches(26,90,.5);
+        rb.driveStrafeInches(26,90,.4);
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(17,0,-.4);
+        rb.driveStraightInches(17,0,-.3);
         rb.lifterHigh();
         rb.driveStrafeInches(5,0,-.4);
         sleep(1250);
         rb.collectorOpen();
         sleep(250);
-        //strafe back and scoot, then turn towards the pile again
-        rb.driveStrafeInches(6,0,.5);
-        rb.lifterLow();
-        rb.driveStraightInches(10,0,.4);
-        rb.turnToAngle(90,.3);
-        rb.lifterCS3();
-        rb.driveStrafeInches(30,90,-.5);
-        sleep(250);
-        rb.collectorClose();
-        sleep(250);
-        rb.lifterLow();
-        sleep(250);
-        rb.driveStrafeInches(26,90,.5);
-        rb.turnToAngle(0,.3);
-        //go towards the high
 
-        rb.driveStraightInches(16,0,-.4);
-        rb.lifterHigh();
-        rb.driveStrafeInches(5,0,-.4);
-        sleep(1250);
-        rb.collectorOpen();
-        sleep(250);
         //strafe back and scoot, then turn towards the pile again
-        rb.driveStrafeInches(4,0,.5);
+        rb.driveStrafeInches(4,0,.4);
         rb.lifterZero();
-        sleep(250);
+
 
         switch(color){
             case RED:
@@ -144,7 +123,13 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
                 rb.driveStraightInches(22,0,.4);
                 break;
 
+
+
         }
+
+        sleep(2000);
+
+
 
 
 
