@@ -59,7 +59,7 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         waitForStart();
 
 
-        VisionBase.COLOR color = vision.findRGB(205,245,270,340, false);
+        VisionBase.COLOR color = vision.findRGB(245,280,240,320, true);
 
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -80,11 +80,14 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         //drive and deliver to the low junction
         rb.driveStraightInches(8,0,.3);
         rb.driveStrafeInches(7,0,-.4);
+        sleep(500);
+        rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
-        //realign against the wall
-        rb.driveStrafeInches(8,0,.4);
+        rb.lifterLow();
+        sleep(500);
+        rb.driveStrafeInches(6,0,.4);
         //drive toward the blue junction and turn to face the pile
         rb.driveStraightInches(8,0,-.3);
         rb.turnToAngle(-85,.3);
@@ -100,12 +103,16 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(18,0,.3);
+        rb.driveStraightInches(17,0,.3);
         rb.lifterHigh();
-        rb.driveStrafeInches(6,0,-.4);
+        sleep(2000);
+        rb.driveStrafeInches(5,0,-.4);
         sleep(1250);
+        rb.scootLifterDown();
+        sleep(500);
         rb.collectorOpen();
-
+        sleep(250);
+        rb.lifterHigh();
         //strafe back and scoot, then turn towards the pile again
         rb.driveStrafeInches(4,0,.4);
         rb.lifterZero();
@@ -113,11 +120,11 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
 
         switch(color){
             case RED:
-                rb.driveStraightInches(12,0,.4);
+                rb.driveStraightInches(10,0,.4);
                 break;
             case GREEN:
             case NOT_DETECTED:
-                rb.driveStraightInches(8,0,-.4);
+                rb.driveStraightInches(5,0,-.4);
                 break;
             case BLUE:
                 rb.driveStraightInches(22,0,-.4);

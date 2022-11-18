@@ -58,7 +58,7 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(205,245,270,340, false);
+        VisionBase.COLOR color = vision.findRGB(245,280,240,320, true);
 
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -79,53 +79,64 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
         //drive and deliver to the low junction
         rb.driveStraightInches(16,0,-.3);
         rb.driveStrafeInches(8,0,-.4);
+        sleep(500);
+        rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
+        rb.lifterLow();
+        sleep(500);
         //realign against the wall
         rb.driveStrafeInches(4,0,.4);
         //drive toward the blue junction and turn to face the pile
         rb.driveStraightInches(8,0,.3);
-        rb.turnToAngle(90,.3);
+        rb.turnToAngle(95,.3);
         //drive towards pile
-        rb.driveStraightInches(46,90,-.3);
+        rb.driveStraightInches(48,95,-.3);
         rb.lifterCS4();
-        rb.driveStrafeInches(38,90,-.4);
+        rb.driveStrafeInches(36,95,-.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
         rb.lifterLow();
-        rb.driveStrafeInches(26,90,.4);
+        rb.driveStrafeInches(26,95,.4);
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(17,0,-.3);
+        rb.driveStraightInches(18,0,-.3);
         rb.lifterHigh();
-        rb.driveStrafeInches(5,0,-.4);
+        sleep(2000);
+        rb.driveStrafeInches(4,0,-.4);
         sleep(1250);
+        rb.scootLifterDown();
+        sleep(500);
         rb.collectorOpen();
         sleep(250);
-
+        rb.lifterHigh();
         //strafe back and scoot, then turn towards the pile again
         rb.driveStrafeInches(4,0,.4);
         rb.lifterZero();
 
 
+        telemetry.addData("color:", color);
+        telemetry.update();
         switch(color){
             case RED:
-                rb.driveStraightInches(12,0,-.4);
+                rb.driveStraightInches(22,0,.4);
                 break;
             case GREEN:
                 case NOT_DETECTED:
                 rb.driveStraightInches(8,0,.4);
                 break;
             case BLUE:
-                rb.driveStraightInches(22,0,.4);
+                rb.driveStraightInches(10,0,-.4);
                 break;
 
 
 
         }
+        telemetry.addData("color:", color);
+        telemetry.update();
 
         sleep(2000);
 

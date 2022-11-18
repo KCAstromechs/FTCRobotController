@@ -58,7 +58,7 @@ public class ChesterBlueBlueTerminal extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(205,245,270,340, false);
+        VisionBase.COLOR color = vision.findRGB(245,280,240,320, true);
 
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -79,19 +79,22 @@ public class ChesterBlueBlueTerminal extends LinearOpMode {
         //drive and deliver to the low junction
         rb.driveStraightInches(8,0,.3);
         rb.driveStrafeInches(8,0,-.4);
+        sleep(500);
+        rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
-        //realign against the wall
+        rb.lifterLow();
+        sleep(500);
         rb.driveStrafeInches(4,0,.4);
         //drive toward the blue junction and turn to face the pile
-        rb.driveStraightInches(5,0,-.3);
+        rb.driveStraightInches(8,0,-.3);
         rb.turnToAngle(-85,.3);
         //drive towards pile
         rb.driveStraightInches(46,-85,.3);
         rb.lifterCS4();
 
-        rb.driveStrafeInches(37,-85,-.4);
+        rb.driveStrafeInches(36,-85,-.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
@@ -100,12 +103,16 @@ public class ChesterBlueBlueTerminal extends LinearOpMode {
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(17,0,.3);
+        rb.driveStraightInches(15,0,.3);
         rb.lifterHigh();
+        sleep(2000);
         rb.driveStrafeInches(3,0,-.4);
         sleep(1250);
+        rb.scootLifterDown();
+        sleep(500);
         rb.collectorOpen();
         sleep(250);
+        rb.lifterHigh();
 
         //strafe back and scoot, then turn towards the pile again
         rb.driveStrafeInches(3,0,.4);
