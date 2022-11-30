@@ -21,7 +21,9 @@ public class M1FCTeleOp extends OpMode {
     BNO055IMU imu;
     double desiredAngle;
     boolean dpad = false;
-    double errorK = 0.015;
+    double errorK = 0.01;
+    boolean resetAngle = false;
+    double angleOffset = 0.0;
 
     @Override
     public void init() {
@@ -63,7 +65,7 @@ public class M1FCTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+        double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - Math.abs(angleOffset);
 
         if (dpad = true) {
             if (Math.abs(zAngle - desiredAngle) < errorK) {
@@ -73,21 +75,21 @@ public class M1FCTeleOp extends OpMode {
             }
         }
 
-        // dpad turning
-        if (gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right) {
+        // precise angle turning
+        if (gamepad1.y || gamepad1.a || gamepad1.x || gamepad1.b) {
             dpad = true;
             rb.dpadTurn(true);
             // what is our desired angle?
-            if (gamepad1.dpad_up) {
+            if (gamepad1.y) {
                 desiredAngle = 0;
             }
-            else if (gamepad1.dpad_down) {
+            else if (gamepad1.a) {
                 desiredAngle = PI;
             }
-            else if (gamepad1.dpad_left) {
+            else if (gamepad1.x) {
                 desiredAngle = -PI/2;
             }
-            else if (gamepad1.dpad_right) {
+            else if (gamepad1.b) {
                 desiredAngle = PI/2;
             }
             else {
@@ -109,19 +111,41 @@ public class M1FCTeleOp extends OpMode {
                 rb.dpadInverse();
             }
         }
-        // if button toggle, switch speed
-        if (gamepad1.left_bumper) {
-            rb.FCSlowMode(true);
-        } else if (gamepad1.right_bumper) {
-            rb.FCSlowMode(false);
-        }
 
-        // FC Drive
+        // input from gamepad sticks
         double turnPower = (gamepad1.left_stick_x);
         double inputX = gamepad1.right_stick_x;
         double inputY = -gamepad1.right_stick_y;
 
+        // if dpad button, change input values
+        if (gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right) {
+            if (gamepad1.dpad_up){
+                inputX = 0;
+                inputY = -1;
+            }
+            else if (gamepad1.dpad_down){
+                inputX = 0;
+                inputY = 1;
+            }
+            else if (gamepad1.dpad_left){
+                inputX = -1;
+                inputY = 0;
+            }
+            else if (gamepad1.dpad_right){
+                inputX = 1;
+                inputY = 0;
+            }
+        }
+
+        // drive now :)
         rb.FCDrive(inputX,inputY,turnPower);
+
+
+        // RESET ANGLE ?
+        if (gamepad1.left_bumper) {
+            resetAngle = true;
+            angleOffset += -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+        }
 
         //COLLECTOR
         if (gamepad2.a){
@@ -151,8 +175,8 @@ public class M1FCTeleOp extends OpMode {
         //LIFTER
         rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
 
-        rb.performFCUpdates();
-
+        rb.performFCUpdates(resetAngle);
+        resetAngle = false;
     }
 
     /*

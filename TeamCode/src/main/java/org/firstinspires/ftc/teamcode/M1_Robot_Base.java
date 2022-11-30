@@ -48,9 +48,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _inputY;
     double _turnPower;
     double _dpadPower = 0.5;
-    double FCSpeedK = 1.5;
-    double FCSpeedSlowK = 3;
-    boolean FCSlowMode = false;
+    double FCSpeedK = 1;
+    double FCAngleOffset = 0;
     boolean _dpad = false;
     double _direction = 0;
     Telemetry _telemetry;
@@ -237,10 +236,6 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
-    public void FCSlowMode(boolean slow){
-        FCSlowMode = slow;
-    }
-
     public void dpadTurn (boolean dpad){
         _dpad = dpad;
     }
@@ -325,7 +320,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         if(position!=0) {
             int newTargetPosition = _lifter.getCurrentPosition() + position;
             if (newTargetPosition > 2560) newTargetPosition = 2560;
-            if (newTargetPosition < -50) newTargetPosition = -50;
+            //if (newTargetPosition < -50) newTargetPosition = -50;
             _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(1);
         }
@@ -666,15 +661,12 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
-    public void performFCUpdates(){
-        float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
-        double K;
-        if (FCSlowMode = true){
-            K = FCSpeedSlowK;
+    public void performFCUpdates(boolean reset){
+        if (reset){
+            FCAngleOffset += -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
         }
-        else{
-            K = FCSpeedK;
-        }
+        double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - Math.abs(FCAngleOffset);
+        double K = FCSpeedK; // if you want to create a slow mode, replace or change K
 
         double robotX = (_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)));
         double robotY = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));

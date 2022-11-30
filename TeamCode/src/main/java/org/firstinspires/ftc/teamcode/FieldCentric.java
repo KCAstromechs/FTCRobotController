@@ -7,8 +7,6 @@ public interface FieldCentric {
 
     void FCDrive(double inputX, double inputY, double turnPower);
 
-    void FCSlowMode(boolean slow);
-
     void dpadTurn (boolean dpad);
 
     void dpadDirection (double direction);

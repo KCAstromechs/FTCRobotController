@@ -103,7 +103,7 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(17,0,.3);
+        rb.driveStraightInches(16,0,.3);
         rb.lifterHigh();
         sleep(2000);
         rb.driveStrafeInches(5,0,-.4);
@@ -127,7 +127,7 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
                 rb.driveStraightInches(5,0,-.4);
                 break;
             case BLUE:
-                rb.driveStraightInches(22,0,-.4);
+                rb.driveStraightInches(30,0,-.4);
                 break;
 
 
