@@ -67,51 +67,6 @@ public class M1FCTeleOp extends OpMode {
     public void loop() {
         double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - Math.abs(angleOffset);
 
-        if (dpad = true) {
-            if (Math.abs(zAngle - desiredAngle) < errorK) {
-                rb.dpadDirection(0);
-                dpad = false;
-                rb.dpadTurn(false);
-            }
-        }
-
-        // precise angle turning
-        if (gamepad1.y || gamepad1.a || gamepad1.x || gamepad1.b) {
-            dpad = true;
-            rb.dpadTurn(true);
-            // what is our desired angle?
-            if (gamepad1.y) {
-                desiredAngle = 0;
-            }
-            else if (gamepad1.a) {
-                desiredAngle = PI;
-            }
-            else if (gamepad1.x) {
-                desiredAngle = -PI/2;
-            }
-            else if (gamepad1.b) {
-                desiredAngle = PI/2;
-            }
-            else {
-                desiredAngle = zAngle;
-            }
-
-            // are we at the angle?
-            if (Math.abs(zAngle - desiredAngle) < errorK){
-                rb.dpadDirection(0);
-            }
-            // which direction is fastest?
-            else if (desiredAngle < zAngle) {
-                rb.dpadDirection(1);
-            } else if (desiredAngle > zAngle){
-                rb.dpadDirection(-1);
-            }
-            // discontinuity - are we going the shortest path?
-            if (Math.abs(zAngle-desiredAngle) > PI) {
-                rb.dpadInverse();
-            }
-        }
-
         // input from gamepad sticks
         double turnPower = (gamepad1.left_stick_x);
         double inputX = gamepad1.right_stick_x;
@@ -121,24 +76,24 @@ public class M1FCTeleOp extends OpMode {
         if (gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right) {
             if (gamepad1.dpad_up){
                 inputX = 0;
-                inputY = -1;
+                inputY = 0.5;
             }
             else if (gamepad1.dpad_down){
                 inputX = 0;
-                inputY = 1;
+                inputY = -0.5;
             }
             else if (gamepad1.dpad_left){
-                inputX = -1;
+                inputX = -0.5;
                 inputY = 0;
             }
             else if (gamepad1.dpad_right){
-                inputX = 1;
+                inputX = 0.5;
                 inputY = 0;
             }
         }
 
         // drive now :)
-        rb.FCDrive(inputX,inputY,turnPower);
+        rb.FCDrive(Math.cbrt(inputX)/2, Math.cbrt(inputY)/2, Math.cbrt(turnPower)/2);
 
 
         // RESET ANGLE ?

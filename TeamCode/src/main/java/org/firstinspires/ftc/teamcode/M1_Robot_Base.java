@@ -21,6 +21,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     //FRONT LEFT IS ENCODER Y, FRONT RIGHT IS ENCODER X
     //type this into command to set up the wifi connect:
     // AppData\Local\Android\Sdk\platform-tools\adb connect 192.168.43.1:5555
+    //disconnect from all if having issues
+    // AppData\Local\Android\Sdk\platform-tools\adb disconnect
 
 
     //Important Set-Up Stuff
