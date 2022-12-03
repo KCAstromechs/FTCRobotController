@@ -58,7 +58,7 @@ public class ChesterRed extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(245,280,240,320, true);
+        VisionBase.COLOR color = vision.findRGB(235,260,255,350, true);
 
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -74,6 +74,7 @@ public class ChesterRed extends LinearOpMode {
         }
         telemetry.update();
 
+        sleep(1000);
 
         rb.lifterLow();
         //drive and deliver to the low junction
@@ -102,7 +103,7 @@ public class ChesterRed extends LinearOpMode {
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(14,0,-.3);
+        rb.driveStraightInches(15,0,-.3);
         rb.lifterHigh();
         sleep(2000);
         rb.driveStrafeInches(4,0,-.4);

@@ -32,8 +32,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     DcMotor _backRight;
     DcMotor _lifter;
     Servo _collector;
-    double COLLECTOR_CLOSED = 1;
-    double COLLECTOR_OPEN = .9;
+    double COLLECTOR_CLOSED = .95;
+    double COLLECTOR_OPEN = .85;
     int ZERO_HEIGHT = 0;
     int LOW_HEIGHT = 1050;
     int MID_HEIGHT = 1765;
@@ -662,6 +662,9 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
     }
+
+
+
 
     public void performFCUpdates(boolean reset){
         if (reset){

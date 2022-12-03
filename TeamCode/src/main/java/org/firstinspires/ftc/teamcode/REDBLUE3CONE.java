@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="Chester Blue Side Red Terminal", group="Robot")
-public class ChesterBlueRedTerminal extends LinearOpMode {
+@Autonomous(name="3 CONE??", group="Robot")
+public class REDBLUE3CONE extends LinearOpMode {
 
     public M1_Robot_Base rb;
     private ElapsedTime runtime = new ElapsedTime();
@@ -58,6 +58,7 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+
         VisionBase.COLOR color = vision.findRGB(235,260,255,350, true);
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -76,8 +77,8 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
 
         rb.lifterLow();
         //drive and deliver to the low junction
-        rb.driveStraightInches(16,0,-.3);
-        rb.driveStrafeInches(8,0,-.4);
+        rb.driveStraightInches(8,0,.3);
+        rb.driveStrafeInches(7,0,-.4);
         sleep(500);
         rb.scootLifterDown();
         sleep(250);
@@ -85,27 +86,26 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
         sleep(250);
         rb.lifterLow();
         sleep(500);
-        //realign against the wall
-        rb.driveStrafeInches(4,0,.4);
+        rb.driveStrafeInches(6,0,.4);
         //drive toward the blue junction and turn to face the pile
-        rb.driveStraightInches(8,0,.3);
-        rb.turnToAngle(95,.3);
+        rb.driveStraightInches(8,0,-.3);
+        rb.turnToAngle(-85,.3);
         //drive towards pile
-        rb.driveStraightInches(48,95,-.3);
+        rb.driveStraightInches(46,-85,.3);
         rb.lifterCS4();
-        rb.driveStrafeInches(36,95,-.4);
+        rb.driveStrafeInches(35,-85,-.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
         rb.lifterLow();
-        rb.driveStrafeInches(26,95,.4);
+        rb.driveStrafeInches(24,-85,.4);
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(18,0,-.3);
+        rb.driveStraightInches(17,0,.3);
         rb.lifterHigh();
-        sleep(2000);
-        rb.driveStrafeInches(4,0,-.4);
+        sleep(1000);
+        rb.driveStrafeInches(5,0,-.4);
         sleep(1250);
         rb.scootLifterDown();
         sleep(500);
@@ -114,33 +114,49 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
         rb.lifterHigh();
         //strafe back and scoot, then turn towards the pile again
         rb.driveStrafeInches(4,0,.4);
+
+        sleep(250);
+        rb.lifterLow();
+        rb.driveStraightInches(10,0,-.4);
+        rb.turnToAngle(-85,.3);
+        rb.lifterCS3();
+        rb.driveStrafeInches(29,-85,-.5);
+        sleep(250);
+        rb.collectorClose();
+        sleep(250);
+        rb.lifterLow();
+        sleep(250);
+        rb.driveStrafeInches(24,-85,.5);
+        rb.turnToAngle(0,.3);
+        //go towards the high
+
+        rb.driveStraightInches(16,0,.4);
+        rb.lifterHigh();
+        rb.driveStrafeInches(6,0,-.4);
+        sleep(1250);
+        rb.collectorOpen();
+        sleep(250);
+        //strafe back and scoot, then turn towards the pile again
+        rb.driveStrafeInches(4,0,.4);
         rb.lifterZero();
+        sleep(250);
 
 
-        telemetry.addData("color:", color);
-        telemetry.update();
         switch(color){
             case RED:
-                rb.driveStraightInches(22,0,.4);
+                rb.driveStraightInches(10,0,.4);
                 break;
             case GREEN:
-                case NOT_DETECTED:
-                rb.driveStraightInches(8,0,.4);
+            case NOT_DETECTED:
+                rb.driveStraightInches(9,0,-.4);
                 break;
             case BLUE:
-                rb.driveStraightInches(10,0,-.4);
+                rb.driveStraightInches(30,0,-.4);
                 break;
-
 
 
         }
-        telemetry.addData("color:", color);
-        telemetry.update();
-
         sleep(2000);
-
-
-
 
 
 
@@ -159,5 +175,5 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
     }
 
 
-}
+    }
 

@@ -59,8 +59,7 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         waitForStart();
 
 
-        VisionBase.COLOR color = vision.findRGB(245,280,240,320, true);
-
+        VisionBase.COLOR color = vision.findRGB(235,260,255,350, true);
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
         }
@@ -94,7 +93,7 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         //drive towards pile
         rb.driveStraightInches(46,-85,.3);
         rb.lifterCS4();
-        rb.driveStrafeInches(34,-85,-.4);
+        rb.driveStrafeInches(35,-85,-.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
@@ -103,9 +102,9 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
         rb.turnToAngle(0,.3);
         //go towards the high
 
-        rb.driveStraightInches(16,0,.3);
+        rb.driveStraightInches(17,0,.3);
         rb.lifterHigh();
-        sleep(2000);
+        sleep(1000);
         rb.driveStrafeInches(5,0,-.4);
         sleep(1250);
         rb.scootLifterDown();
@@ -124,7 +123,7 @@ public class ChesterRedBlueTerminal extends LinearOpMode {
                 break;
             case GREEN:
             case NOT_DETECTED:
-                rb.driveStraightInches(5,0,-.4);
+                rb.driveStraightInches(9,0,-.4);
                 break;
             case BLUE:
                 rb.driveStraightInches(30,0,-.4);
