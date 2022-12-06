@@ -72,11 +72,11 @@ public class ChesterBlueBlueTerminal extends LinearOpMode {
             telemetry.addData("Final Answer", "NOT DETECTED");
         }
         telemetry.update();
-
+        sleep(1000);
 
         rb.lifterLow();
         //drive and deliver to the low junction
-        rb.driveStraightInches(8,0,.3);
+        rb.driveStraightInches(7,0,.3);
         rb.driveStrafeInches(8,0,-.4);
         sleep(500);
         rb.scootLifterDown();
@@ -87,7 +87,7 @@ public class ChesterBlueBlueTerminal extends LinearOpMode {
         sleep(500);
         rb.driveStrafeInches(4,0,.4);
         //drive toward the blue junction and turn to face the pile
-        rb.driveStraightInches(8,0,-.3);
+        rb.driveStraightInches(7,0,-.3);
         rb.turnToAngle(-85,.3);
         //drive towards pile
         rb.driveStraightInches(46,-85,.3);
@@ -104,8 +104,8 @@ public class ChesterBlueBlueTerminal extends LinearOpMode {
 
         rb.driveStraightInches(15,0,.3);
         rb.lifterHigh();
-        sleep(2000);
-        rb.driveStrafeInches(3,0,-.4);
+        sleep(1500);
+        rb.driveStrafeInches(5,0,-.4);
         sleep(1250);
         rb.scootLifterDown();
         sleep(500);
@@ -114,20 +114,20 @@ public class ChesterBlueBlueTerminal extends LinearOpMode {
         rb.lifterHigh();
 
         //strafe back and scoot, then turn towards the pile again
-        rb.driveStrafeInches(3,0,.4);
+        rb.driveStrafeInches(5,0,.4);
         rb.lifterZero();
         sleep(250);
 
         switch(color){
             case RED:
-                rb.driveStraightInches(4,0,.4);
+                rb.driveStraightInches(8,0,.4);
                 break;
             case GREEN:
             case NOT_DETECTED:
                 rb.driveStraightInches(8,0,-.4);
                 break;
             case BLUE:
-                rb.driveStraightInches(29,0,-.4);
+                rb.driveStraightInches(35,0,-.4);
                 break;
 
         }

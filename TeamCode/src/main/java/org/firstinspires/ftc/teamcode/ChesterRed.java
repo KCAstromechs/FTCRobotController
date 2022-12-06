@@ -94,7 +94,7 @@ public class ChesterRed extends LinearOpMode {
         //drive towards pile
         rb.driveStraightInches(48,95,-.3);
         rb.lifterCS4();
-        rb.driveStrafeInches(38,95,-.4);
+        rb.driveStrafeInches(37,95,-.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
@@ -122,14 +122,14 @@ public class ChesterRed extends LinearOpMode {
 
         switch(color){
             case RED:
-                rb.driveStraightInches(4,0,-.4);
+                rb.driveStraightInches(29,0,.4);
                 break;
             case GREEN:
             case NOT_DETECTED:
                 rb.driveStraightInches(5,0,.4);
                 break;
             case BLUE:
-                rb.driveStraightInches(29,0,.4);
+                rb.driveStraightInches(4,0,-.4);
                 break;
 
         }

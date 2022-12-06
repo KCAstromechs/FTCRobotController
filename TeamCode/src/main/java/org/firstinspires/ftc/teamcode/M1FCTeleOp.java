@@ -92,7 +92,7 @@ public class M1FCTeleOp extends OpMode {
 
         // RESET ANGLE ?
         if (gamepad1.left_bumper) {
-            angleOffset += -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+            angleOffset = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
         }
 
         //COLLECTOR
