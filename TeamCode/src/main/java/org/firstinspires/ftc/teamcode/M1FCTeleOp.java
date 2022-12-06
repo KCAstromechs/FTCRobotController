@@ -27,7 +27,7 @@ public class M1FCTeleOp extends OpMode {
         rb = new M1_Robot_Base(hardwareMap, telemetry, true);
 
         // original angle
-        fieldAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+        fieldAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
