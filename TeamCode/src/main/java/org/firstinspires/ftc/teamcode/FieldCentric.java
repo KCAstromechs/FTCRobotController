@@ -7,9 +7,4 @@ public interface FieldCentric {
 
     void FCDrive(double inputX, double inputY, double turnPower);
 
-    void dpadTurn (boolean dpad);
-
-    void dpadDirection (double direction);
-
-    void dpadInverse ();
 }

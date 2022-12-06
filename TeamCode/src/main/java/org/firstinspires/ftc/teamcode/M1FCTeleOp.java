@@ -19,10 +19,6 @@ public class M1FCTeleOp extends OpMode {
     public M1_Robot_Base rb;
     double fieldAngle;
     BNO055IMU imu;
-    double desiredAngle;
-    boolean dpad = false;
-    double errorK = 0.01;
-    boolean resetAngle = false;
     double angleOffset = 0.0;
 
     @Override
@@ -65,8 +61,6 @@ public class M1FCTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - Math.abs(angleOffset);
-
         // input from gamepad sticks
         double turnPower = (gamepad1.left_stick_x);
         double inputX = gamepad1.right_stick_x;
@@ -98,7 +92,6 @@ public class M1FCTeleOp extends OpMode {
 
         // RESET ANGLE ?
         if (gamepad1.left_bumper) {
-            resetAngle = true;
             angleOffset += -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
         }
 
@@ -130,8 +123,20 @@ public class M1FCTeleOp extends OpMode {
         //LIFTER
         rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
 
-        rb.performFCUpdates(resetAngle);
-        resetAngle = false;
+        if(gamepad2.dpad_up){
+            rb.lifterHigh();
+        }
+        if(gamepad2.dpad_right){
+            rb.lifterMedium();
+        }
+        if(gamepad2.dpad_down){
+            rb.lifterLow();
+        }
+        if(gamepad2.dpad_left){
+            rb.lifterZero();
+        }
+
+        rb.performFCUpdates(angleOffset);
     }
 
     /*

@@ -49,13 +49,8 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     double _inputX;
     double _inputY;
     double _turnPower;
-    double _dpadPower = 0.5;
     double FCSpeedK = 1;
-    double FCAngleOffset = 0;
-    boolean _dpad = false;
-    double _direction = 0;
     Telemetry _telemetry;
-    OpMode _callingOpMode;
     final double K_TURN = 0.02;
     final double K_STRAFE = 0.001;
     public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98;
@@ -119,15 +114,6 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
         imu.initialize(IMUParams);
         while(!imu.isGyroCalibrated());
-
-        float zAngle;
-        float yAngle;
-        float xAngle;
-        zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        yAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
-        xAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
-
-
 
 
 
@@ -236,18 +222,6 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
         _inputY = inputY;
         _turnPower = turnPower;
 
-    }
-
-    public void dpadTurn (boolean dpad){
-        _dpad = dpad;
-    }
-
-    public void dpadDirection (double direction){
-        _direction = direction;
-    }
-
-    public void dpadInverse (){
-        _direction *= -1;
     }
 
 //----------------------------------------------------------------------------------------------------------------
@@ -666,20 +640,17 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
 
-    public void performFCUpdates(boolean reset){
-        if (reset){
-            FCAngleOffset += -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
-        }
-        double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - Math.abs(FCAngleOffset);
+    public void performFCUpdates(double angleOffset){
+        double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - angleOffset;
         double K = FCSpeedK; // if you want to create a slow mode, replace or change K
 
         double robotX = (_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)));
         double robotY = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
 
-        double fLPower = ((-robotX + robotY) + _turnPower - (_dpadPower*_direction)) / K;
-        double fRPower = ((-robotX - robotY) - _turnPower + (_dpadPower*_direction)) / K;
-        double bRPower = ((-robotX + robotY) - _turnPower + (_dpadPower*_direction)) / K;
-        double bLPower = ((-robotX - robotY) + _turnPower - (_dpadPower*_direction)) / K;
+        double fLPower = ((-robotX + robotY) + _turnPower) / K;
+        double fRPower = ((-robotX - robotY) - _turnPower) / K;
+        double bRPower = ((-robotX + robotY) - _turnPower) / K;
+        double bLPower = ((-robotX - robotY) + _turnPower) / K;
 
         double highestPowerF = Math.max(Math.abs(fLPower), Math.abs(fRPower));
         double highestPowerB = Math.max(Math.abs(bRPower), Math.abs(bLPower));
