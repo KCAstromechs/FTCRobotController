@@ -65,6 +65,8 @@ public class M1FCTeleOp extends OpMode {
         double turnPower = (gamepad1.left_stick_x);
         double inputX = gamepad1.right_stick_x;
         double inputY = -gamepad1.right_stick_y;
+        if(Math.abs(inputX)<0.2) inputX = 0;
+        if(Math.abs(inputY)<0.2) inputY = 0;
 
         // if dpad button, change input values
         if (gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right) {
@@ -87,7 +89,7 @@ public class M1FCTeleOp extends OpMode {
         }
 
         // drive now :)
-        rb.FCDrive(Math.cbrt(inputX)/2, Math.cbrt(inputY)/2, Math.cbrt(turnPower)/2);
+        rb.FCDrive(Math.cbrt(inputX)/3, Math.cbrt(inputY)/3, Math.cbrt(turnPower)/3);
 
 
         // RESET ANGLE ?

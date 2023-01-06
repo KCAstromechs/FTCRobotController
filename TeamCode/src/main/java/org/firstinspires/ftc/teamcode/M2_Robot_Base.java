@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.PI;
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,11 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-import static java.lang.Math.PI;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static java.lang.Thread.sleep;
-
-public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable, FieldCentric {
+public class M2_Robot_Base extends AstromechsRobotBase implements TankDriveable, Strafeable, FieldCentric {
 
     //FRONT LEFT IS ENCODER Y, FRONT RIGHT IS ENCODER X
     //type this into command to set up the wifi connect:
@@ -61,7 +59,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
     BNO055IMU imu;
 
     //thing that happens when new is used (constructor)
-    public M1_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry) {
+    public M2_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry) {
 
         //underscore means it's a private variable
         _telemetry = telemetry;
@@ -125,7 +123,7 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
     }
 
-    public M1_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry, boolean isFC) {
+    public M2_Robot_Base(HardwareMap hardwareMap, Telemetry telemetry, boolean isFC) {
        //yeah I know it's redundant i just need to use the variable
         isFC = true;
 
@@ -646,9 +644,6 @@ public class M1_Robot_Base extends AstromechsRobotBase implements TankDriveable,
 
 
     }
-
-
-
 
     public void performFCUpdates(double angleOffset){
         double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - angleOffset;

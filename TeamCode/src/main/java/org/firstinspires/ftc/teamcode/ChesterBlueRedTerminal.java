@@ -58,7 +58,7 @@ public class ChesterBlueRedTerminal extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(235,260,255,350, true);
+        VisionBase.COLOR color = vision.findRGB(235,260,280,375, false);
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
         }
