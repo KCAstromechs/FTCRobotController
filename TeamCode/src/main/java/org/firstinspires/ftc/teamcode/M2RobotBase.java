@@ -31,20 +31,23 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     DcMotor _lifter;
     Servo _rightCollector;
     Servo _leftCollector;
-    Servo _collector;
-    double RIGHT_COLLECTOR_CLOSED = .22;
+
+    double RIGHT_COLLECTOR_CLOSED = .40;
     double RIGHT_COLLECTOR_OPEN = 0;
     double LEFT_COLLECTOR_CLOSED = .75;
     double LEFT_COLLECTOR_OPEN = 1;
+    int TOP_SAFETY = 4800;
+    int BOTTOM_SAFETY = -200;
     int ZERO_HEIGHT = 0;
-    int LOW_HEIGHT = 1050;
-    int MID_HEIGHT = 1765;
+    int LOW_HEIGHT = 1750;
+    int MID_HEIGHT = 3100;
     int DOWN_CORRECT = 200;
-    int HIGH_HEIGHT = 2400;
-    int CONE_STACK_LEVEL_1 = 0;
-    int CONE_STACK_LEVEL_2 = 334;
-    int CONE_STACK_LEVEL_3 = 300;
-    int CONE_STACK_LEVEL_4 = 320;
+    int HIGH_HEIGHT = 4125;
+    int CONE_STACK_LEVEL_1 = 50;
+    int CONE_STACK_LEVEL_2 = 185;
+    int CONE_STACK_LEVEL_3 = 350;
+    int CONE_STACK_LEVEL_4 = 506;
+    int CONE_STACK_LEVEL_5 = 630;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -70,7 +73,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _lifter = hardwareMap.get(DcMotor.class,"lifter");
         _rightCollector = hardwareMap.get(Servo.class,"rightCollector");
         _leftCollector = hardwareMap.get(Servo.class,"leftCollector");
-        _collector = hardwareMap.get(Servo.class,"collector");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
 
@@ -136,7 +138,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _lifter = hardwareMap.get(DcMotor.class,"lifter");
         _leftCollector = hardwareMap.get(Servo.class,"leftCollector");
         _rightCollector = hardwareMap.get(Servo.class,"rightCollector");
-        _collector = hardwareMap.get(Servo.class,"collector");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
 
 
@@ -237,18 +238,20 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     /***
      * puts the collector into the "closed" position, in which it would be holding a cone
      */
+
     public void collectorClose(){
         _rightCollector.setPosition(RIGHT_COLLECTOR_CLOSED);
         _leftCollector.setPosition(LEFT_COLLECTOR_CLOSED);
     }
     /***
      * puts the collector into the "open" position, in which it would be ready to collect a cone
-     */
+    */
     public void collectorOpen(){
         _rightCollector.setPosition(RIGHT_COLLECTOR_OPEN);
         _leftCollector.setPosition(LEFT_COLLECTOR_OPEN);
 
     }
+
 
     public void lifterLow(){
         _lifter.setTargetPosition(LOW_HEIGHT);
@@ -303,10 +306,17 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     public void lifterControl(int position){
         if(position!=0) {
             int newTargetPosition = _lifter.getCurrentPosition() + position;
-            if (newTargetPosition > 2560) newTargetPosition = 2560;
-            //if (newTargetPosition < -50) newTargetPosition = -50;
-            _lifter.setTargetPosition(newTargetPosition);
             _lifter.setPower(1);
+
+            if (newTargetPosition > TOP_SAFETY)
+                newTargetPosition = TOP_SAFETY;
+                _lifter.setTargetPosition(newTargetPosition);
+                _lifter.setPower(1);
+
+            if(newTargetPosition < BOTTOM_SAFETY)
+                 newTargetPosition = BOTTOM_SAFETY;
+                _lifter.setTargetPosition(newTargetPosition);
+                _lifter.setPower(1);
         }
         _telemetry.addData("lifter target", _lifter.getTargetPosition());
         _telemetry.addData("lifter encoder", _lifter.getCurrentPosition());
@@ -617,12 +627,12 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     public void performUpdates() {
         //if strafePower (trigger) is 0 then it will act as a tank drive
-       /*
+
        _frontRight.setPower(_rightPower-_strafePower);
        _backLeft.setPower(_leftPower-_strafePower);
        _frontLeft.setPower(_leftPower+_strafePower);
        _backRight.setPower(_rightPower+_strafePower);
-        */
+
 
 /*
        _frontRight.setPower(_rightPower-_strafePower);
@@ -633,11 +643,13 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 */
 
 
-
+/*
         _frontRight.setPower(-_leftPower-_strafePower);
         _frontLeft.setPower(_leftPower-_strafePower);
         _backRight.setPower(_rightPower-_strafePower);
         _backLeft.setPower(-_rightPower-_strafePower);
+
+ */
 
 
         //powers = sticks used to determine what side of the robot the motor is on from collector in the fro//- means that the motor is corkscrewing backwards
