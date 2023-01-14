@@ -45,7 +45,7 @@ public class RedRedTest extends LinearOpMode {
 
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         rb = new M2RobotBase(hardwareMap,telemetry);
         vision = new VisionBase(hardwareMap, telemetry);
 
@@ -72,6 +72,27 @@ public class RedRedTest extends LinearOpMode {
         }
         telemetry.update();
         sleep(1000);
+
+
+
+
+        rb.lifterMedium();
+        rb.driveStrafeInches(65,0,.4);
+        sleep(250);
+        rb.lifterHigh();
+        telemetry.addData("i am thinking", "hmm");
+        telemetry.update();
+        rb.turnToAngle(55,.3);
+        telemetry.addData("i am thinking", "hmm yes");
+        telemetry.update();
+        rb.driveStraightInches(5,55,.4);
+        telemetry.addData("i am thinking", "hmm yes quite");
+        telemetry.update();
+        rb.scootLifterDown();
+        rb.collectorOpen();
+
+
+
 
 
 

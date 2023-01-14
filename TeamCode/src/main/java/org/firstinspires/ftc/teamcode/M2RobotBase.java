@@ -32,16 +32,16 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     Servo _rightCollector;
     Servo _leftCollector;
 
-    double RIGHT_COLLECTOR_CLOSED = .40;
+    double RIGHT_COLLECTOR_CLOSED = .45;
     double RIGHT_COLLECTOR_OPEN = 0;
-    double LEFT_COLLECTOR_CLOSED = .75;
+    double LEFT_COLLECTOR_CLOSED = .70;
     double LEFT_COLLECTOR_OPEN = 1;
     int TOP_SAFETY = 4800;
     int BOTTOM_SAFETY = -200;
     int ZERO_HEIGHT = 0;
     int LOW_HEIGHT = 1750;
     int MID_HEIGHT = 3100;
-    int DOWN_CORRECT = 200;
+    int DOWN_CORRECT = 400;
     int HIGH_HEIGHT = 4125;
     int CONE_STACK_LEVEL_1 = 50;
     int CONE_STACK_LEVEL_2 = 185;
@@ -396,9 +396,9 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         }
         //reset the gyro and the motors
         float zAngle = 0.0f;
-        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        while(Math.abs(_frontRight.getCurrentPosition())>10){}
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        while(Math.abs(_frontLeft.getCurrentPosition())>10){}
 
 
         //set the motors to the desired power, they will keep running during all the logic with the encoders
@@ -409,7 +409,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
 
         //checks if the current number of encoder clicks is less than what we want. this will keep running until the current encoder clicks are more than what we want
-        while ( Math.abs(encoderClicks) > Math.abs(_frontRight.getCurrentPosition() )){
+        while ( Math.abs(encoderClicks) > Math.abs(_frontLeft.getCurrentPosition() )){
             information();
             //normalizes the angle
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
@@ -453,7 +453,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sleep(250);
+        Thread.sleep(250);
 
         _frontRight.setPower(power);
         _backRight.setPower(-power);
@@ -462,7 +462,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
 
 
-        while ( Math.abs(_frontLeft.getCurrentPosition()) < Math.abs(encoderClicks)){
+        while ( Math.abs(_frontRight.getCurrentPosition()) < Math.abs(encoderClicks)){
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             if(useCheat) {
                 zAngle = (float) normalizeAngle(zAngle + 180);
@@ -471,7 +471,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             //       e.g. yAngle = 171 and desiredAngle = -179
             //
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
-            double strafeCorrect = (_frontRight.getCurrentPosition()-0.0)*K_STRAFE;  // target is 0, finds the change in the y encoder value and converts it to a power value to modify the power parameter. Subracts zero because that's the number we want it to be at
+            double strafeCorrect = (-_frontLeft.getCurrentPosition()-0.0)*K_STRAFE;  // target is 0, finds the change in the y encoder value and converts it to a power value to modify the power parameter. Subracts zero because that's the number we want it to be at
 
 
             _frontRight.setPower(power - driveCorrect - strafeCorrect);
