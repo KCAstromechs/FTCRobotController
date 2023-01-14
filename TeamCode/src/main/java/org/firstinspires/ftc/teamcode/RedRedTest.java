@@ -82,9 +82,12 @@ public class RedRedTest extends LinearOpMode {
         rb.lifterHigh();
         telemetry.addData("i am thinking", "hmm");
         telemetry.update();
-        rb.turnToAngle(55,.3);
+        rb.turnToAngle(60,.3);
         telemetry.addData("i am thinking", "hmm yes");
         telemetry.update();
+
+        //check the drive straight method in for the sleep
+        //add telemetry to the ds method
         rb.driveStraightInches(5,55,.4);
         telemetry.addData("i am thinking", "hmm yes quite");
         telemetry.update();

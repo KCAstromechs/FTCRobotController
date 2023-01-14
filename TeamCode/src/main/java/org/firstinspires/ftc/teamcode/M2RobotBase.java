@@ -398,8 +398,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         float zAngle = 0.0f;
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        while(Math.abs(_frontLeft.getCurrentPosition())>10){}
-
+        while(Math.abs(_frontLeft.getCurrentPosition())>50){}
+// was 10
 
         //set the motors to the desired power, they will keep running during all the logic with the encoders
         _frontRight.setPower(power);
