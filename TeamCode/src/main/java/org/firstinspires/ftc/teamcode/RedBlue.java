@@ -55,7 +55,7 @@ public class RedBlue extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(235,260,280,375, false);
+        VisionBase.COLOR color = vision.findRGB(350,420,275,305, false);
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
         }
