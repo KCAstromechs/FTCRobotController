@@ -30,14 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="RED Side RED Terminal", group="Robot")
-public class RedRedTest extends LinearOpMode {
+@Autonomous(name="Red Side Blue Terminal", group="Robot")
+public class RedBlue extends LinearOpMode {
 
     public M2RobotBase rb;
     private VisionBase vision;
@@ -71,100 +69,47 @@ public class RedRedTest extends LinearOpMode {
             telemetry.addData("Final Answer", "NOT DETECTED");
         }
         telemetry.update();
-
-        //-------------------------------------------------------------------------------
-        // THE RELOCATION OF THE SIGNAL CONE
-        //-------------------------------------------------------------------------------
+        sleep(1000);
 
 
-        //drive about halfway to the mid field
-        rb.driveStraightInches(18,0,.4);
-        //wiggle the signal cone out of the way
-        rb.turnToAngle(60,.4);
+
+/*
+        rb.lifterMedium();
+        rb.driveStrafeInches(65,0,.4);
+        sleep(250);
         rb.lifterHigh();
+        telemetry.addData("i am thinking", "hmm");
+        telemetry.update();
+        rb.turnToAngle(60,.3);
+        telemetry.addData("i am thinking", "hmm yes");
+        telemetry.update();
+
+        //check the drive straight method in for the sleep
+        //add telemetry to the ds method
+        rb.driveStraightInches(5,55,.4);
+        telemetry.addData("i am thinking", "hmm yes quite");
+        telemetry.update();
+        rb.scootLifterDown();
+        rb.collectorOpen();
+
+
+ */
+
+        /*
+    rb.driveStraightInches(45,0,.4);
+    rb.lifterHigh();
+    rb.turnToAngle(-45,.3);
+    rb.driveStraightInches(4,-45,.3);
+
+         */
+
+
+
+        rb.driveStraightInches(18,0,.4);
+        rb.turnToAngle(-50,.3);
+        sleep(250);
         rb.turnToAngle(0,.3);
-
-
-
-        //-------------------------------------------------------------------------------
-        // FIRST CONE
-        //-------------------------------------------------------------------------------
-
-        //finish the drive to mid field
-        rb.driveStraightInches(18,0,.4);
-        //turn towards the high
-        rb.turnToAngle(-25,.3);
-        rb.driveStraightInches(10,-25,.3);
-        sleep(200);
-        rb.collectorOpen();
-        //raise the roof so it doesn't catch
-        sleep(200);
-        rb.collectorClose();
-        //prepare for cone pile and cha cha real smooth away
-        rb.lifterCS5();
-        rb.driveStraightInches(6,-25,-.4);
-        rb.collectorOpen();
-
-
-
-        //------------------------------------------------------------------------------------------
-        //  SECOND CONE
-        //------------------------------------------------------------------------------------------
-
-
-        //turn towards pile
-        rb.turnToAngle(95,.3);
-        rb.driveStraightInches(27,95,.3);
-        rb.collectorClose();
-        sleep(250);
-        //lift to be ready for high
-        rb.lifterHigh();
-        sleep(700);
-        rb.driveStraightInches(22,95,-.4);
-        //turn towards the high
-        rb.turnToAngle(-37,.3);
-        rb.driveStraightInches(8,-37,.3);
-        sleep(200);
-        rb.collectorOpen();
-        //raise the roof (so it doesn't catch)
-        sleep(200);
-        //back away
-        rb.collectorClose();
-        rb.driveStraightInches(5,-35,-.4);
-
-
-        //------------------------------------------------------------------------------------------
-        // THIRD CONE
-        //------------------------------------------------------------------------------------------
-
-        //prepare for pile
-        rb.lifterCS4();
-        rb.collectorOpen();
-        rb.turnToAngle(95,.3);
-        rb.driveStraightInches(24,95,.3);
-        rb.collectorClose();
-        sleep(250);
-        rb.lifterHigh();
-        sleep(700);
-        rb.driveStraightInches(19,95,-.4);
-        rb.turnToAngle(-40,.3);
-        rb.driveStraightInches(8,-40,.3);
-        sleep(200);
-        rb.collectorOpen();
-        //raise the roof (so it doesn't catch)
-        sleep(200);
-        //back away
-        rb.collectorClose();
-        rb.driveStraightInches(5,-40,-.4);
-
-        //------------------------------------------------------------------------------------------
-        // FOURTH CONE
-        //------------------------------------------------------------------------------------------
-
-
-
-
-
+        rb.driveStraightInches(21,0,.4);
 
 
 

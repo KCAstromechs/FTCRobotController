@@ -33,16 +33,16 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     Servo _leftCollector;
 
     double RIGHT_COLLECTOR_CLOSED = .45;
-    double RIGHT_COLLECTOR_OPEN = 0;
+    double RIGHT_COLLECTOR_OPEN = .25;
     double LEFT_COLLECTOR_CLOSED = .70;
-    double LEFT_COLLECTOR_OPEN = 1;
+    double LEFT_COLLECTOR_OPEN = .9;
     int TOP_SAFETY = 4800;
     int BOTTOM_SAFETY = -200;
     int ZERO_HEIGHT = 0;
     int LOW_HEIGHT = 1750;
     int MID_HEIGHT = 3100;
-    int DOWN_CORRECT = 400;
-    int HIGH_HEIGHT = 4125;
+    int DOWN_CORRECT = 500;
+    int HIGH_HEIGHT = 3900;
     int CONE_STACK_LEVEL_1 = 50;
     int CONE_STACK_LEVEL_2 = 185;
     int CONE_STACK_LEVEL_3 = 350;
@@ -294,6 +294,12 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     public void lifterCS1(){
         _lifter.setTargetPosition(CONE_STACK_LEVEL_1);
+        _lifter.setPower(.5);
+
+    }
+
+    public void lifterCS5(){
+        _lifter.setTargetPosition(CONE_STACK_LEVEL_5);
         _lifter.setPower(.5);
 
     }
@@ -661,13 +667,13 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - angleOffset;
         double K = FCSpeedK; // if you want to create a slow mode, replace or change K
 
-        double robotX = (_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)));
-        double robotY = ((_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2))))*1.4;
+        double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
+        double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2))))*1.4;
 
-        double fLPower = ((-robotX + robotY) + _turnPower) / K;
-        double fRPower = ((-robotX - robotY) - _turnPower) / K;
-        double bRPower = ((-robotX + robotY) - _turnPower) / K;
-        double bLPower = ((-robotX - robotY) + _turnPower) / K;
+        double fLPower = ((robotX + robotY) + _turnPower) / K;
+        double fRPower = ((robotX - robotY) - _turnPower) / K;
+        double bRPower = ((robotX + robotY) - _turnPower) / K;
+        double bLPower = ((robotX - robotY) + _turnPower) / K;
 
         double highestPowerF = Math.max(Math.abs(fLPower), Math.abs(fRPower));
         double highestPowerB = Math.max(Math.abs(bRPower), Math.abs(bLPower));
