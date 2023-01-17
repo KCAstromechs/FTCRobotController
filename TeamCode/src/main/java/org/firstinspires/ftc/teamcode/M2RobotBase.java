@@ -36,13 +36,13 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     double RIGHT_COLLECTOR_OPEN = .25;
     double LEFT_COLLECTOR_CLOSED = .70;
     double LEFT_COLLECTOR_OPEN = .9;
+    int DOWN_CORRECT = 500;
     int TOP_SAFETY = 4800;
     int BOTTOM_SAFETY = -200;
     int ZERO_HEIGHT = 0;
     int LOW_HEIGHT = 1750;
     int MID_HEIGHT = 3100;
-    int DOWN_CORRECT = 500;
-    int HIGH_HEIGHT = 3900;
+    int HIGH_HEIGHT = 3950;
     int CONE_STACK_LEVEL_1 = 50;
     int CONE_STACK_LEVEL_2 = 185;
     int CONE_STACK_LEVEL_3 = 350;

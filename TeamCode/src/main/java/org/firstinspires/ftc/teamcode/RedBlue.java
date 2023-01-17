@@ -73,35 +73,8 @@ public class RedBlue extends LinearOpMode {
 
 
 
-/*
-        rb.lifterMedium();
-        rb.driveStrafeInches(65,0,.4);
-        sleep(250);
-        rb.lifterHigh();
-        telemetry.addData("i am thinking", "hmm");
-        telemetry.update();
-        rb.turnToAngle(60,.3);
-        telemetry.addData("i am thinking", "hmm yes");
-        telemetry.update();
-
-        //check the drive straight method in for the sleep
-        //add telemetry to the ds method
-        rb.driveStraightInches(5,55,.4);
-        telemetry.addData("i am thinking", "hmm yes quite");
-        telemetry.update();
-        rb.scootLifterDown();
-        rb.collectorOpen();
 
 
- */
-
-        /*
-    rb.driveStraightInches(45,0,.4);
-    rb.lifterHigh();
-    rb.turnToAngle(-45,.3);
-    rb.driveStraightInches(4,-45,.3);
-
-         */
 
 
 
