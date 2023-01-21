@@ -30,12 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
-@Autonomous(name="RED Side BLUE Terminal", group="Robot")
-public class RedBlueThreeCone extends LinearOpMode {
+@Autonomous(name="BLUE Side BLUE Terminal", group="Robot")
+public class BlueBlueThreeCone extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
@@ -56,7 +56,7 @@ public class RedBlueThreeCone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(350,420,311,351, false);
+        VisionBase.COLOR color = vision.findRGB(350,420,250,285, false);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -79,7 +79,7 @@ public class RedBlueThreeCone extends LinearOpMode {
 
         rb.driveStrafeInches(10,0,.4);
         rb.driveStraightInches(18,0,.5);
-        rb.turnToAngle(-60,.4);
+        rb.turnToAngle(-60,.2);
         rb.lifterHigh();
         rb.turnToAngle(0,.3);
 
@@ -92,18 +92,21 @@ public class RedBlueThreeCone extends LinearOpMode {
         //finish the drive to mid field
         rb.driveStraightInches(21,0,.4);
         //turn towards the high
-        rb.turnToAngle(49,.3);
-        rb.driveStraightInches(4,49,.3);
+        rb.turnToAngle(43,.3);
+        rb.driveStraightInches(4,43,.3);
         sleep(200);
+        // drop him off at school
         rb.scootLifterDown();
         sleep(200);
         rb.collectorOpen();
+        sleep(500);
         //raise the roof so it doesn't catch
-        sleep(200);
         rb.lifterHigh();
+        sleep(500);
         //prepare for cone pile and cha cha real smooth away
-        rb.driveStraightInches(4,49,-.4);
+        rb.driveStraightInches(4,43,-.2);
         rb.lifterCS5();
+        sleep(1000);
 
 
 
@@ -115,29 +118,31 @@ public class RedBlueThreeCone extends LinearOpMode {
 
 
         //turn towards pile
-        rb.turnToAngle(-85,.3);
-        rb.driveStraightInches(24,-85,.4);
+        rb.turnToAngle(-80,.3);
+        rb.driveStraightInches(30,-80,.4);
         rb.collectorClose();
         sleep(250);
         //lift to be ready for high
         rb.lifterHigh();
-        sleep(700);
-        rb.driveStraightInches(23,-85,-.4);
+        sleep(1000);
+        rb.driveStraightInches(25,-80,-.4);
         //turn towards the high
-        rb.turnToAngle(65,.3);
-        rb.driveStraightInches(6,65,.3);
+        rb.turnToAngle(55,.3);
+        rb.driveStraightInches(5,55,.3);
         sleep(200);
+        // drop him off at school
         rb.scootLifterDown();
         sleep(200);
         rb.collectorOpen();
-        //raise the roof (so it doesn't catch)
-        sleep(200);
+        sleep(500);
+        //raise the roof so it doesn't catch
         rb.lifterHigh();
+        sleep(500);
         //back away
         rb.collectorClose();
-        rb.driveStraightInches(6,65,-.4);
+        sleep(200);
 
-
+/*
 
         //------------------------------------------------------------------------------------------
         // THIRD CONE
@@ -146,67 +151,72 @@ public class RedBlueThreeCone extends LinearOpMode {
         //prepare for pile
         rb.lifterCS4();
         rb.collectorOpen();
-        rb.turnToAngle(-90,.3);
-        rb.driveStraightInches(22,-90,.4);
+        rb.turnToAngle(-85,.3);
+        rb.driveStraightInches(23,-85,.4);
         rb.collectorClose();
         sleep(250);
         rb.lifterHigh();
         sleep(700);
-        rb.driveStraightInches(20,-90,-.4);
-        rb.turnToAngle(70,.3);
-        rb.driveStraightInches(8,70,.3);
-        sleep(200);
-        rb.scootLifterDown();
+        rb.driveStraightInches(25,-85,-.4);
+        rb.turnToAngle(60,.3);
+        rb.driveStraightInches(5,60,.3);
         sleep(200);
         rb.collectorOpen();
         //raise the roof (so it doesn't catch)
         sleep(200);
-        rb.lifterHigh();
         //back away
         rb.collectorClose();
-        rb.driveStraightInches(5,70,-.4);
+        rb.driveStraightInches(5,60,-.4);
 
         //------------------------------------------------------------------------------------------
         // FOURTH CONE
         //------------------------------------------------------------------------------------------
 
-        /*
         if (timeRemainingAfterVision > 28){
             telemetry.addData("hello", "i have time for a fourth cone");
             telemetry.update();
         }
 
 
-         */
+
+
+
+
+
+
+
+
+
+
 
         rb.lifterZero();
         rb.turnToAngle(7,.3);
-
+*/
 
         switch(color){
             case RED:
-                rb.driveStraightInches(3,7,-.5);
-                rb.driveStrafeInches(32,7,.5);
-                rb.driveStraightInches(6,7,-.5);
-
-
+                rb.driveStraightInches(12,55,-.4);
+                rb.turnToAngle(85,.3);
+                rb.driveStraightInches(25,85,.3);
                 break;
 
             case GREEN:
-            case NOT_DETECTED:
-                rb.driveStraightInches(6,7,-.5);
 
+            case NOT_DETECTED:
+                rb.driveStraightInches(8,55,-.4);
+                rb.turnToAngle(0,0.3);
+                rb.driveStraightInches(4,0,-0.3);
                 break;
 
             case BLUE:
-                rb.driveStraightInches(2,7,-.5);
-                rb.driveStrafeInches(27,7,-.5);
-                rb.driveStraightInches(6,7,-.5);
+                rb.driveStraightInches(4,55,-.4);
+                rb.turnToAngle(0,0.3);
+                rb.driveStrafeInches(30,0,-.4);
                 break;
         }
-
-        sleep(2000);
-
+        rb.turnToAngle(0,0.3);
+        rb.lifterZero();
+        sleep(4000);
 
     }
 

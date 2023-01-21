@@ -42,7 +42,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     int ZERO_HEIGHT = 0;
     int LOW_HEIGHT = 1750;
     int MID_HEIGHT = 3100;
-    int HIGH_HEIGHT = 3950;
+    int HIGH_HEIGHT = 4000;
     int CONE_STACK_LEVEL_1 = 50;
     int CONE_STACK_LEVEL_2 = 185;
     int CONE_STACK_LEVEL_3 = 350;

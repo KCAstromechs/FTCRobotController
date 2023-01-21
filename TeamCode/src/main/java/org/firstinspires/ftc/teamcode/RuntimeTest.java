@@ -34,10 +34,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="Red Side Blue Terminal", group="Robot")
-public class RedBlue extends LinearOpMode {
+@Autonomous(name="Runtime Test", group="Robot")
+public class RuntimeTest extends LinearOpMode {
 
     public M2RobotBase rb;
+    public double timeElapsed;
     private VisionBase vision;
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -55,51 +56,13 @@ public class RedBlue extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(350,420,275,305, false);
-        if (color == VisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "RED");
-        }
-        else if (color == VisionBase.COLOR.GREEN) {
-            telemetry.addData("Final Answer", "GREEN");
-        }
-        else if (color == VisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "BLUE");
-        }
-        else {
-            telemetry.addData("Final Answer", "NOT DETECTED");
-        }
-        telemetry.update();
-        sleep(1000);
+     sleep(5000);
+     timeElapsed = getRuntime();
+     telemetry.addData("time remaining:", timeElapsed);
+     telemetry.update();
+     sleep(5000);
 
 
-
-
-
-
-
-
-        rb.driveStraightInches(18,0,.4);
-        rb.turnToAngle(-50,.3);
-        sleep(250);
-        rb.turnToAngle(0,.3);
-        rb.driveStraightInches(21,0,.4);
-
-
-
-
-
-
-        switch(color){
-            case RED:
-                break;
-
-            case GREEN:
-            case NOT_DETECTED:
-                break;
-
-            case BLUE:
-                break;
-        }
     }
 
 
