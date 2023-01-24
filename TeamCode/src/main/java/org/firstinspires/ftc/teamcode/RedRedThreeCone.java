@@ -58,7 +58,7 @@ public class RedRedThreeCone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(350,420,324,363, false);
+        VisionBase.COLOR color = vision.findRGB(390,460,249,292, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -224,8 +224,8 @@ public class RedRedThreeCone extends LinearOpMode {
         //finish the drive to mid field
         rb.driveStraightInches(19,0,.4);
         //turn towards the high
-        rb.turnToAngle(-47,.3);
-        rb.driveStraightInches(9,-47,.3);
+        rb.turnToAngle(-45,.3);
+        rb.driveStraightInches(9,-45,.3);
         sleep(200);
         rb.scootLifterDown();
         sleep(200);
@@ -233,7 +233,7 @@ public class RedRedThreeCone extends LinearOpMode {
         //raise the roof so it doesn't catch
         sleep(200);
         //prepare for cone pile and cha cha real smooth away
-        rb.driveStraightInches(8,-49,-.4);
+        rb.driveStraightInches(8,-45,-.4);
         rb.lifterCS5();
 
 
@@ -256,7 +256,7 @@ public class RedRedThreeCone extends LinearOpMode {
         rb.driveStraightInches(17,95,-.4);
         //turn towards the high
         rb.turnToAngle(-47,.3);
-        rb.driveStraightInches(9,-47,.3);
+        rb.driveStraightInches(9,-45,.3);
         sleep(200);
         rb.scootLifterDown();
         sleep(200);

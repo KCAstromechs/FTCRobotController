@@ -64,6 +64,7 @@ public class M2FieldCentric extends OpMode {
         double inputY = -gamepad1.right_stick_y;
         if(Math.abs(inputX)<0.2) inputX = 0;
         if(Math.abs(inputY)<0.2) inputY = 0;
+        if(Math.abs(turnPower) <0.2) turnPower = gamepad2.left_stick_x;
 
         // if dpad button, change input values
         if (gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right) {

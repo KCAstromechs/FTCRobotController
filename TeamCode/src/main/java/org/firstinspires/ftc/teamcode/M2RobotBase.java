@@ -41,7 +41,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     int BOTTOM_SAFETY = -200;
     int ZERO_HEIGHT = 0;
     int LOW_HEIGHT = 1750;
-    int MID_HEIGHT = 3100;
+    int MID_HEIGHT = 2900;
     int HIGH_HEIGHT = 4000;
     int CONE_STACK_LEVEL_1 = 50;
     int CONE_STACK_LEVEL_2 = 185;
@@ -319,10 +319,13 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
                 _lifter.setTargetPosition(newTargetPosition);
                 _lifter.setPower(1);
 
+                /*
             if(newTargetPosition < BOTTOM_SAFETY)
                  newTargetPosition = BOTTOM_SAFETY;
                 _lifter.setTargetPosition(newTargetPosition);
                 _lifter.setPower(1);
+
+                 */
         }
         _telemetry.addData("lifter target", _lifter.getTargetPosition());
         _telemetry.addData("lifter encoder", _lifter.getCurrentPosition());
