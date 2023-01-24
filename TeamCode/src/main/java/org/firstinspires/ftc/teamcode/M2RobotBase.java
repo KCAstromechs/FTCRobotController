@@ -34,7 +34,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     double RIGHT_COLLECTOR_CLOSED = .45;
     double RIGHT_COLLECTOR_OPEN = .25;
-    double LEFT_COLLECTOR_CLOSED = .70;
+    double LEFT_COLLECTOR_CLOSED = .65;
     double LEFT_COLLECTOR_OPEN = .9;
     int DOWN_CORRECT = 500;
     int TOP_SAFETY = 4800;
