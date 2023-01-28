@@ -32,11 +32,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="BLUE Terminal", group="Robot")
-public class BlueBlueThreeCone extends LinearOpMode {
+@Autonomous(name="RED Terminal", group="Robot")
+public class RedTerm2Cone extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
@@ -57,7 +58,7 @@ public class BlueBlueThreeCone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(390,470,120,420, false);
+        VisionBase.COLOR color = vision.findRGB(390,480,120,440, false);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -73,6 +74,7 @@ public class BlueBlueThreeCone extends LinearOpMode {
         }
         telemetry.update();
 
+
         //-------------------------------------------------------------------------------
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
@@ -80,43 +82,38 @@ public class BlueBlueThreeCone extends LinearOpMode {
         rb.driveStrafeInches(8,0,.4);
         rb.driveStraightInches(25,0,.3);
         rb.turnToAngle(-70,.2);
-        rb.driveStraightInches(3,-70,.3);
-        rb.driveStraightInches(3,-70,-.3);
         sleep(250);
+        rb.turnToAngle(-52,.3);
         rb.lifterMedium();
-        rb.turnToAngle(40,.3);
-        sleep(1500);
-        rb.driveStraightInches(3,40,.3);
+        sleep(1250);
+        rb.driveStraightInches(10,-52,.3);
         sleep(500);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
-        rb.driveStraightInches(8,40,-.4);
+        rb.driveStraightInches(6,-52,-.4);
         //-------------------------------------------------------------------------------
         // second cone
         //-------------------------------------------------------------------------------
-        rb.turnToAngle(-85,.3);
-        rb.driveStrafeInches(40,-85,.4);
+        rb.turnToAngle(90,.3);
+        rb.driveStrafeInches(19,90,-.4);
         rb.lifterCS5();
-        rb.driveStraightInches(22,-85,.4);
+        rb.driveStraightInches(21,90,.4);
         sleep(250);
         rb.collectorClose();
         sleep(250);
         rb.lifterMedium();
         sleep(250);
-        rb.driveStraightInches(21,-85,-.4);
-        rb.turnToAngle(90,-.3);
-
-        //tune me! im an annoyance!
-        rb.driveStrafeInches(20,90,.4);
-        rb.driveStraightInches(4,90,.3);
-        //i am no longer annoying, do not tune me
+        rb.driveStraightInches(23,95,-.4);
+        rb.turnToAngle(-90,-.3);
+        rb.driveStrafeInches(6,-90,-.4);
+        rb.driveStraightInches(3,-90,.3);
         sleep(250);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
-        rb.driveStraightInches(4,90,-.3);
+        rb.driveStraightInches(3,-90,-.3);
         rb.turnToAngle(0,.3);
 
 
@@ -125,9 +122,9 @@ public class BlueBlueThreeCone extends LinearOpMode {
 
 
         switch(color){
-            case BLUE:
-                rb.driveStraightInches(9,0,-.4);
-                rb.driveStrafeInches(32,0,-.5);
+            case RED:
+                rb.driveStraightInches(12,0,-.4);
+                rb.driveStrafeInches(32,0,.5);
 
 
 
@@ -139,9 +136,9 @@ public class BlueBlueThreeCone extends LinearOpMode {
 
                 break;
 
-            case RED:
-                rb.driveStraightInches(9,0,-.4);
-                rb.driveStrafeInches(30,0,.5);
+            case BLUE:
+                rb.driveStraightInches(12,0,-.4);
+                rb.driveStrafeInches(30,0,-.5);
                 break;
         }
 
@@ -154,6 +151,8 @@ public class BlueBlueThreeCone extends LinearOpMode {
 
 
     }
+
+
 
 
         }

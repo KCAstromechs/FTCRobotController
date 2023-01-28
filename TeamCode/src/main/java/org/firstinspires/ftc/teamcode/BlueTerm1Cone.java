@@ -101,8 +101,7 @@ public class BlueTerm1Cone extends LinearOpMode {
 
         switch(color){
             case BLUE:
-                rb.driveStraightInches(5,0,-.4);
-                rb.driveStrafeInches(32,0,-.5);
+                rb.driveStrafeInches(35,0,-.5);
 
 
 
@@ -115,7 +114,6 @@ public class BlueTerm1Cone extends LinearOpMode {
                 break;
 
             case RED:
-                rb.driveStraightInches(5,0,-.4);
                 rb.driveStrafeInches(30,0,.5);
                 break;
         }
