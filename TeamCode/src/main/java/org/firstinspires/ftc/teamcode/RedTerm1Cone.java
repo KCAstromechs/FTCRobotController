@@ -102,8 +102,6 @@ public class RedTerm1Cone extends LinearOpMode {
             case RED:
                 rb.driveStrafeInches(32,0,.5);
 
-
-
                 break;
 
             case GREEN:
@@ -113,13 +111,14 @@ public class RedTerm1Cone extends LinearOpMode {
                 break;
 
             case BLUE:
-                rb.driveStrafeInches(30,0,-.5);
+                rb.driveStrafeInches(36,0,-.5);
                 break;
         }
 
         rb.collectorClose();
         rb.lifterZero();
-        sleep(3000);
+        rb.turnToAngle(0,0.2);
+        sleep(5000);
 
 
 

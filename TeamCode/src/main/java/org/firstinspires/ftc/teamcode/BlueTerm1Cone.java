@@ -120,7 +120,8 @@ public class BlueTerm1Cone extends LinearOpMode {
 
         rb.collectorClose();
         rb.lifterZero();
-        sleep(3000);
+        rb.turnToAngle(0,0.2);
+        sleep(5000);
 
 
 
