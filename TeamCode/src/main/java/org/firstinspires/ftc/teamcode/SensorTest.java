@@ -1,23 +1,28 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@Disabled
 
-@TeleOp(name="Oodome", group="Iterative Opmode")
-public class Odometer extends OpMode{
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+@TeleOp(name="Sensor Test", group="Iterative Opmode")
+public class SensorTest extends OpMode{
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    public M2RobotBase rb;
+    public ColorSensor color;
+    public DistanceSensor distance;
+
+
 
 
     @Override
     public void init() {
 
-        rb = new M2RobotBase(hardwareMap, telemetry, false);
-
+        color = hardwareMap.get(ColorSensor.class,"color");
+        distance = hardwareMap.get(DistanceSensor.class,"distance");
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -52,8 +57,11 @@ public class Odometer extends OpMode{
 
     @Override
     public void loop() {
-
-       rb.encoderTest();
+    telemetry.addData("red sensed", color.red());
+    telemetry.addData("green sensed", color.green());
+    telemetry.addData("blue sensed", color.blue());
+    telemetry.addData("distance", distance.getDistance(DistanceUnit.CM));
+    telemetry.update();
     }
 
     /*

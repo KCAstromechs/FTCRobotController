@@ -87,12 +87,16 @@ public class M2FieldCentric extends OpMode {
         }
 
         // drive now :)
-        rb.FCDrive(Math.cbrt(inputX)/2, Math.cbrt(inputY)/2, Math.cbrt(turnPower)/2);
+        rb.FCDrive(Math.cbrt(inputX)*.75, Math.cbrt(inputY)*.75, Math.cbrt(turnPower)*.75);
 
 
         // RESET ANGLE ?
         if (gamepad1.left_bumper) {
             angleOffset = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+        }
+
+        if (gamepad1.right_bumper){
+            rb.performFCUpdates(angleOffset, true);
         }
 
         //COLLECTOR
@@ -136,7 +140,7 @@ public class M2FieldCentric extends OpMode {
             rb.lifterZero();
         }
 
-        rb.performFCUpdates(angleOffset);
+        rb.performFCUpdates(angleOffset, false);
     }
 
     /*
