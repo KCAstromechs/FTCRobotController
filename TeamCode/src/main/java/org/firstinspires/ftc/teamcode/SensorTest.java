@@ -12,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class SensorTest extends OpMode{
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    public ColorSensor color;
-    public DistanceSensor distance;
+    public ColorSensor colorSensor;
+    public DistanceSensor distanceSensor;
 
 
 
@@ -21,8 +21,8 @@ public class SensorTest extends OpMode{
     @Override
     public void init() {
 
-        color = hardwareMap.get(ColorSensor.class,"color");
-        distance = hardwareMap.get(DistanceSensor.class,"distance");
+        colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
+        distanceSensor = hardwareMap.get(DistanceSensor.class,"distanceSensor");
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -57,10 +57,10 @@ public class SensorTest extends OpMode{
 
     @Override
     public void loop() {
-    telemetry.addData("red sensed", color.red());
-    telemetry.addData("green sensed", color.green());
-    telemetry.addData("blue sensed", color.blue());
-    telemetry.addData("distance", distance.getDistance(DistanceUnit.CM));
+    telemetry.addData("red sensed", colorSensor.red());
+    telemetry.addData("green sensed", colorSensor.green());
+    telemetry.addData("blue sensed", colorSensor.blue());
+    telemetry.addData("distance", distanceSensor.getDistance(DistanceUnit.CM));
     telemetry.update();
     }
 

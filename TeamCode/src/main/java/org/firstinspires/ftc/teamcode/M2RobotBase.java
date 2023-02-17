@@ -37,8 +37,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     ColorSensor _colorSensor;
     DistanceSensor _distanceSensor;
 
-    int coneDriveDistance = 5;
-    int distanceFromCone = 10;
+    double desiredDistanceFromCone = 0;
     double RIGHT_COLLECTOR_CLOSED = .45;
     double RIGHT_COLLECTOR_OPEN = .25;
     double LEFT_COLLECTOR_CLOSED = .65;
@@ -55,8 +54,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     int CONE_STACK_LEVEL_3 = 350;
     int CONE_STACK_LEVEL_4 = 506;
     int CONE_STACK_LEVEL_5 = 630;
-    int RedTapeThreshold = 1000;
-    int BlueTapeThreshold = 1000;
+    int minColorDifference = 0;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -366,6 +364,14 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     }
 
+    public boolean isClosed(){
+        if ((_leftCollector.getPosition() >= .35) && (_rightCollector.getPosition() >= .35)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
 //-----------------------------------------------------------------------------------------------------------------
 //AUTONOMOUS MOVEMENT
@@ -605,98 +611,116 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return Math.abs(a1 - (a2 + 360));
     }
 
-    public boolean colorSensorDetect(boolean isBlue, float desiredAngle) {
+    public boolean colorSensorDetect(boolean isBlue, float desiredAngle) throws InterruptedException {
 
-        float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        double driveCorrect = (zAngle - desiredAngle) * K_TURN;
-        double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
-        //if we are on the red side
-        if (!isBlue) {
-            //while the color sensor does not read within 800-1200
-            while (!((_colorSensor.red() < (RedTapeThreshold + 200)) && (_colorSensor.red() > (RedTapeThreshold - 200)))) {
-                //strafe over
-                _telemetry.addData("waiting for proper reading", _colorSensor.red());
-                _telemetry.update();
-                _frontLeft.setPower(.2);
-                _frontRight.setPower(-.2);
-                _backLeft.setPower(.2);
-                _backRight.setPower(-.2);
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Thread.sleep(250);
 
-                //if the proper color is read
-                if (((_colorSensor.red() < (RedTapeThreshold + 200)) && (_colorSensor.red() > (RedTapeThreshold - 200)))) {
-                    //turn the power off and tell the program that the drive was successful
-                    _telemetry.addData("SUCCESSS!!!", "Color go brrrrrr");
-                    _telemetry.update();
-                    _frontLeft.setPower(0);
-                    _frontRight.setPower(0);
-                    _backLeft.setPower(0);
-                    _backRight.setPower(0);
-                    return true;
-                }
-                //if the robot has moved too far as a safety
-                else if (Math.abs(_frontRight.getCurrentPosition()) > 1000) {
-                    //turn power off an report that the drive was unsuccessful
-                    _telemetry.addData("FAILED", "jsldauhvuajkdfn");
-                    _telemetry.update();
-                    _frontLeft.setPower(0);
-                    _frontRight.setPower(0);
-                    _backLeft.setPower(0);
-                    _backRight.setPower(0);
-                    return false;
-                }
-            }
-        }
-
+        //if we are on the blue side
         if (isBlue) {
-            while (!((_colorSensor.blue() < (BlueTapeThreshold + 200)) && (_colorSensor.blue() > (BlueTapeThreshold - 200)))) {
-                _frontLeft.setPower(-.2);
-                _frontRight.setPower(.2);
-                _backLeft.setPower(-.2);
-                _backRight.setPower(.2);
-
-                if (((_colorSensor.blue() < (BlueTapeThreshold + 200)) && (_colorSensor.blue() > (BlueTapeThreshold - 200)))) {
-                    _frontLeft.setPower(0);
-                    _frontRight.setPower(0);
-                    _backLeft.setPower(0);
-                    _backRight.setPower(0);
-                    return true;
-                } else if (Math.abs(_frontRight.getCurrentPosition()) > 1000) {
-                    _frontLeft.setPower(0);
-                    _frontRight.setPower(0);
-                    _backLeft.setPower(0);
-                    _backRight.setPower(0);
-                    return false;
-                }
+            //while the color sensor does not read within 80-100
+            while (_colorSensor.blue() < _colorSensor.green() + minColorDifference || (Math.abs(_frontRight.getCurrentPosition()) > 400)) {
+                float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+                double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+                double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
+                //strafe over
+                _telemetry.addData("blue strength", _colorSensor.blue() - _colorSensor.green());
+                _telemetry.update();
+                _frontLeft.setPower(.275 + driveCorrect - strafeCorrect);
+                _frontRight.setPower(-.275 - driveCorrect - strafeCorrect);
+                _backLeft.setPower(-.275 + driveCorrect - strafeCorrect);
+                _backRight.setPower(.275 - driveCorrect - strafeCorrect);
+            }
+            //if the proper color is read
+            //turn the power off and tell the program that the drive was successful
+            if (_colorSensor.blue() > _colorSensor.green() + minColorDifference) {
+                _telemetry.addData("SUCCESSS!!!", "Color go brrrrrr");
+                _telemetry.update();
+                _frontLeft.setPower(0);
+                _frontRight.setPower(0);
+                _backLeft.setPower(0);
+                _backRight.setPower(0);
+                return true;
+            }
+        }
+        else {
+            //while the color sensor does not read within 80-100
+            while (_colorSensor.red() < _colorSensor.green() + minColorDifference || (Math.abs(_frontRight.getCurrentPosition()) > 400)) {
+                float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+                double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+                double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
+                //strafe over
+                _telemetry.addData("red strength", _colorSensor.red() - _colorSensor.green());
+                _telemetry.update();
+                _frontLeft.setPower(.275 + driveCorrect - strafeCorrect);
+                _frontRight.setPower(-.275 - driveCorrect - strafeCorrect);
+                _backLeft.setPower(-.275 + driveCorrect - strafeCorrect);
+                _backRight.setPower(.275 - driveCorrect - strafeCorrect);
+            }
+            //if the proper color is read
+            //turn the power off and tell the program that the drive was successful
+            if (_colorSensor.red() > _colorSensor.green() + minColorDifference) {
+                _telemetry.addData("SUCCESSS!!!", "Color go brrrrrr");
+                _telemetry.update();
+                _frontLeft.setPower(0);
+                _frontRight.setPower(0);
+                _backLeft.setPower(0);
+                _backRight.setPower(0);
+                return true;
             }
         }
 
-        _telemetry.addData("why am i here", "idk man");
+        //if the robot has moved too far as a safety
+        //turn power off an report that the drive was unsuccessful
+        _telemetry.addData("FAILED", "jsldauhvuajkdfn");
         _telemetry.update();
-        return true;
+        _frontLeft.setPower(0);
+        _frontRight.setPower(0);
+        _backLeft.setPower(0);
+        _backRight.setPower(0);
+        return false;
     }
 
-    public boolean coneDrive(float desiredAngle){
-        float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        double driveCorrect = (zAngle - desiredAngle) * K_TURN;
-        double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
+    public boolean coneDrive(double coneDriveMaxDistance, float desiredAngle, double power) throws InterruptedException {
 
-        while (((Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveDistance*147.5)) || (_distanceSensor.getDistance(DistanceUnit.CM)-5) < distanceFromCone)){
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Thread.sleep(250);
 
+        while (Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveMaxDistance*147.5) && _distanceSensor.getDistance(DistanceUnit.CM) - 4.5 >= desiredDistanceFromCone){
+            float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+            double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+            double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
             _telemetry.addData("status", "seeking");
+            _frontRight.setPower(power - driveCorrect);
+            _backRight.setPower(power - driveCorrect);
+            _frontLeft.setPower(power + driveCorrect);
+            _backLeft.setPower(power + driveCorrect);
+            _telemetry.addData("distance", _distanceSensor.getDistance(DistanceUnit.CM) - 5.0);
             _telemetry.update();
-
-            _frontLeft.setPower(.3);
-            _frontRight.setPower(.3);
-            _backLeft.setPower(.3);
-            _backRight.setPower(.3);
-
-
-
-
-
         }
+        // stop moving
+        _frontLeft.setPower(0);
+        _frontRight.setPower(0);
+        _backLeft.setPower(0);
+        _backRight.setPower(0);
 
-        return true;
+        // did we hit max distance or see the cone?
+        if (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5 <= 0) {
+            _telemetry.addData("status","detected");
+            _telemetry.update();
+            return true;
+        }
+        else {
+            _telemetry.addData("status","distance exceeded");
+            _telemetry.update();
+            return false;
+        }
     }
 
 
@@ -771,7 +795,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     }
 
-    public void performFCUpdates(double angleOffset, boolean UseSlowMode) {
+    public void performFCUpdates(double angleOffset, boolean UseSlowMode, boolean autoGrab) {
         double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - angleOffset;
         double K = FCSpeedK; // if you want to create a slow mode, replace or change K
 
@@ -782,6 +806,10 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
         double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
         double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)))) * 1.4;
+
+        if (autoGrab && (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) <= 0) {
+            collectorClose();
+        }
 
         if (UseSlowMode || (_lifter.getCurrentPosition() > MID_HEIGHT-200)) {
              fLPower = ((robotX + robotY) + _turnPower) / K;
@@ -796,7 +824,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
              bLPower = ((robotX - robotY) + _turnPower);
 
         }
-
 
         double highestPowerF = Math.max(Math.abs(fLPower), Math.abs(fRPower));
         double highestPowerB = Math.max(Math.abs(bRPower), Math.abs(bLPower));

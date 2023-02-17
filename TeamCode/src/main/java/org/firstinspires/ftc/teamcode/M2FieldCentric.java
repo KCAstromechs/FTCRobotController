@@ -18,6 +18,7 @@ public class M2FieldCentric extends OpMode {
     BNO055IMU imu;
     double angleOffset = 0.0;
     boolean slow = false;
+    boolean autoGrab = false;
 
     @Override
     public void init() {
@@ -88,7 +89,7 @@ public class M2FieldCentric extends OpMode {
         }
 
         // drive now :)
-        rb.FCDrive(Math.cbrt(inputX)*.75, Math.cbrt(inputY)*.75, Math.cbrt(turnPower)*.75);
+        rb.FCDrive(Math.cbrt(inputX)*.75, Math.cbrt(inputY)*.75, Math.cbrt(turnPower)*.5);
 
 
         // RESET ANGLE ?
@@ -125,6 +126,10 @@ public class M2FieldCentric extends OpMode {
             }
         }
 
+        if(gamepad2.right_bumper){
+            autoGrab = !autoGrab;
+        }
+
         //LIFTER
         rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
 
@@ -141,7 +146,12 @@ public class M2FieldCentric extends OpMode {
             rb.lifterZero();
         }
 
-        rb.performFCUpdates(angleOffset, slow);
+        if (autoGrab){
+            if (rb.isClosed()){
+                autoGrab = !autoGrab;
+            }
+        }
+        rb.performFCUpdates(angleOffset, slow, autoGrab);
     }
 
     /*

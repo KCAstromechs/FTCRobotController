@@ -79,25 +79,33 @@ public class RedTerm2Cone extends LinearOpMode {
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
 
-        rb.driveStrafeInches(8,0,.4);
-        rb.driveStraightInches(25,0,.3);
+        rb.driveStrafeInches(6,0,.4);
+        rb.driveStraightInches(28,0,.3);
         rb.turnToAngle(-70,.2);
         sleep(250);
         rb.turnToAngle(-52,.3);
         rb.lifterMedium();
         sleep(1250);
-        rb.driveStraightInches(10,-52,.3);
+        rb.driveStraightInches(9,-52,.3);
         sleep(500);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         rb.driveStraightInches(6,-52,-.4);
+
+
+
         //-------------------------------------------------------------------------------
         // second cone
         //-------------------------------------------------------------------------------
         rb.turnToAngle(90,.3);
-        rb.driveStrafeInches(19,90,-.4);
+        rb.driveStrafeInches(22,90,-.4);
         rb.lifterCS5();
+        rb.driveStraightInches(13,90,.3);
+        rb.colorSensorDetect(false,90);
+        //rb.coneDrive()
+
+        /*
         rb.driveStraightInches(21,90,.4);
         sleep(250);
         rb.collectorClose();
@@ -148,6 +156,8 @@ public class RedTerm2Cone extends LinearOpMode {
         sleep(5000);
 
 
+
+         */
 
 
 
