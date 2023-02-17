@@ -17,6 +17,7 @@ public class M2FieldCentric extends OpMode {
     double fieldAngle;
     BNO055IMU imu;
     double angleOffset = 0.0;
+    boolean slow = false;
 
     @Override
     public void init() {
@@ -96,7 +97,7 @@ public class M2FieldCentric extends OpMode {
         }
 
         if (gamepad1.right_bumper){
-            rb.performFCUpdates(angleOffset, true);
+            slow = !slow;
         }
 
         //COLLECTOR
@@ -140,7 +141,7 @@ public class M2FieldCentric extends OpMode {
             rb.lifterZero();
         }
 
-        rb.performFCUpdates(angleOffset, false);
+        rb.performFCUpdates(angleOffset, slow);
     }
 
     /*

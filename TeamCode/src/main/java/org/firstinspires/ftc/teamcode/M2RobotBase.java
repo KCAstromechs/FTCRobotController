@@ -7,6 +7,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, Strafeable, FieldCentric {
 
@@ -33,7 +35,10 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     Servo _rightCollector;
     Servo _leftCollector;
     ColorSensor _colorSensor;
+    DistanceSensor _distanceSensor;
 
+    int coneDriveDistance = 5;
+    int distanceFromCone = 10;
     double RIGHT_COLLECTOR_CLOSED = .45;
     double RIGHT_COLLECTOR_OPEN = .25;
     double LEFT_COLLECTOR_CLOSED = .65;
@@ -50,13 +55,15 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     int CONE_STACK_LEVEL_3 = 350;
     int CONE_STACK_LEVEL_4 = 506;
     int CONE_STACK_LEVEL_5 = 630;
+    int RedTapeThreshold = 1000;
+    int BlueTapeThreshold = 1000;
     double _leftPower;
     double _rightPower;
     double _strafePower;
     double _inputX;
     double _inputY;
     double _turnPower;
-    double FCSpeedK = 3;
+    double FCSpeedK = 2;
     Telemetry _telemetry;
     final double K_TURN = 0.02;
     final double K_STRAFE = 0.001;
@@ -76,6 +83,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _rightCollector = hardwareMap.get(Servo.class, "rightCollector");
         _leftCollector = hardwareMap.get(Servo.class, "leftCollector");
         _colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        _distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
 
@@ -596,6 +604,96 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
         return Math.abs(a1 - (a2 + 360));
     }
+
+    public boolean colorSensorDetect(boolean isBlue, float desiredAngle) {
+
+        float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+        double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
+        //if we are on the red side
+        if (!isBlue) {
+            //while the color sensor does not read within 800-1200
+            while (!((_colorSensor.red() < (RedTapeThreshold + 200)) && (_colorSensor.red() > (RedTapeThreshold - 200)))) {
+                //strafe over
+                _telemetry.addData("waiting for proper reading", _colorSensor.red());
+                _telemetry.update();
+                _frontLeft.setPower(.2);
+                _frontRight.setPower(-.2);
+                _backLeft.setPower(.2);
+                _backRight.setPower(-.2);
+
+                //if the proper color is read
+                if (((_colorSensor.red() < (RedTapeThreshold + 200)) && (_colorSensor.red() > (RedTapeThreshold - 200)))) {
+                    //turn the power off and tell the program that the drive was successful
+                    _telemetry.addData("SUCCESSS!!!", "Color go brrrrrr");
+                    _telemetry.update();
+                    _frontLeft.setPower(0);
+                    _frontRight.setPower(0);
+                    _backLeft.setPower(0);
+                    _backRight.setPower(0);
+                    return true;
+                }
+                //if the robot has moved too far as a safety
+                else if (Math.abs(_frontRight.getCurrentPosition()) > 1000) {
+                    //turn power off an report that the drive was unsuccessful
+                    _telemetry.addData("FAILED", "jsldauhvuajkdfn");
+                    _telemetry.update();
+                    _frontLeft.setPower(0);
+                    _frontRight.setPower(0);
+                    _backLeft.setPower(0);
+                    _backRight.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        if (isBlue) {
+            while (!((_colorSensor.blue() < (BlueTapeThreshold + 200)) && (_colorSensor.blue() > (BlueTapeThreshold - 200)))) {
+                _frontLeft.setPower(-.2);
+                _frontRight.setPower(.2);
+                _backLeft.setPower(-.2);
+                _backRight.setPower(.2);
+
+                if (((_colorSensor.blue() < (BlueTapeThreshold + 200)) && (_colorSensor.blue() > (BlueTapeThreshold - 200)))) {
+                    _frontLeft.setPower(0);
+                    _frontRight.setPower(0);
+                    _backLeft.setPower(0);
+                    _backRight.setPower(0);
+                    return true;
+                } else if (Math.abs(_frontRight.getCurrentPosition()) > 1000) {
+                    _frontLeft.setPower(0);
+                    _frontRight.setPower(0);
+                    _backLeft.setPower(0);
+                    _backRight.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        _telemetry.addData("why am i here", "idk man");
+        _telemetry.update();
+        return true;
+    }
+
+    public boolean coneDrive(){
+        while (((Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveDistance*147.5)) || (_distanceSensor.getDistance(DistanceUnit.CM)-5) < distanceFromCone)){
+
+            _telemetry.addData("status", "seeking");
+            _telemetry.update();
+
+            _frontLeft.setPower(.3);
+            _frontRight.setPower(.3);
+            _backLeft.setPower(.3);
+            _backRight.setPower(.3);
+
+
+
+        }
+
+        return true;
+    }
+
+
 
 //----------------------------------------------------------------------------------------------------------------------------------
 //TELEMETRY AND TROUBLESHOOTING
