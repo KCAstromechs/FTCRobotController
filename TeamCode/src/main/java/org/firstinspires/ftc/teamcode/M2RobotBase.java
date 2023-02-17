@@ -675,7 +675,11 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return true;
     }
 
-    public boolean coneDrive(){
+    public boolean coneDrive(float desiredAngle){
+        float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+        double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
+
         while (((Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveDistance*147.5)) || (_distanceSensor.getDistance(DistanceUnit.CM)-5) < distanceFromCone)){
 
             _telemetry.addData("status", "seeking");
@@ -685,6 +689,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             _frontRight.setPower(.3);
             _backLeft.setPower(.3);
             _backRight.setPower(.3);
+
+
 
 
 
@@ -777,7 +783,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
         double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)))) * 1.4;
 
-        if (UseSlowMode) {
+        if (UseSlowMode || (_lifter.getCurrentPosition() > MID_HEIGHT-200)) {
              fLPower = ((robotX + robotY) + _turnPower) / K;
              fRPower = ((robotX - robotY) - _turnPower) / K;
              bRPower = ((robotX + robotY) - _turnPower) / K;
