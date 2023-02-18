@@ -37,6 +37,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     ColorSensor _colorSensor;
     DistanceSensor _distanceSensor;
 
+    int lifterAutoAdjust = (6*100);
     double desiredDistanceFromCone = 0;
     double RIGHT_COLLECTOR_CLOSED = .45;
     double RIGHT_COLLECTOR_OPEN = .25;
@@ -55,6 +56,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     int CONE_STACK_LEVEL_4 = 506;
     int CONE_STACK_LEVEL_5 = 630;
     int minColorDifference = 0;
+    boolean driveOverride = false;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -141,6 +143,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _lifter = hardwareMap.get(DcMotor.class, "lifter");
         _leftCollector = hardwareMap.get(Servo.class, "leftCollector");
         _rightCollector = hardwareMap.get(Servo.class, "rightCollector");
+        _colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        _distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
 
@@ -611,7 +615,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return Math.abs(a1 - (a2 + 360));
     }
 
-    public boolean colorSensorDetect(boolean isBlue, float desiredAngle) throws InterruptedException {
+    public boolean colorSensorDetect(boolean isBlueTape, float desiredAngle, boolean isBlueTerminal) throws InterruptedException {
 
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -620,19 +624,30 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         Thread.sleep(250);
 
         //if we are on the blue side
-        if (isBlue) {
+        if (isBlueTape) {
             //while the color sensor does not read within 80-100
-            while (_colorSensor.blue() < _colorSensor.green() + minColorDifference || (Math.abs(_frontRight.getCurrentPosition()) > 400)) {
+            while (_colorSensor.blue() < _colorSensor.green() + minColorDifference && (Math.abs(_frontRight.getCurrentPosition()) < 400)) {
                 float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 double driveCorrect = (zAngle - desiredAngle) * K_TURN;
                 double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
                 //strafe over
                 _telemetry.addData("blue strength", _colorSensor.blue() - _colorSensor.green());
                 _telemetry.update();
-                _frontLeft.setPower(.275 + driveCorrect - strafeCorrect);
-                _frontRight.setPower(-.275 - driveCorrect - strafeCorrect);
-                _backLeft.setPower(-.275 + driveCorrect - strafeCorrect);
-                _backRight.setPower(.275 - driveCorrect - strafeCorrect);
+
+                if (isBlueTerminal) {
+
+                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+                }
+
+                else{
+                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+                }
             }
             //if the proper color is read
             //turn the power off and tell the program that the drive was successful
@@ -648,17 +663,30 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         }
         else {
             //while the color sensor does not read within 80-100
-            while (_colorSensor.red() < _colorSensor.green() + minColorDifference || (Math.abs(_frontRight.getCurrentPosition()) > 400)) {
+            while (_colorSensor.red() < _colorSensor.green() + minColorDifference && (Math.abs(_frontRight.getCurrentPosition()) < 400)) {
                 float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 double driveCorrect = (zAngle - desiredAngle) * K_TURN;
                 double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
                 //strafe over
                 _telemetry.addData("red strength", _colorSensor.red() - _colorSensor.green());
                 _telemetry.update();
-                _frontLeft.setPower(.275 + driveCorrect - strafeCorrect);
-                _frontRight.setPower(-.275 - driveCorrect - strafeCorrect);
-                _backLeft.setPower(-.275 + driveCorrect - strafeCorrect);
-                _backRight.setPower(.275 - driveCorrect - strafeCorrect);
+
+                if(isBlueTerminal) {
+                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+
+                }
+
+                else {
+                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+
+
+                }
             }
             //if the proper color is read
             //turn the power off and tell the program that the drive was successful
@@ -684,7 +712,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return false;
     }
 
-    public boolean coneDrive(double coneDriveMaxDistance, float desiredAngle, double power) throws InterruptedException {
+    public boolean coneDrive(double coneDriveMaxDistanceInches, float desiredAngle, double power) throws InterruptedException {
 
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -692,7 +720,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
-        while (Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveMaxDistance*147.5) && _distanceSensor.getDistance(DistanceUnit.CM) - 4.5 >= desiredDistanceFromCone){
+        while (Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveMaxDistanceInches*147.5) && _distanceSensor.getDistance(DistanceUnit.CM) - 4.5 >= desiredDistanceFromCone){
             float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
             double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
@@ -795,7 +823,13 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     }
 
-    public void performFCUpdates(double angleOffset, boolean UseSlowMode, boolean autoGrab) {
+    /**
+     * TODO
+     * @param angleOffset
+     * @param UseSlowMode
+     * @param autoGrab
+     */
+    public void performFCUpdates(double angleOffset, boolean UseSlowMode, boolean autoGrab) throws  InterruptedException {
         double zAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - angleOffset;
         double K = FCSpeedK; // if you want to create a slow mode, replace or change K
 
@@ -807,8 +841,16 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
         double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)))) * 1.4;
 
-        if (autoGrab && (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) <= 0) {
+
+        if (autoGrab && (_distanceSensor.getDistance(DistanceUnit.CM) - 6.0) <= 0) {
+            _inputX = 0;
+            _inputY = 0;
+            _turnPower = 0;
             collectorClose();
+            Thread.sleep(350);
+            _lifter.setPower(.5);
+            _lifter.setTargetPosition((_lifter.getCurrentPosition() +lifterAutoAdjust));
+            driveOverride = false;
         }
 
         if (UseSlowMode || (_lifter.getCurrentPosition() > MID_HEIGHT-200)) {
@@ -840,6 +882,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _frontRight.setPower(fRPower);
         _backRight.setPower(bRPower);
         _backLeft.setPower(bLPower);
+
     }
 }
 

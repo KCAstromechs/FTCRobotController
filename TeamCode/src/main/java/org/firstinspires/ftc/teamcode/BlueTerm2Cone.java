@@ -97,8 +97,10 @@ public class BlueTerm2Cone extends LinearOpMode {
         //-------------------------------------------------------------------------------
         rb.turnToAngle(-85,.3);
         rb.driveStrafeInches(40,-85,.4);
+        rb.driveStraightInches(13,-85,.3);
         rb.lifterCS5();
-        rb.driveStraightInches(22,-85,.4);
+        rb.colorSensorDetect(false,-85, true);
+        rb.coneDrive(8,-85,.3);
         sleep(250);
         rb.collectorClose();
         sleep(250);

@@ -79,19 +79,21 @@ public class RedTerm2Cone extends LinearOpMode {
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
 
-        rb.driveStrafeInches(6,0,.4);
+        rb.driveStrafeInches(8,0,.4);
         rb.driveStraightInches(28,0,.3);
         rb.turnToAngle(-70,.2);
+        rb.driveStraightInches(3,-70,.3);
+        rb.driveStraightInches(3,-70,-.3);
         sleep(250);
         rb.turnToAngle(-52,.3);
         rb.lifterMedium();
         sleep(1250);
-        rb.driveStraightInches(9,-52,.3);
+        rb.driveStraightInches(8,-52,.3);
         sleep(500);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
-        rb.driveStraightInches(6,-52,-.4);
+        rb.driveStraightInches(5,-52,-.4);
 
 
 
@@ -99,20 +101,16 @@ public class RedTerm2Cone extends LinearOpMode {
         // second cone
         //-------------------------------------------------------------------------------
         rb.turnToAngle(90,.3);
-        rb.driveStrafeInches(22,90,-.4);
+        rb.driveStrafeInches(20,90,-.4);
         rb.lifterCS5();
         rb.driveStraightInches(13,90,.3);
-        rb.colorSensorDetect(false,90);
-        //rb.coneDrive()
-
-        /*
-        rb.driveStraightInches(21,90,.4);
-        sleep(250);
+        rb.colorSensorDetect(false,90,false);
+        rb.coneDrive(9,90,.4);
         rb.collectorClose();
         sleep(250);
         rb.lifterMedium();
         sleep(250);
-        rb.driveStraightInches(23,95,-.4);
+        rb.driveStraightInches(20,95,-.4);
         rb.turnToAngle(-90,-.3);
         rb.driveStrafeInches(6,-90,-.4);
         rb.driveStraightInches(3,-90,.3);
@@ -121,6 +119,7 @@ public class RedTerm2Cone extends LinearOpMode {
         sleep(250);
         rb.collectorOpen();
         sleep(250);
+        rb.lifterHigh();
         rb.driveStraightInches(3,-90,-.3);
         rb.turnToAngle(0,.3);
 
@@ -146,9 +145,12 @@ public class RedTerm2Cone extends LinearOpMode {
 
             case BLUE:
                 rb.driveStraightInches(12,0,-.4);
-                rb.driveStrafeInches(30,0,-.5);
+                rb.driveStrafeInches(35,0,-.5);
                 break;
         }
+
+
+
 
         rb.collectorClose();
         rb.lifterZero();
@@ -157,11 +159,13 @@ public class RedTerm2Cone extends LinearOpMode {
 
 
 
-         */
+
 
 
 
     }
+
+
 
 
 

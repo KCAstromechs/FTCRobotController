@@ -97,8 +97,11 @@ public class M2FieldCentric extends OpMode {
             angleOffset = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
         }
 
-        if (gamepad1.right_bumper){
-            slow = !slow;
+        if (gamepad1.a){
+            slow = true;
+        }
+        if (gamepad1.b){
+            slow = false;
         }
 
         //COLLECTOR
@@ -127,7 +130,21 @@ public class M2FieldCentric extends OpMode {
         }
 
         if(gamepad2.right_bumper){
-            autoGrab = !autoGrab;
+            autoGrab = true;
+            slow = true;
+        }
+
+        if(gamepad2.left_bumper){
+            autoGrab = false;
+            slow = false;
+        }
+
+        if (autoGrab){
+            if (rb.isClosed()){
+                autoGrab = false;
+                slow = false;
+
+            }
         }
 
         //LIFTER
@@ -146,12 +163,12 @@ public class M2FieldCentric extends OpMode {
             rb.lifterZero();
         }
 
-        if (autoGrab){
-            if (rb.isClosed()){
-                autoGrab = !autoGrab;
-            }
+
+        try {
+            rb.performFCUpdates(angleOffset, slow, autoGrab);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        rb.performFCUpdates(angleOffset, slow, autoGrab);
     }
 
     /*
