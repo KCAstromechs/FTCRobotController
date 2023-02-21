@@ -615,7 +615,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return Math.abs(a1 - (a2 + 360));
     }
 
-    public boolean colorSensorDetect(boolean isBlueTape, float desiredAngle, boolean isBlueTerminal) throws InterruptedException {
+    public boolean colorSensorDetect(boolean isBlueTape, float desiredAngle, boolean moveLeft) throws InterruptedException {
 
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -634,20 +634,23 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
                 _telemetry.addData("blue strength", _colorSensor.blue() - _colorSensor.green());
                 _telemetry.update();
 
-                if (isBlueTerminal) {
 
-                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+                if (moveLeft) {
+                    _frontLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(-.3 - driveCorrect - strafeCorrect);
                 }
-
                 else{
                     _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
                     _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
                     _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
                     _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+
                 }
+
+
+
             }
             //if the proper color is read
             //turn the power off and tell the program that the drive was successful
@@ -671,20 +674,17 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
                 _telemetry.addData("red strength", _colorSensor.red() - _colorSensor.green());
                 _telemetry.update();
 
-                if(isBlueTerminal) {
-                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
-
+                if (moveLeft) {
+                    _frontLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(-.3 - driveCorrect - strafeCorrect);
                 }
-
-                else {
+                else{
                     _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
                     _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
                     _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
                     _backRight.setPower(.3 - driveCorrect - strafeCorrect);
-
 
                 }
             }

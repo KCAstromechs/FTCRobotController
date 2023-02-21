@@ -57,7 +57,7 @@ public class BlueTerm2Cone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(390,470,120,420, false);
+        VisionBase.COLOR color = vision.findRGB(390,470,120,420, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -92,13 +92,13 @@ public class BlueTerm2Cone extends LinearOpMode {
         sleep(250);
         rb.collectorOpen();
         rb.driveStraightInches(8,40,-.4);
+        rb.lifterCS5();
         //-------------------------------------------------------------------------------
         // second cone
         //-------------------------------------------------------------------------------
         rb.turnToAngle(-85,.3);
         rb.driveStrafeInches(40,-85,.4);
         rb.driveStraightInches(13,-85,.3);
-        rb.lifterCS5();
         rb.colorSensorDetect(false,-85, true);
         rb.coneDrive(8,-85,.3);
         sleep(250);
@@ -110,14 +110,15 @@ public class BlueTerm2Cone extends LinearOpMode {
         rb.turnToAngle(90,-.3);
 
         //tune me! im an annoyance!
-        rb.driveStrafeInches(20,90,.4);
-        rb.driveStraightInches(4,90,.3);
+        rb.driveStrafeInches(21,90,.4);
+        rb.driveStraightInches(3,90,.3);
         //i am no longer annoying, do not tune me
         sleep(250);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
+        rb.lifterHigh();
         rb.driveStraightInches(4,90,-.3);
         rb.turnToAngle(0,.3);
 
@@ -128,7 +129,7 @@ public class BlueTerm2Cone extends LinearOpMode {
 
         switch(color){
             case BLUE:
-                rb.driveStraightInches(9,0,-.4);
+                rb.driveStraightInches(11,0,-.4);
                 rb.driveStrafeInches(32,0,-.5);
 
 
@@ -142,7 +143,7 @@ public class BlueTerm2Cone extends LinearOpMode {
                 break;
 
             case RED:
-                rb.driveStraightInches(9,0,-.4);
+                rb.driveStraightInches(11,0,-.4);
                 rb.driveStrafeInches(30,0,.5);
                 break;
         }
