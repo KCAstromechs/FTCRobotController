@@ -114,19 +114,11 @@ public class M2FieldCentric extends OpMode {
         }
 
         if(gamepad2.x){
-            try {
-                rb.lifterResetDown();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            rb.scootLifterUp();
         }
 
         if(gamepad2.y){
-            try {
-                rb.lifterResetUp();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            rb.scootLifterDown();
         }
 
         if(gamepad2.right_bumper){

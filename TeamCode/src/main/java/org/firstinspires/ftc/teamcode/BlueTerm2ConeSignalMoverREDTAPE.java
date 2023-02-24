@@ -30,13 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Disabled
-@Autonomous(name="BLUE Terminal", group="Robot")
-public class BlueTerm2Cone extends LinearOpMode {
+
+@Autonomous(name="BLUE Terminal RED Tape", group="Robot")
+public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
@@ -57,7 +56,7 @@ public class BlueTerm2Cone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(390,470,120,420, true);
+        VisionBase.COLOR color = vision.findRGB(192,272,110,225, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -77,32 +76,27 @@ public class BlueTerm2Cone extends LinearOpMode {
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
 
-        rb.driveStrafeInches(7,0,.4);
-        rb.driveStraightInches(25,0,.3);
-        rb.turnToAngle(-65,.2);
-        rb.driveStraightInches(3,-65,.3);
-        rb.driveStraightInches(3,-65,-.3);
+        rb.lifterLow();
+        rb.driveStrafeInches(29,0,-.4);
+        rb.driveStraightInches(25,0,.4);
+        rb.turnToAngle(43,.3);
+        rb.driveStraightInches(4,45,.3);
         sleep(250);
-        rb.lifterMedium();
-        rb.turnToAngle(37,.3);
-        sleep(1500);
-        rb.driveStraightInches(4,37,.3);
-        sleep(500);
         rb.scootLifterDown();
         sleep(250);
+
         rb.collectorOpen();
-        rb.driveStraightInches(9,37,-.4);
+        sleep(250);
+        rb.driveStraightInches(4,45,-.3);
+        rb.turnToAngle(-85,.3);
+        rb.driveStraightInches(2,-85,-.2);
+        rb.colorSensorDetect(false,-85, true,14750);
         rb.lifterCS5();
+        rb.coneDrive(4,-85,.3);
+        rb.collectorClose();
         //-------------------------------------------------------------------------------
         // second cone
         //-------------------------------------------------------------------------------
-        rb.turnToAngle(-85,.3);
-        rb.driveStrafeInches(40,-85,.4);
-        rb.driveStraightInches(13,-85,.3);
-        rb.colorSensorDetect(false,-85, true, 400);
-        rb.coneDrive(10,-85,.3);
-        sleep(250);
-        rb.collectorClose();
         sleep(250);
         rb.lifterMedium();
         sleep(250);

@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
+@Disabled
 @Autonomous(name="RED Terminal", group="Robot")
 public class RedTerm2Cone extends LinearOpMode {
 
@@ -79,21 +79,22 @@ public class RedTerm2Cone extends LinearOpMode {
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
 
-        rb.driveStrafeInches(8,0,.4);
-        rb.driveStraightInches(28,0,.3);
-        rb.turnToAngle(-70,.2);
-        rb.driveStraightInches(3,-70,.3);
-        rb.driveStraightInches(3,-70,-.3);
+        rb.driveStrafeInches(6,0,.4);
+        rb.driveStraightInches(25,0,.3);
+        rb.turnToAngle(-60,.2);
+        rb.driveStraightInches(3,-60,.3);
+        rb.driveStraightInches(3,-60,-.3);
         sleep(250);
-        rb.turnToAngle(-52,.3);
+        rb.turnToAngle(-50,.3);
         rb.lifterMedium();
         sleep(1250);
-        rb.driveStraightInches(8,-52,.3);
+        rb.driveStraightInches(11,-50,.3);
         sleep(500);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
-        rb.driveStraightInches(5,-52,-.4);
+        rb.driveStraightInches(2,-50,-.4);
+        rb.lifterCS5();
 
 
 
@@ -101,26 +102,25 @@ public class RedTerm2Cone extends LinearOpMode {
         // second cone
         //-------------------------------------------------------------------------------
         rb.turnToAngle(90,.3);
-        rb.driveStrafeInches(20,90,-.4);
-        rb.lifterCS5();
+        rb.driveStrafeInches(17,90,-.4);
         rb.driveStraightInches(13,90,.3);
-        rb.colorSensorDetect(false,90,false);
-        rb.coneDrive(9,90,.4);
+        rb.colorSensorDetect(false,95,false, 400);
+        rb.coneDrive(10,95,.4);
         rb.collectorClose();
         sleep(250);
         rb.lifterMedium();
         sleep(250);
-        rb.driveStraightInches(20,95,-.4);
+        rb.driveStraightInches(22,95,-.4);
         rb.turnToAngle(-90,-.3);
-        rb.driveStrafeInches(6,-90,-.4);
-        rb.driveStraightInches(3,-90,.3);
+        rb.driveStrafeInches(7,-95,-.4);
+        rb.driveStraightInches(3,-95,.3);
         sleep(250);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
         rb.lifterHigh();
-        rb.driveStraightInches(3,-90,-.3);
+        rb.driveStraightInches(3,-95,-.3);
         rb.turnToAngle(0,.3);
 
 
@@ -130,7 +130,7 @@ public class RedTerm2Cone extends LinearOpMode {
 
         switch(color){
             case RED:
-                rb.driveStraightInches(12,0,-.4);
+                rb.driveStraightInches(15,0,-.4);
                 rb.driveStrafeInches(32,0,.5);
 
 
@@ -144,7 +144,7 @@ public class RedTerm2Cone extends LinearOpMode {
                 break;
 
             case BLUE:
-                rb.driveStraightInches(12,0,-.4);
+                rb.driveStraightInches(15,0,-.4);
                 rb.driveStrafeInches(35,0,-.5);
                 break;
         }

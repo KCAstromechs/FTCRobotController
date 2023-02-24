@@ -30,13 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Disabled
-@Autonomous(name="BLUE Terminal", group="Robot")
-public class BlueTerm2Cone extends LinearOpMode {
+
+@Autonomous(name="RED Terminal RED Tape", group="Robot")
+public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
@@ -57,7 +56,7 @@ public class BlueTerm2Cone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(390,470,120,420, true);
+        VisionBase.COLOR color = vision.findRGB(192,272,110,225, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -73,53 +72,44 @@ public class BlueTerm2Cone extends LinearOpMode {
         }
         telemetry.update();
 
+
         //-------------------------------------------------------------------------------
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
 
-        rb.driveStrafeInches(7,0,.4);
-        rb.driveStraightInches(25,0,.3);
-        rb.turnToAngle(-65,.2);
-        rb.driveStraightInches(3,-65,.3);
-        rb.driveStraightInches(3,-65,-.3);
+        rb.lifterLow();
+        rb.driveStrafeInches(36,0,.4);
+        rb.driveStraightInches(25,0,.4);
+        rb.turnToAngle(-43,.3);
+        rb.driveStraightInches(4,-43,.3);
         sleep(250);
-        rb.lifterMedium();
-        rb.turnToAngle(37,.3);
-        sleep(1500);
-        rb.driveStraightInches(4,37,.3);
-        sleep(500);
         rb.scootLifterDown();
         sleep(250);
+
         rb.collectorOpen();
-        rb.driveStraightInches(9,37,-.4);
-        rb.lifterCS5();
-        //-------------------------------------------------------------------------------
-        // second cone
-        //-------------------------------------------------------------------------------
-        rb.turnToAngle(-85,.3);
-        rb.driveStrafeInches(40,-85,.4);
-        rb.driveStraightInches(13,-85,.3);
-        rb.colorSensorDetect(false,-85, true, 400);
-        rb.coneDrive(10,-85,.3);
         sleep(250);
+        rb.driveStraightInches(4,-43,-.3);
+        rb.turnToAngle(90,.3);
+        rb.driveStraightInches(3,90,-.2);
+
+        rb.colorSensorDetect(false,90, false,7000);
+        rb.lifterCS5();
+        rb.coneDrive(4,90,.3);
         rb.collectorClose();
         sleep(250);
         rb.lifterMedium();
         sleep(250);
-        rb.driveStraightInches(19,-85,-.4);
-        rb.turnToAngle(90,-.3);
-
-        //tune me! im an annoyance!
-        rb.driveStrafeInches(21,90,.4);
-        rb.driveStraightInches(4,90,.3);
-        //i am no longer annoying, do not tune me
+        rb.driveStraightInches(22,95,-.4);
+        rb.turnToAngle(-90,-.3);
+        rb.driveStrafeInches(7,-95,-.4);
+        rb.driveStraightInches(3,-95,.3);
         sleep(250);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
         rb.lifterHigh();
-        rb.driveStraightInches(4,90,-.3);
+        rb.driveStraightInches(3,-95,-.3);
         rb.turnToAngle(0,.3);
 
 
@@ -128,9 +118,9 @@ public class BlueTerm2Cone extends LinearOpMode {
 
 
         switch(color){
-            case BLUE:
-                rb.driveStraightInches(11,0,-.4);
-                rb.driveStrafeInches(32,0,-.5);
+            case RED:
+                rb.driveStraightInches(18,0,-.4);
+                rb.driveStrafeInches(32,0,.5);
 
 
 
@@ -142,11 +132,14 @@ public class BlueTerm2Cone extends LinearOpMode {
 
                 break;
 
-            case RED:
-                rb.driveStraightInches(11,0,-.4);
-                rb.driveStrafeInches(30,0,.5);
+            case BLUE:
+                rb.driveStraightInches(15,0,-.4);
+                rb.driveStrafeInches(35,0,-.5);
                 break;
         }
+
+
+
 
         rb.collectorClose();
         rb.lifterZero();
@@ -157,7 +150,83 @@ public class BlueTerm2Cone extends LinearOpMode {
 
 
 
+        /*
+        rb.lifterCS5();
+
+
+
+        //-------------------------------------------------------------------------------
+        // second cone
+        //-------------------------------------------------------------------------------
+        rb.turnToAngle(90,.3);
+        rb.driveStrafeInches(17,90,-.4);
+        rb.driveStraightInches(13,90,.3);
+        rb.colorSensorDetect(false,95,false);
+        rb.coneDrive(10,95,.4);
+        rb.collectorClose();
+        sleep(250);
+        rb.lifterMedium();
+        sleep(250);
+        rb.driveStraightInches(22,95,-.4);
+        rb.turnToAngle(-90,-.3);
+        rb.driveStrafeInches(7,-95,-.4);
+        rb.driveStraightInches(3,-95,.3);
+        sleep(250);
+        rb.scootLifterDown();
+        sleep(250);
+        rb.collectorOpen();
+        sleep(250);
+        rb.lifterHigh();
+        rb.driveStraightInches(3,-95,-.3);
+        rb.turnToAngle(0,.3);
+
+
+
+
+
+
+        switch(color){
+            case RED:
+                rb.driveStraightInches(15,0,-.4);
+                rb.driveStrafeInches(32,0,.5);
+
+
+
+                break;
+
+            case GREEN:
+            case NOT_DETECTED:
+
+
+                break;
+
+            case BLUE:
+                rb.driveStraightInches(15,0,-.4);
+                rb.driveStrafeInches(35,0,-.5);
+                break;
+        }
+
+
+
+
+        rb.collectorClose();
+        rb.lifterZero();
+        rb.turnToAngle(0,0.2);
+        sleep(5000);
+
+
+
+
+         */
+
+
+
+
     }
+
+
+
+
 
 
         }

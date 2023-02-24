@@ -56,7 +56,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     int CONE_STACK_LEVEL_4 = 506;
     int CONE_STACK_LEVEL_5 = 630;
     int minColorDifference = 0;
-    boolean driveOverride = false;
     double _leftPower;
     double _rightPower;
     double _strafePower;
@@ -263,6 +262,11 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     }
 
 
+    public void rightCollectorOpen(){
+        _rightCollector.setPosition(RIGHT_COLLECTOR_OPEN);
+    }
+
+
     public void lifterLow() {
         _lifter.setTargetPosition(LOW_HEIGHT);
         _lifter.setPower(.5);
@@ -281,6 +285,11 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     public void scootLifterDown() {
         _lifter.setTargetPosition(_lifter.getCurrentPosition() - DOWN_CORRECT);
+        _lifter.setPower(.5);
+    }
+
+    public void scootLifterUp() {
+        _lifter.setTargetPosition(_lifter.getCurrentPosition() + DOWN_CORRECT);
         _lifter.setPower(.5);
     }
 
@@ -615,7 +624,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return Math.abs(a1 - (a2 + 360));
     }
 
-    public boolean colorSensorDetect(boolean isBlueTape, float desiredAngle, boolean moveLeft) throws InterruptedException {
+    public boolean colorSensorDetect(boolean isBlueTape, float desiredAngle, boolean moveLeft, int desiredClicks) throws InterruptedException {
 
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -626,7 +635,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         //if we are on the blue side
         if (isBlueTape) {
             //while the color sensor does not read within 80-100
-            while (_colorSensor.blue() < _colorSensor.green() + minColorDifference && (Math.abs(_frontRight.getCurrentPosition()) < 400)) {
+            while (_colorSensor.blue() < _colorSensor.green() + minColorDifference && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
                 float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 double driveCorrect = (zAngle - desiredAngle) * K_TURN;
                 double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
@@ -666,7 +675,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         }
         else {
             //while the color sensor does not read within 80-100
-            while (_colorSensor.red() < _colorSensor.green() + minColorDifference && (Math.abs(_frontRight.getCurrentPosition()) < 400)) {
+            while (_colorSensor.red() < _colorSensor.green() + minColorDifference && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
                 float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 double driveCorrect = (zAngle - desiredAngle) * K_TURN;
                 double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
@@ -843,14 +852,21 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
 
         if (autoGrab && (_distanceSensor.getDistance(DistanceUnit.CM) - 6.0) <= 0) {
+            // MAKE SURE ROBOT IS SAFE DURING THREAD.SLEEP
             _inputX = 0;
             _inputY = 0;
             _turnPower = 0;
+            _frontLeft.setPower(0);
+            _frontRight.setPower(0);
+            _backRight.setPower(0);
+            _backLeft.setPower(0);
+            // close the collector
             collectorClose();
+            // wait for collector to close
             Thread.sleep(350);
+            // lift slightly above cone stack or ground
             _lifter.setPower(.5);
             _lifter.setTargetPosition((_lifter.getCurrentPosition() +lifterAutoAdjust));
-            driveOverride = false;
         }
 
         if (UseSlowMode || (_lifter.getCurrentPosition() > MID_HEIGHT-200)) {

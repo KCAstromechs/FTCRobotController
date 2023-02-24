@@ -56,7 +56,7 @@ public class ColorSensorMethodTest extends LinearOpMode {
 
         rb.collectorOpen();
         rb.lifterCS5();
-        lineDetect = rb.colorSensorDetect(false, 0,false);
+        lineDetect = rb.colorSensorDetect(false, 0,false, 400);
 
         sleep(2000);
 
