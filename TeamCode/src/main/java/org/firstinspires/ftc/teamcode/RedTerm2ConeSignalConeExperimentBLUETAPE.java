@@ -56,7 +56,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(192,272,110,225, true);
+        VisionBase.COLOR color = vision.findRGB(200,280,225,395, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -90,7 +90,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         sleep(250);
         rb.driveStraightInches(4,-43,-.3);
         rb.turnToAngle(90,.3);
-        rb.driveStraightInches(3,90,-.2);
+        rb.driveStraightInches(1,90,-.2);
 
         rb.colorSensorDetect(true,90, false,7000);
         rb.lifterCS5();

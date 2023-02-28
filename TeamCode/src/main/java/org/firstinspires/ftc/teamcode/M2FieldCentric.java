@@ -19,6 +19,7 @@ public class M2FieldCentric extends OpMode {
     double angleOffset = 0.0;
     boolean slow = false;
     boolean autoGrab = false;
+    static final double joystickLifterConstant = 150.0;
 
     @Override
     public void init() {
@@ -97,10 +98,10 @@ public class M2FieldCentric extends OpMode {
             angleOffset = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
         }
 
-        if (gamepad1.a){
+        if ((gamepad1.a) || (gamepad2.x)) {
             slow = true;
         }
-        if (gamepad1.b){
+        if ((gamepad1.b) || (gamepad2.y)){
             slow = false;
         }
 
@@ -113,12 +114,13 @@ public class M2FieldCentric extends OpMode {
             rb.collectorClose();
         }
 
-        if(gamepad2.x){
-            rb.scootLifterUp();
-        }
-
-        if(gamepad2.y){
-            rb.scootLifterDown();
+        // lifter reset
+        if(gamepad1.y){
+            try {
+                rb.lifterResetUp();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         if(gamepad2.right_bumper){
@@ -140,7 +142,12 @@ public class M2FieldCentric extends OpMode {
         }
 
         //LIFTER
-        rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
+        if (slow) {
+            rb.lifterControl((int)(-gamepad2.right_stick_y*50.0));
+        }
+        else {
+            rb.lifterControl((int)(-gamepad2.right_stick_y*300.0));
+        }
 
         if(gamepad2.dpad_up){
             rb.lifterHigh();

@@ -43,6 +43,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     double RIGHT_COLLECTOR_OPEN = .25;
     double LEFT_COLLECTOR_CLOSED = .65;
     double LEFT_COLLECTOR_OPEN = .9;
+    int lifterZero = 0;
     int DOWN_CORRECT = 500;
     int TOP_SAFETY = 4800;
     int BOTTOM_SAFETY = -200;
@@ -67,6 +68,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     final double K_TURN = 0.02;
     final double K_STRAFE = 0.001;
     public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98;
+    final double lifterSpeed = 1;
     BNO055IMU imu;
 
     //thing that happens when new is used (constructor)
@@ -268,64 +270,64 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
 
     public void lifterLow() {
-        _lifter.setTargetPosition(LOW_HEIGHT);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + LOW_HEIGHT);
+        _lifter.setPower(lifterSpeed);
     }
 
     public void lifterMedium() {
-        _lifter.setTargetPosition(MID_HEIGHT);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + MID_HEIGHT);
+        _lifter.setPower(lifterSpeed);
     }
 
     public void lifterHigh() {
-        _lifter.setTargetPosition(HIGH_HEIGHT);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + HIGH_HEIGHT);
+        _lifter.setPower(lifterSpeed);
 
     }
 
     public void scootLifterDown() {
         _lifter.setTargetPosition(_lifter.getCurrentPosition() - DOWN_CORRECT);
-        _lifter.setPower(.5);
+        _lifter.setPower(lifterSpeed);
     }
 
     public void scootLifterUp() {
         _lifter.setTargetPosition(_lifter.getCurrentPosition() + DOWN_CORRECT);
-        _lifter.setPower(.5);
+        _lifter.setPower(lifterSpeed);
     }
 
     public void lifterCS4() {
-        _lifter.setTargetPosition(CONE_STACK_LEVEL_4);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_4);
+        _lifter.setPower(lifterSpeed);
 
     }
 
     public void lifterCS3() {
-        _lifter.setTargetPosition(CONE_STACK_LEVEL_3);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_3);
+        _lifter.setPower(lifterSpeed);
 
     }
 
     public void lifterCS2() {
-        _lifter.setTargetPosition(CONE_STACK_LEVEL_2);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_2);
+        _lifter.setPower(lifterSpeed);
 
     }
 
     public void lifterCS1() {
-        _lifter.setTargetPosition(CONE_STACK_LEVEL_1);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_1);
+        _lifter.setPower(lifterSpeed);
 
     }
 
     public void lifterCS5() {
-        _lifter.setTargetPosition(CONE_STACK_LEVEL_5);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_5);
+        _lifter.setPower(lifterSpeed);
 
     }
 
     public void lifterZero() {
-        _lifter.setTargetPosition(ZERO_HEIGHT);
-        _lifter.setPower(.5);
+        _lifter.setTargetPosition(lifterZero + ZERO_HEIGHT);
+        _lifter.setPower(lifterSpeed);
     }
 
     public void lifterControl(int position) {
@@ -346,9 +348,16 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
                  */
         }
-        _telemetry.addData("lifter target", _lifter.getTargetPosition());
-        _telemetry.addData("lifter encoder", _lifter.getCurrentPosition());
+        // data time and safety encoder checks
+        double lifterTarget =  _lifter.getTargetPosition();
+        double lifterCurrent = _lifter.getCurrentPosition();
+        _telemetry.addData("lifter target", lifterTarget);
+        _telemetry.addData("lifter encoder", lifterCurrent);
         _telemetry.addData("position", position);
+        if ((lifterCurrent < 0) && (lifterCurrent < lifterZero)) {
+            lifterZero = (int)lifterCurrent + 30;
+            _telemetry.addData("lifterZero has been reset", "yay");
+        }
         _telemetry.update();
     }
 
