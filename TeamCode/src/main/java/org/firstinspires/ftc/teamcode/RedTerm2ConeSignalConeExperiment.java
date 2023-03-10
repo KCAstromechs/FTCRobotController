@@ -56,7 +56,7 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(200,280,225,395, true);
+        VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -84,7 +84,7 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
         rb.driveStraightInches(4,-43,.3);
         sleep(250);
         rb.scootLifterDown();
-        sleep(250);
+        sleep(500);
 
         rb.collectorOpen();
         sleep(250);
@@ -101,8 +101,9 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
         sleep(250);
         rb.driveStraightInches(22,95,-.4);
         rb.turnToAngle(-90,-.3);
-        rb.driveStrafeInches(7,-95,-.4);
-        rb.driveStraightInches(3,-95,.3);
+        rb.driveStrafeInches(4,-95,-.4);
+        rb.horizontalJunctionDistanceDetect(false,-90,900);
+        rb.forwardJunctionDistanceDetect(-90,140);
         sleep(250);
         rb.scootLifterDown();
         sleep(250);

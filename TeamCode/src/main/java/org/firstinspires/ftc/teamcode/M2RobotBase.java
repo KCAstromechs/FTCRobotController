@@ -263,12 +263,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     }
 
-
-    public void rightCollectorOpen(){
-        _rightCollector.setPosition(RIGHT_COLLECTOR_OPEN);
-    }
-
-
     public void lifterLow() {
         _lifter.setTargetPosition(lifterZero + LOW_HEIGHT);
         _lifter.setPower(lifterSpeed);
@@ -633,6 +627,74 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return Math.abs(a1 - (a2 + 360));
     }
 
+    public void horizontalJunctionDistanceDetect(boolean moveLeft, float desiredAngle, int desiredClicks) throws InterruptedException {
+
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Thread.sleep(250);
+
+
+            while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 10) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
+                float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+                double driveCorrect = (zAngle - desiredAngle) * K_TURN;
+                double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
+                //strafe over
+
+
+                if (moveLeft) {
+                    _frontLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                }
+                else{
+                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+
+                }
+
+
+
+            }
+                _frontLeft.setPower(0);
+                _frontRight.setPower(0);
+                _backLeft.setPower(0);
+                _backRight.setPower(0);
+            }
+
+
+    public void forwardJunctionDistanceDetect(float desiredAngle, int desiredClicks) throws InterruptedException {
+
+        _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Thread.sleep(250);
+
+
+        while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 1) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
+            float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+                _frontLeft.setPower(.2);
+                _frontRight.setPower(.2);
+                _backLeft.setPower(.2);
+                _backRight.setPower(.2);
+
+        }
+        _frontLeft.setPower(0);
+        _frontRight.setPower(0);
+        _backLeft.setPower(0);
+        _backRight.setPower(0);
+    }
+
+
+
+
+
     public boolean colorSensorDetect(boolean isBlueTape, float desiredAngle, boolean moveLeft, int desiredClicks) throws InterruptedException {
 
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -654,16 +716,16 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
 
                 if (moveLeft) {
-                    _frontLeft.setPower(-.3 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(.3 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(.3 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _frontLeft.setPower(-.5 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(.5 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(.5 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(-.5 - driveCorrect - strafeCorrect);
                 }
                 else{
-                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+                    _frontLeft.setPower(.5 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-.5 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-.5 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(.5 - driveCorrect - strafeCorrect);
 
                 }
 
@@ -747,8 +809,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             _backRight.setPower(power - driveCorrect);
             _frontLeft.setPower(power + driveCorrect);
             _backLeft.setPower(power + driveCorrect);
-            _telemetry.addData("distance", _distanceSensor.getDistance(DistanceUnit.CM) - 5.0);
-            _telemetry.update();
         }
         // stop moving
         _frontLeft.setPower(0);
@@ -768,6 +828,11 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             return false;
         }
     }
+
+
+
+
+
 
 
 
@@ -859,6 +924,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
         double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)))) * 1.4;
 
+        _telemetry.addData("distance", (_distanceSensor.getDistance(DistanceUnit.CM)-5));
+        _telemetry.update();
 
         if (autoGrab && (_distanceSensor.getDistance(DistanceUnit.CM) - 6.0) <= 0) {
             // MAKE SURE ROBOT IS SAFE DURING THREAD.SLEEP

@@ -143,7 +143,7 @@ public class M2FieldCentric extends OpMode {
 
         //LIFTER
         if (slow) {
-            rb.lifterControl((int)(-gamepad2.right_stick_y*50.0));
+            rb.lifterControl((int)(-gamepad2.right_stick_y*100.0));
         }
         else {
             rb.lifterControl((int)(-gamepad2.right_stick_y*300.0));

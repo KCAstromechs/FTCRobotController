@@ -56,7 +56,7 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(200,280,225,395, true);
+        VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -79,15 +79,15 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         rb.lifterLow();
         rb.driveStrafeInches(29,0,-.4);
         rb.driveStraightInches(25,0,.4);
-        rb.turnToAngle(43,.3);
-        rb.driveStraightInches(4,45,.3);
+        rb.turnToAngle(52,.3);
+        rb.driveStraightInches(4,52,.3);
         sleep(250);
         rb.scootLifterDown();
         sleep(250);
 
         rb.collectorOpen();
         sleep(250);
-        rb.driveStraightInches(4,45,-.3);
+        rb.driveStraightInches(4,52,-.3);
         rb.turnToAngle(-85,.3);
         rb.driveStraightInches(1,-85,-.2);
         rb.colorSensorDetect(false,-85, true,14750);
@@ -97,7 +97,7 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         //-------------------------------------------------------------------------------
         // second cone
         //-------------------------------------------------------------------------------
-        sleep(250);
+        sleep(500);
         rb.lifterMedium();
         sleep(250);
         rb.driveStraightInches(19,-85,-.4);

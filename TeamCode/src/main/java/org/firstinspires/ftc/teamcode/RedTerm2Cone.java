@@ -58,7 +58,7 @@ public class RedTerm2Cone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(200,280,225,395, true);
+        VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");

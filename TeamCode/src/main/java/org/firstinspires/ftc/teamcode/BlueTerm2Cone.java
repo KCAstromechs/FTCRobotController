@@ -57,7 +57,7 @@ public class BlueTerm2Cone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(200,280,225,395, true);
+        VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
         timeRemainingAfterVision = getRuntime();
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
@@ -84,14 +84,14 @@ public class BlueTerm2Cone extends LinearOpMode {
         rb.driveStraightInches(3,-65,-.3);
         sleep(250);
         rb.lifterMedium();
-        rb.turnToAngle(37,.3);
+        rb.turnToAngle(40,.3);
         sleep(1500);
-        rb.driveStraightInches(4,37,.3);
+        rb.driveStraightInches(4,40,.3);
         sleep(500);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
-        rb.driveStraightInches(9,37,-.4);
+        rb.driveStraightInches(9,40,-.4);
         rb.lifterCS5();
         //-------------------------------------------------------------------------------
         // second cone

@@ -25,8 +25,7 @@ public class VisionTest extends LinearOpMode {
 
         // now let's run vision, full image is 640 x 480
         // values for left line up:
-        VisionBase.COLOR color = vision.findRGB(200,280,225,395, true);
-
+        VisionBase.COLOR color = vision.findRGB(187,268,200,280, true);
         if (color == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
         }
