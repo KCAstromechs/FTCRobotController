@@ -450,7 +450,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
         //checks if the current number of encoder clicks is less than what we want. this will keep running until the current encoder clicks are more than what we want
         while (Math.abs(encoderClicks) > Math.abs(_frontLeft.getCurrentPosition())) {
-            information();
             //normalizes the angle
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             if (useCheat) {
@@ -584,13 +583,13 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         // while the
         while (angleDifference(desiredAngle, zAngle) > 5) {
             zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-            information();
 
             if (useCheat) {
                 zAngle = (float) normalizeAngle(zAngle + 180);
             }
             sleep(10);
         }
+
 
         _frontRight.setPower(0);
         _backRight.setPower(0);
@@ -627,8 +626,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return Math.abs(a1 - (a2 + 360));
     }
 
-    public void horizontalJunctionDistanceDetect(boolean moveLeft, float desiredAngle, int desiredClicks) throws InterruptedException {
-
+    public void horizontalJunctionDistanceDetect(boolean moveLeft, float desiredAngle, int desiredClicks, double power) throws InterruptedException {
+        //NEVER EVER NEVER EVER NEVER EVER MAKE THE POWER NEGATIVE IT'LL MESS EVERYTHING UP
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -636,24 +635,29 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         Thread.sleep(250);
 
 
-            while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 10) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
+            while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 15) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
                 float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 double driveCorrect = (zAngle - desiredAngle) * K_TURN;
                 double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
+
+                _telemetry.addData("HORIZONTAL distance", _distanceSensor.getDistance(DistanceUnit.CM));
+                _telemetry.update();
+
+
                 //strafe over
 
 
                 if (moveLeft) {
-                    _frontLeft.setPower(-.3 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(.3 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(.3 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _frontLeft.setPower(-power + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(power - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(power + driveCorrect - strafeCorrect);
+                    _backRight.setPower(-power - driveCorrect - strafeCorrect);
                 }
                 else{
-                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
+                    _frontLeft.setPower(power + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-power - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-power + driveCorrect - strafeCorrect);
+                    _backRight.setPower(power - driveCorrect - strafeCorrect);
 
                 }
 
@@ -664,10 +668,12 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
                 _frontRight.setPower(0);
                 _backLeft.setPower(0);
                 _backRight.setPower(0);
+                _telemetry.clear();
+
             }
 
 
-    public void forwardJunctionDistanceDetect(float desiredAngle, int desiredClicks) throws InterruptedException {
+    public void forwardJunctionDistanceDetect(int desiredClicks) throws InterruptedException {
 
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -676,8 +682,10 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         Thread.sleep(250);
 
 
-        while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 1) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
-            float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        while (((Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 5) && ((Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) < 25))) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks))  {
+
+             _telemetry.addData("currentDistance", _distanceSensor.getDistance(DistanceUnit.CM));
+             _telemetry.update();
 
                 _frontLeft.setPower(.2);
                 _frontRight.setPower(.2);
@@ -817,7 +825,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _backRight.setPower(0);
 
         // did we hit max distance or see the cone?
-        if (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5 <= 0) {
+        if (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5 <= 7) {
             _telemetry.addData("status","detected");
             _telemetry.update();
             return true;
@@ -924,7 +932,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
         double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)))) * 1.4;
 
-        _telemetry.addData("distance", (_distanceSensor.getDistance(DistanceUnit.CM)-5));
+        _telemetry.addData("distance", (_distanceSensor.getDistance(DistanceUnit.CM)));
         _telemetry.update();
 
         if (autoGrab && (_distanceSensor.getDistance(DistanceUnit.CM) - 6.0) <= 0) {

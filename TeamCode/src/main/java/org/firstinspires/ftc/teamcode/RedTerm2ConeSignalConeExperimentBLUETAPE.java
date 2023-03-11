@@ -77,18 +77,31 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
 
+
+        //-------------------------------------------------------------------------------
+        // THE RELOCATION OF THE SIGNAL CONE
+        //-------------------------------------------------------------------------------
+
+        rb.driveStraightInches(1,0,.3);
         rb.lifterLow();
-        rb.driveStrafeInches(36,0,.4);
-        rb.driveStraightInches(25,0,.4);
-        rb.turnToAngle(-43,.3);
-        rb.driveStraightInches(4,-43,.3);
+        rb.driveStrafeInches(38,0,.4);
+        rb.driveStraightInches(29,0,.4);
+        rb.turnToAngle(-85,.3);
+        rb.horizontalJunctionDistanceDetect(true,-85,865,.4);
+        sleep(250);
+        rb.horizontalJunctionDistanceDetect(false,-85,221, .3);
+        sleep(250);
+        rb.forwardJunctionDistanceDetect(444);
         sleep(250);
         rb.scootLifterDown();
-        sleep(250);
+        sleep(500);
 
         rb.collectorOpen();
         sleep(250);
-        rb.driveStraightInches(4,-43,-.3);
+        rb.driveStraightInches(2,-85,-.3);
+
+
+
         rb.turnToAngle(90,.3);
         rb.driveStraightInches(1,90,-.2);
 
@@ -96,13 +109,17 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         rb.lifterCS5();
         rb.coneDrive(4,90,.3);
         rb.collectorClose();
-        sleep(500);
+        sleep(250);
         rb.lifterMedium();
         sleep(250);
         rb.driveStraightInches(22,95,-.4);
         rb.turnToAngle(-90,-.3);
-        rb.driveStrafeInches(7,-95,-.4);
-        rb.driveStraightInches(3,-95,.3);
+        // 1032, 221
+        rb.horizontalJunctionDistanceDetect(false,-90,1500,.4);
+        sleep(250);
+        rb.horizontalJunctionDistanceDetect(true,-90,1000,.3);
+        sleep(250);
+        rb.forwardJunctionDistanceDetect(140);
         sleep(250);
         rb.scootLifterDown();
         sleep(250);
@@ -145,6 +162,8 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         rb.lifterZero();
         rb.turnToAngle(0,0.2);
         sleep(5000);
+
+
 
 
 
