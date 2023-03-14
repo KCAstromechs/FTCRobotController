@@ -634,8 +634,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
-
-            while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 15) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
+//15
+            while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 20) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
                 float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 double driveCorrect = (zAngle - desiredAngle) * K_TURN;
                 double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
@@ -724,16 +724,16 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
 
                 if (moveLeft) {
-                    _frontLeft.setPower(-.5 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(.5 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(.5 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(-.5 - driveCorrect - strafeCorrect);
+                    _frontLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(-.3 - driveCorrect - strafeCorrect);
                 }
                 else{
-                    _frontLeft.setPower(.5 + driveCorrect - strafeCorrect);
-                    _frontRight.setPower(-.5 - driveCorrect - strafeCorrect);
-                    _backLeft.setPower(-.5 + driveCorrect - strafeCorrect);
-                    _backRight.setPower(.5 - driveCorrect - strafeCorrect);
+                    _frontLeft.setPower(.3 + driveCorrect - strafeCorrect);
+                    _frontRight.setPower(-.3 - driveCorrect - strafeCorrect);
+                    _backLeft.setPower(-.3 + driveCorrect - strafeCorrect);
+                    _backRight.setPower(.3 - driveCorrect - strafeCorrect);
 
                 }
 
@@ -791,7 +791,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
         //if the robot has moved too far as a safety
         //turn power off an report that the drive was unsuccessful
-        _telemetry.addData("FAILED", "jsldauhvuajkdfn");
+        _telemetry.addData("FAILED", "ENCODER DRIVE");
         _telemetry.update();
         _frontLeft.setPower(0);
         _frontRight.setPower(0);
@@ -825,7 +825,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _backRight.setPower(0);
 
         // did we hit max distance or see the cone?
-        if (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5 <= 7) {
+        if (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5 <= 9) {
             _telemetry.addData("status","detected");
             _telemetry.update();
             return true;
@@ -836,7 +836,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             return false;
         }
     }
-
 
 
 

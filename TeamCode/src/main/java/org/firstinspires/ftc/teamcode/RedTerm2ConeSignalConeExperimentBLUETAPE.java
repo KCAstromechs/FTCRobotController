@@ -84,7 +84,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
 
         rb.driveStraightInches(1,0,.3);
         rb.lifterLow();
-        rb.driveStrafeInches(38,0,.4);
+        rb.driveStrafeInches(36,0,.4);
         rb.driveStraightInches(29,0,.4);
         rb.turnToAngle(-85,.3);
         rb.horizontalJunctionDistanceDetect(true,-85,865,.4);
@@ -103,9 +103,9 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
 
 
         rb.turnToAngle(90,.3);
-        rb.driveStraightInches(1,90,-.2);
+        rb.driveStraightInches(3,90,-.2);
 
-        rb.colorSensorDetect(true,90, false,7000);
+        rb.colorSensorDetect(true,90, false,2500);
         rb.lifterCS5();
         rb.coneDrive(4,90,.3);
         rb.collectorClose();

@@ -72,25 +72,26 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         }
         telemetry.update();
 
-        //-------------------------------------------------------------------------------
-        // THE RELOCATION OF THE SIGNAL CONE
-        //-------------------------------------------------------------------------------
-
+        rb.driveStraightInches(1,0,.3);
         rb.lifterLow();
-        rb.driveStrafeInches(29,0,-.4);
-        rb.driveStraightInches(25,0,.4);
-        rb.turnToAngle(52,.3);
-        rb.driveStraightInches(4,52,.3);
+        rb.driveStrafeInches(35,0,-.4);
+        rb.driveStraightInches(27,0,.4);
+        rb.turnToAngle(85,.3);
+        rb.horizontalJunctionDistanceDetect(false,90,865,.4);
+        sleep(250);
+        rb.horizontalJunctionDistanceDetect(true,90,221, .3);
+        sleep(250);
+        rb.forwardJunctionDistanceDetect(444);
         sleep(250);
         rb.scootLifterDown();
-        sleep(250);
+        sleep(500);
 
         rb.collectorOpen();
         sleep(250);
-        rb.driveStraightInches(4,52,-.3);
+        rb.driveStraightInches(2,90,-.3);
         rb.turnToAngle(-85,.3);
-        rb.driveStraightInches(1,-85,-.2);
-        rb.colorSensorDetect(false,-85, true,14750);
+        rb.driveStraightInches(3,-85,-.2);
+        rb.colorSensorDetect(false,-85, true,3000);
         rb.lifterCS5();
         rb.coneDrive(4,-85,.3);
         rb.collectorClose();
@@ -100,21 +101,23 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         sleep(500);
         rb.lifterMedium();
         sleep(250);
-        rb.driveStraightInches(19,-85,-.4);
+        rb.driveStraightInches(22,-85,-.4);
         rb.turnToAngle(90,-.3);
-
-        //tune me! im an annoyance!
-        rb.driveStrafeInches(21,90,.4);
-        rb.driveStraightInches(4,90,.3);
-        //i am no longer annoying, do not tune me
+//2000
+        rb.horizontalJunctionDistanceDetect(true,95,3000,.4);
+        sleep(250);
+        rb.horizontalJunctionDistanceDetect(false,95,500,.3);
+        sleep(250);
+        rb.forwardJunctionDistanceDetect(140);
         sleep(250);
         rb.scootLifterDown();
         sleep(250);
         rb.collectorOpen();
         sleep(250);
         rb.lifterHigh();
-        rb.driveStraightInches(4,90,-.3);
+        rb.driveStraightInches(3,95,-.3);
         rb.turnToAngle(0,.3);
+
 
 
 

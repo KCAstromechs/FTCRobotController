@@ -98,9 +98,9 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
 
 
         rb.turnToAngle(90,.3);
-        rb.driveStraightInches(1,90,-.2);
+        rb.driveStraightInches(3,90,-.2);
 
-        rb.colorSensorDetect(false,90, false,7000);
+        rb.colorSensorDetect(false,90, false,2500);
         rb.lifterCS5();
         rb.coneDrive(4,90,.3);
         rb.collectorClose();
