@@ -57,16 +57,16 @@ public class BlueTerm2Cone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
+        ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
         timeRemainingAfterVision = getRuntime();
-        if (color == ColorVisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "RED");
+        if (zone == ColorVisionBase.ZONE.ONE) {
+            telemetry.addData("Final Answer", "ONE");
         }
-        else if (color == ColorVisionBase.COLOR.GREEN) {
-            telemetry.addData("Final Answer", "GREEN");
+        else if (zone == ColorVisionBase.ZONE.TWO) {
+            telemetry.addData("Final Answer", "TWO");
         }
-        else if (color == ColorVisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "BLUE");
+        else if (zone == ColorVisionBase.ZONE.THREE) {
+            telemetry.addData("Final Answer", "THREE");
         }
         else {
             telemetry.addData("Final Answer", "NOT DETECTED");
@@ -128,8 +128,8 @@ public class BlueTerm2Cone extends LinearOpMode {
 
 
 
-        switch(color){
-            case BLUE:
+        switch(zone){
+            case THREE:
                 rb.driveStraightInches(11,0,-.4);
                 rb.driveStrafeInches(32,0,-.5);
 
@@ -137,13 +137,13 @@ public class BlueTerm2Cone extends LinearOpMode {
 
                 break;
 
-            case GREEN:
+            case TWO:
             case NOT_DETECTED:
 
 
                 break;
 
-            case RED:
+            case ONE:
                 rb.driveStraightInches(11,0,-.4);
                 rb.driveStrafeInches(30,0,.5);
                 break;

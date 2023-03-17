@@ -56,15 +56,15 @@ public class TimeOutTestAuto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
+        ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
         timeRemainingAfterVision = getRuntime();
-        if (color == ColorVisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "RED");
+        if (zone == ColorVisionBase.ZONE.ONE) {
+            telemetry.addData("Final Answer", "ONE");
         }
-        else if (color == ColorVisionBase.COLOR.GREEN) {
+        else if (zone == ColorVisionBase.ZONE.TWO) {
             telemetry.addData("Final Answer", "GREEN");
         }
-        else if (color == ColorVisionBase.COLOR.BLUE) {
+        else if (zone == ColorVisionBase.ZONE.THREE) {
             telemetry.addData("Final Answer", "BLUE");
         }
         else {
