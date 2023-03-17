@@ -73,7 +73,7 @@ public class TimeOutTestAuto extends LinearOpMode {
         telemetry.update();
 
         try {
-            rb.driveStrafeInches(1000, 0, .5, 2000, (int) runtime.milliseconds());
+            rb.driveStrafeInches(10000, 0, .5, 2000);
         }
         catch (DriveTimeoutException dte){
             rb.motorShutdown();
