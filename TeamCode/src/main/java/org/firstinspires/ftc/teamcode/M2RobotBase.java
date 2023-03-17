@@ -76,10 +76,9 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
 
     //thing that happens when new is used (constructor)
-    public M2RobotBase(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime runtime) {
+    public M2RobotBase(HardwareMap hardwareMap, Telemetry telemetry) {
 
         //underscore means it's a private variable
-        _runtime = runtime;
         _telemetry = telemetry;
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -524,18 +523,18 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _backLeft.setPower(0);
     }
 
-    public void driveStrafeInches(double inches, double desiredAngle, double power, int timeLimitMS, int currentTime) throws InterruptedException, DriveTimeoutException {
-        driveStrafe((int) (inches * DRIVE_STRAFE_ENCODER_TO_INCHES), desiredAngle, power, timeLimitMS, currentTime);
+    public void driveStrafeInches(double inches, double desiredAngle, double power, int timeLimitMS) throws InterruptedException, DriveTimeoutException {
+        driveStrafe((int) (inches * DRIVE_STRAFE_ENCODER_TO_INCHES), desiredAngle, power, timeLimitMS);
     }
 
-    public void driveStrafe(int encoderClicks, double desiredAngle, double power, int timeLimitMS, int currentTime) throws InterruptedException, DriveTimeoutException {
-        driveStrafe(encoderClicks, desiredAngle, power, false, timeLimitMS, currentTime);
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power, int timeLimitMS) throws InterruptedException, DriveTimeoutException {
+        driveStrafe(encoderClicks, desiredAngle, power, false, timeLimitMS);
     }
 
     public void driveStrafe(int encoderClicks, double desiredAngle, double power, boolean useCheat,
-    int timeLimitMS, int currentTime)
+    int timeLimitMS)
     throws InterruptedException, DriveTimeoutException {
-        int startTime = currentTime;
+       long endTimeNS = (System.nanoTime()+ (timeLimitMS*1000000));
 
 
         //throw new dte();
@@ -571,7 +570,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             _backLeft.setPower(power + driveCorrect - strafeCorrect);
             information();
 
-            if (currentTime > (startTime + timeLimitMS)){
+            if (System.nanoTime() > endTimeNS){
                 throw new DriveTimeoutException();
             }
 
