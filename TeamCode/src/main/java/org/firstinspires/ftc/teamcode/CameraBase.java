@@ -45,6 +45,7 @@ import androidx.annotation.NonNull;
 
 public class CameraBase {
 
+
     //----------------------------------------------------------------------------------------------
     // Variables
     //----------------------------------------------------------------------------------------------
@@ -97,6 +98,11 @@ public class CameraBase {
     //----------------------------------------------------------------------------------------------
     // Interact with this Class
     //----------------------------------------------------------------------------------------------
+
+    public CameraBase(HardwareMap _hardwareMap, Telemetry _telemetry) {
+        hardwareMap = _hardwareMap;
+        telemetry = _telemetry;
+    }
 
     // do this at the beginning
     public void initCamera() {

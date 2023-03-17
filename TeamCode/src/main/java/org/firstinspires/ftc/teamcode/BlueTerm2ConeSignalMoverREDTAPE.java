@@ -58,12 +58,12 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         waitForStart();
 /*
 
-        VisionBase.COLOR color = vision.findRGB(225, 300, 305, 360, true);
+        ColorVisionBase.ZONE zone = vision.findZone(225, 300, 305, 360, true);
 
         try {
 
 
-            if (color == VisionBase.COLOR.RED) {
+            if (zone == VisionBase.COLOR.RED) {
                 telemetry.addData("Final Answer", "RED");
             } else if (color == VisionBase.COLOR.GREEN) {
                 telemetry.addData("Final Answer", "GREEN");

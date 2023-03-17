@@ -25,15 +25,15 @@ public class ColorVisionTest extends LinearOpMode {
 
         // now let's run vision, full image is 640 x 480
         // values for left line up:
-        ColorVisionBase.COLOR color = vision.findRGB(187,268,200,280, true);
-        if (color == ColorVisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "RED");
+        ColorVisionBase.ZONE zone = vision.findZone(187,268,200,280, true);
+        if (zone == ColorVisionBase.ZONE.ONE) {
+            telemetry.addData("Final Answer", "ONE");
         }
-        else if (color == ColorVisionBase.COLOR.GREEN) {
-            telemetry.addData("Final Answer", "GREEN");
+        else if (zone == ColorVisionBase.ZONE.TWO) {
+            telemetry.addData("Final Answer", "TWO");
         }
-        else if (color == ColorVisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "BLUE");
+        else if (zone == ColorVisionBase.ZONE.THREE) {
+            telemetry.addData("Final Answer", "THREE");
         }
         else {
             telemetry.addData("Final Answer", "NOT DETECTED");

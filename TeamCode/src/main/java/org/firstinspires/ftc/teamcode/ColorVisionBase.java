@@ -15,13 +15,13 @@ public class ColorVisionBase {
     //----------------------------------------------------------------------------------------------
 
     // color variables
-    enum COLOR {
-        RED,
-        GREEN,
-        BLUE,
+    enum ZONE {
+        ONE,
+        TWO,
+        THREE,
         NOT_DETECTED
     }
-    COLOR mostRGB = COLOR.NOT_DETECTED;
+    ZONE mostRGB = ZONE.NOT_DETECTED;
 
     // robot variables
     HardwareMap hardwareMap;
@@ -34,6 +34,7 @@ public class ColorVisionBase {
     public ColorVisionBase(HardwareMap _hardwareMap, Telemetry _telemetry) {
         hardwareMap = _hardwareMap;
         telemetry = _telemetry;
+        cb = new CameraBase(_hardwareMap, _telemetry);
     }
 
     // do this at the beginning
@@ -41,7 +42,7 @@ public class ColorVisionBase {
         cb.initCamera();
     }
 
-    public COLOR findRGB(int minX, int maxX, int minY, int maxY, boolean save) {
+    public ZONE findZone(int minX, int maxX, int minY, int maxY, boolean save) {
         int color = 0;
         int redValue = 0;
         int greenValue = 0;
@@ -55,7 +56,7 @@ public class ColorVisionBase {
         // retrieve bitmap
         Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save);
         if (bitmap == null) {
-            return COLOR.NOT_DETECTED;
+            return ZONE.NOT_DETECTED;
         }
 
         // loop thru bitmap
@@ -80,13 +81,13 @@ public class ColorVisionBase {
         }
         if (pixelCountR > detectionThreshold || pixelCountG > detectionThreshold || pixelCountB > detectionThreshold) {
             if(pixelCountR > pixelCountG && pixelCountR > pixelCountB)
-                mostRGB = COLOR.RED;
+                mostRGB = ZONE.ONE;
             else if (pixelCountG > pixelCountR && pixelCountG > pixelCountB)
-                mostRGB = COLOR.GREEN;
+                mostRGB = ZONE.TWO;
             else if (pixelCountB > pixelCountR && pixelCountB > pixelCountG)
-                mostRGB = COLOR.BLUE;
+                mostRGB = ZONE.THREE;
             else
-                mostRGB = COLOR.NOT_DETECTED;
+                mostRGB = ZONE.NOT_DETECTED;
         }
         return mostRGB;
     }
