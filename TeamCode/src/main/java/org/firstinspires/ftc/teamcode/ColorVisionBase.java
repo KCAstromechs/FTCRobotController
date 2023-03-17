@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class ColorVisionBase {
 
-    private CameraBase cb = new CameraBase();
+    private CameraBase cb;
 
     //----------------------------------------------------------------------------------------------
     // Variables
