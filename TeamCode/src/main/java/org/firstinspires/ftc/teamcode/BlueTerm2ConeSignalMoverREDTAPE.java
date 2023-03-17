@@ -63,12 +63,12 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         try {
 
 
-            if (zone == VisionBase.COLOR.RED) {
-                telemetry.addData("Final Answer", "RED");
-            } else if (color == VisionBase.COLOR.GREEN) {
-                telemetry.addData("Final Answer", "GREEN");
-            } else if (color == VisionBase.COLOR.BLUE) {
-                telemetry.addData("Final Answer", "BLUE");
+            if (zone == VisionBase.ZONE.ONE) {
+                telemetry.addData("Final Answer", "ONE");
+            } else if (zone == VisionBase.ZONE.TWO) {
+                telemetry.addData("Final Answer", "TWO");
+            } else if (zone == VisionBase.ZONE.THREE) {
+                telemetry.addData("Final Answer", "THREE");
             } else {
                 telemetry.addData("Final Answer", "NOT DETECTED");
             }
@@ -120,21 +120,21 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
             rb.turnToAngle(0, .3);
 
 
-            switch (color) {
-                case BLUE:
+            switch (zone) {
+                case THREE:
                     rb.driveStraightInches(11, 0, -.4);
                     rb.driveStrafeInches(32, 0, -.5);
 
 
                     break;
 
-                case GREEN:
+                case TWO:
                 case NOT_DETECTED:
 
 
                     break;
 
-                case RED:
+                case ONE:
                     rb.driveStraightInches(11, 0, -.4);
                     rb.driveStrafeInches(30, 0, .5);
                     break;
