@@ -523,18 +523,17 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _backLeft.setPower(0);
     }
 
-    public void driveStrafeInches(double inches, double desiredAngle, double power, int timeLimitMS) throws InterruptedException, DriveTimeoutException {
+    public void driveStrafeInches(double inches, double desiredAngle, double power, long timeLimitMS) throws InterruptedException, DriveTimeoutException {
         driveStrafe((int) (inches * DRIVE_STRAFE_ENCODER_TO_INCHES), desiredAngle, power, timeLimitMS);
     }
 
-    public void driveStrafe(int encoderClicks, double desiredAngle, double power, int timeLimitMS) throws InterruptedException, DriveTimeoutException {
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power, long timeLimitMS) throws InterruptedException, DriveTimeoutException {
         driveStrafe(encoderClicks, desiredAngle, power, false, timeLimitMS);
     }
 
     public void driveStrafe(int encoderClicks, double desiredAngle, double power, boolean useCheat,
-    int timeLimitMS)
-    throws InterruptedException, DriveTimeoutException {
-       long endTimeNS = (System.nanoTime()+ (timeLimitMS*1000000));
+    long timeLimitMS) throws InterruptedException, DriveTimeoutException {
+       long endTimeNS = (System.nanoTime() + (timeLimitMS*1000000L));
 
 
         //throw new dte();

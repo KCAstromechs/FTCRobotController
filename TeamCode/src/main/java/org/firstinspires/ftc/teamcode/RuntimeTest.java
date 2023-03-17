@@ -48,14 +48,17 @@ public class RuntimeTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         rb = new M2RobotBase(hardwareMap,telemetry);
         vision = new ColorVisionBase(hardwareMap, telemetry);
-
+/*
         vision.initVision();
         rb.collectorClose();
 
         telemetry.addData("ready?", "ready");
         telemetry.update();
+
+ */
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        /*
 
      sleep(5000);
      timeElapsed = getRuntime();
@@ -64,6 +67,8 @@ public class RuntimeTest extends LinearOpMode {
      sleep(5000);
 
 
+
+         */
     }
 
 

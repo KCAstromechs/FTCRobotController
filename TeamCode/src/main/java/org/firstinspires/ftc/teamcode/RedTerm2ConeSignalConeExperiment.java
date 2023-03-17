@@ -57,14 +57,14 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
         waitForStart();
 
         ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
-/*
+
         try {
             timeRemainingAfterVision = getRuntime();
-            if (zone == VisionBase.ZONE.ONE) {
+            if (zone == ColorVisionBase.ZONE.ONE) {
                 telemetry.addData("Final Answer", "ONE");
-            } else if (zone == VisionBase.ZONE.TWO) {
+            } else if (zone == ColorVisionBase.ZONE.TWO) {
                 telemetry.addData("Final Answer", "TWO");
-            } else if (color == VisionBase.ZONE.THREE) {
+            } else if (zone == ColorVisionBase.ZONE.THREE) {
                 telemetry.addData("Final Answer", "THREE");
             } else {
                 telemetry.addData("Final Answer", "NOT DETECTED");
@@ -78,7 +78,7 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
 
             rb.driveStraightInches(1, 0, .3);
             rb.lifterLow();
-            rb.driveStrafeInches(38, 0, .4);
+            rb.driveStrafeInches(38, 0, .4, 40000);
             rb.driveStraightInches(29, 0, .4);
             rb.turnToAngle(-85, .3);
             rb.horizontalJunctionDistanceDetect(true, -85, 865, .4);
@@ -126,7 +126,7 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
             switch (zone) {
                 case ONE:
                     rb.driveStraightInches(18, 0, -.4);
-                    rb.driveStrafeInches(32, 0, .5);
+                    rb.driveStrafeInches(32, 0, .5, 3000);
 
 
                     break;
@@ -139,12 +139,15 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
 
                 case THREE:
                     rb.driveStraightInches(15, 0, -.4);
-                    rb.driveStrafeInches(35, 0, -.5);
+                    rb.driveStrafeInches(35, 0, -.5, 3000);
                     break;
             }
 
         }catch (DriveTimeoutException dte) {
-        rb.motorShutdown();
+            telemetry.addData("status", "dte thrown");
+            telemetry.update();
+            rb.motorShutdown();
+            sleep(2000);
         }
 
 
@@ -155,7 +158,6 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
 
 
 
- */
 
 
 

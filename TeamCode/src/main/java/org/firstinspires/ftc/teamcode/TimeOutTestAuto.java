@@ -38,17 +38,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TimeOutTestAuto extends LinearOpMode {
 
     public M2RobotBase rb;
-    public double timeRemainingAfterVision;
-    private ColorVisionBase vision;
     private ElapsedTime runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         rb = new M2RobotBase(hardwareMap,telemetry);
-        vision = new ColorVisionBase(hardwareMap, telemetry);
-
-        vision.initVision();
         rb.collectorClose();
 
         telemetry.addData("ready?", "ready");
@@ -56,21 +51,6 @@ public class TimeOutTestAuto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
-        timeRemainingAfterVision = getRuntime();
-        if (zone == ColorVisionBase.ZONE.ONE) {
-            telemetry.addData("Final Answer", "ONE");
-        }
-        else if (zone == ColorVisionBase.ZONE.TWO) {
-            telemetry.addData("Final Answer", "GREEN");
-        }
-        else if (zone == ColorVisionBase.ZONE.THREE) {
-            telemetry.addData("Final Answer", "BLUE");
-        }
-        else {
-            telemetry.addData("Final Answer", "NOT DETECTED");
-        }
-        telemetry.update();
 
         try {
             rb.driveStrafeInches(10000, 0, .5, 2000);
