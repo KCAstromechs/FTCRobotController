@@ -57,106 +57,95 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         waitForStart();
 
         VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
-        timeRemainingAfterVision = getRuntime();
-        if (color == VisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "RED");
+/*
+        try {
+            timeRemainingAfterVision = getRuntime();
+            if (color == VisionBase.COLOR.RED) {
+                telemetry.addData("Final Answer", "RED");
+            } else if (color == VisionBase.COLOR.GREEN) {
+                telemetry.addData("Final Answer", "GREEN");
+            } else if (color == VisionBase.COLOR.BLUE) {
+                telemetry.addData("Final Answer", "BLUE");
+            } else {
+                telemetry.addData("Final Answer", "NOT DETECTED");
+            }
+            telemetry.update();
+
+            //-------------------------------------------------------------------------------
+            // THE RELOCATION OF THE SIGNAL CONE
+            //-------------------------------------------------------------------------------
+
+            rb.driveStraightInches(1, 0, .3);
+            rb.lifterLow();
+            rb.driveStrafeInches(36, 0, .4);
+            rb.driveStraightInches(29, 0, .4);
+            rb.turnToAngle(-85, .3);
+            rb.horizontalJunctionDistanceDetect(true, -85, 865, .4);
+            sleep(250);
+            rb.horizontalJunctionDistanceDetect(false, -85, 221, .3);
+            sleep(250);
+            rb.forwardJunctionDistanceDetect(444);
+            sleep(250);
+            rb.scootLifterDown();
+            sleep(500);
+
+            rb.collectorOpen();
+            sleep(250);
+            rb.driveStraightInches(2, -85, -.3);
+
+
+            rb.turnToAngle(90, .3);
+            rb.driveStraightInches(3, 90, -.2);
+
+            rb.colorSensorDetect(true, 90, false, 2500);
+            rb.lifterCS5();
+            rb.coneDrive(4, 90, .3);
+            rb.collectorClose();
+            sleep(250);
+            rb.lifterMedium();
+            sleep(250);
+            rb.driveStraightInches(22, 95, -.4);
+            rb.turnToAngle(-90, -.3);
+            // 1032, 221
+            rb.horizontalJunctionDistanceDetect(false, -90, 1500, .4);
+            sleep(250);
+            rb.horizontalJunctionDistanceDetect(true, -90, 1000, .3);
+            sleep(250);
+            rb.forwardJunctionDistanceDetect(140);
+            sleep(250);
+            rb.scootLifterDown();
+            sleep(250);
+            rb.collectorOpen();
+            sleep(250);
+            rb.lifterHigh();
+            rb.driveStraightInches(3, -95, -.3);
+            rb.turnToAngle(0, .3);
+
+
+            switch (color) {
+                case RED:
+                    rb.driveStraightInches(18, 0, -.4);
+                    rb.driveStrafeInches(32, 0, .5);
+
+
+                    break;
+
+                case GREEN:
+                case NOT_DETECTED:
+
+
+                    break;
+
+                case BLUE:
+                    rb.driveStraightInches(15, 0, -.4);
+                    rb.driveStrafeInches(35, 0, -.5);
+                    break;
+            }
+
+
+        }catch (DriveTimeoutException dte){
+            rb.motorShutdown();
         }
-        else if (color == VisionBase.COLOR.GREEN) {
-            telemetry.addData("Final Answer", "GREEN");
-        }
-        else if (color == VisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "BLUE");
-        }
-        else {
-            telemetry.addData("Final Answer", "NOT DETECTED");
-        }
-        telemetry.update();
-
-
-        //-------------------------------------------------------------------------------
-        // THE RELOCATION OF THE SIGNAL CONE
-        //-------------------------------------------------------------------------------
-
-
-        //-------------------------------------------------------------------------------
-        // THE RELOCATION OF THE SIGNAL CONE
-        //-------------------------------------------------------------------------------
-
-        rb.driveStraightInches(1,0,.3);
-        rb.lifterLow();
-        rb.driveStrafeInches(36,0,.4);
-        rb.driveStraightInches(29,0,.4);
-        rb.turnToAngle(-85,.3);
-        rb.horizontalJunctionDistanceDetect(true,-85,865,.4);
-        sleep(250);
-        rb.horizontalJunctionDistanceDetect(false,-85,221, .3);
-        sleep(250);
-        rb.forwardJunctionDistanceDetect(444);
-        sleep(250);
-        rb.scootLifterDown();
-        sleep(500);
-
-        rb.collectorOpen();
-        sleep(250);
-        rb.driveStraightInches(2,-85,-.3);
-
-
-
-        rb.turnToAngle(90,.3);
-        rb.driveStraightInches(3,90,-.2);
-
-        rb.colorSensorDetect(true,90, false,2500);
-        rb.lifterCS5();
-        rb.coneDrive(4,90,.3);
-        rb.collectorClose();
-        sleep(250);
-        rb.lifterMedium();
-        sleep(250);
-        rb.driveStraightInches(22,95,-.4);
-        rb.turnToAngle(-90,-.3);
-        // 1032, 221
-        rb.horizontalJunctionDistanceDetect(false,-90,1500,.4);
-        sleep(250);
-        rb.horizontalJunctionDistanceDetect(true,-90,1000,.3);
-        sleep(250);
-        rb.forwardJunctionDistanceDetect(140);
-        sleep(250);
-        rb.scootLifterDown();
-        sleep(250);
-        rb.collectorOpen();
-        sleep(250);
-        rb.lifterHigh();
-        rb.driveStraightInches(3,-95,-.3);
-        rb.turnToAngle(0,.3);
-
-
-
-
-
-
-        switch(color){
-            case RED:
-                rb.driveStraightInches(18,0,-.4);
-                rb.driveStrafeInches(32,0,.5);
-
-
-
-                break;
-
-            case GREEN:
-            case NOT_DETECTED:
-
-
-                break;
-
-            case BLUE:
-                rb.driveStraightInches(15,0,-.4);
-                rb.driveStrafeInches(35,0,-.5);
-                break;
-        }
-
-
-
 
         rb.collectorClose();
         rb.lifterZero();
@@ -168,78 +157,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
 
 
 
-
-        /*
-        rb.lifterCS5();
-
-
-
-        //-------------------------------------------------------------------------------
-        // second cone
-        //-------------------------------------------------------------------------------
-        rb.turnToAngle(90,.3);
-        rb.driveStrafeInches(17,90,-.4);
-        rb.driveStraightInches(13,90,.3);
-        rb.colorSensorDetect(false,95,false);
-        rb.coneDrive(10,95,.4);
-        rb.collectorClose();
-        sleep(250);
-        rb.lifterMedium();
-        sleep(250);
-        rb.driveStraightInches(22,95,-.4);
-        rb.turnToAngle(-90,-.3);
-        rb.driveStrafeInches(7,-95,-.4);
-        rb.driveStraightInches(3,-95,.3);
-        sleep(250);
-        rb.scootLifterDown();
-        sleep(250);
-        rb.collectorOpen();
-        sleep(250);
-        rb.lifterHigh();
-        rb.driveStraightInches(3,-95,-.3);
-        rb.turnToAngle(0,.3);
-
-
-
-
-
-
-        switch(color){
-            case RED:
-                rb.driveStraightInches(15,0,-.4);
-                rb.driveStrafeInches(32,0,.5);
-
-
-
-                break;
-
-            case GREEN:
-            case NOT_DETECTED:
-
-
-                break;
-
-            case BLUE:
-                rb.driveStraightInches(15,0,-.4);
-                rb.driveStrafeInches(35,0,-.5);
-                break;
-        }
-
-
-
-
-        rb.collectorClose();
-        rb.lifterZero();
-        rb.turnToAngle(0,0.2);
-        sleep(5000);
-
-
-
-
-         */
-
-
-
+ */
 
     }
 

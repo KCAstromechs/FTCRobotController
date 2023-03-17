@@ -72,7 +72,7 @@ public class RedTerm1Cone extends LinearOpMode {
         }
         telemetry.update();
 
-
+/*
         //-------------------------------------------------------------------------------
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
@@ -123,6 +123,8 @@ public class RedTerm1Cone extends LinearOpMode {
 
 
 
+
+ */
 
     }
 

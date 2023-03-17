@@ -58,169 +58,133 @@ public class BlueRedThreeCone extends LinearOpMode {
         waitForStart();
 
         VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
-        timeRemainingAfterVision = getRuntime();
-        if (color == VisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "RED");
-        }
-        else if (color == VisionBase.COLOR.GREEN) {
-            telemetry.addData("Final Answer", "GREEN");
-        }
-        else if (color == VisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "BLUE");
-        }
-        else {
-            telemetry.addData("Final Answer", "NOT DETECTED");
-        }
-        telemetry.update();
+        /*
+        try {
 
 
-        rb.driveStrafeInches(9,0,.4);
-        rb.driveStraightInches(20,0,.5);
-        rb.turnToAngle(-60,.4);
-        rb.lifterHigh();
-        rb.turnToAngle(0,.3);
-
-
-
-        //-------------------------------------------------------------------------------
-        // FIRST CONE
-        //-------------------------------------------------------------------------------
-
-        //finish the drive to mid field
-        rb.driveStraightInches(19,0,.4);
-        //turn towards the high
-        rb.turnToAngle(-47,.3);
-        rb.driveStraightInches(10,-47,.3);
-        sleep(200);
-        rb.collectorOpen();
-        //raise the roof so it doesn't catch
-        sleep(200);
-        //prepare for cone pile and cha cha real smooth away
-        rb.driveStraightInches(9,-47,-.4);
-        rb.lifterCS5();
-
-
-
-
-
-        //------------------------------------------------------------------------------------------
-        //  SECOND CONE
-        //------------------------------------------------------------------------------------------
-
-
-        //turn towards pile
-        rb.turnToAngle(97,.3);
-        rb.driveStraightInches(15,97,.4);
-        rb.collectorClose();
-        sleep(250);
-        //lift to be ready for high
-        rb.lifterHigh();
-        sleep(700);
-        rb.driveStraightInches(17,97,-.4);
-        //turn towards the high
-        rb.turnToAngle(-45,.3);
-        rb.driveStraightInches(11,-45,.3);
-        sleep(200);
-        rb.collectorOpen();
-        //raise the roof (so it doesn't catch)
-        sleep(200);
-        //back away
-        rb.collectorClose();
-        rb.driveStraightInches(10,-45,-.4);
-
-
-
-        //------------------------------------------------------------------------------------------
-        // THIRD CONE
-        //------------------------------------------------------------------------------------------
-
-        //prepare for pile
-        rb.lifterCS4();
-        rb.collectorOpen();
-        rb.turnToAngle(97,.3);
-        rb.driveStraightInches(16,97,.4);
-        rb.collectorClose();
-        sleep(250);
-        rb.lifterHigh();
-        sleep(700);
-        rb.driveStraightInches(20,97,-.4);
-        rb.turnToAngle(-45,.3);
-        rb.driveStraightInches(9,-45,.3);
-        sleep(200);
-        rb.collectorOpen();
-        //raise the roof (so it doesn't catch)
-        sleep(200);
-        //back away
-        rb.collectorClose();
-        rb.driveStraightInches(4,-45,-.4);
-
-
-
-        //------------------------------------------------------------------------------------------
-        // FOURTH CONE
-        //------------------------------------------------------------------------------------------
-/*
-        if (timeRemainingAfterVision > 28) {
-            telemetry.addData("hello", "i have time for a fourth cone");
+            if (color == VisionBase.COLOR.RED) {
+                telemetry.addData("Final Answer", "RED");
+            } else if (color == VisionBase.COLOR.GREEN) {
+                telemetry.addData("Final Answer", "GREEN");
+            } else if (color == VisionBase.COLOR.BLUE) {
+                telemetry.addData("Final Answer", "BLUE");
+            } else {
+                telemetry.addData("Final Answer", "NOT DETECTED");
+            }
             telemetry.update();
 
 
-            rb.lifterCS3();
+            rb.driveStrafeInches(9, 0, .4);
+            rb.driveStraightInches(20, 0, .5);
+            rb.turnToAngle(-60, .4);
+            rb.lifterHigh();
+            rb.turnToAngle(0, .3);
+
+
+            //-------------------------------------------------------------------------------
+            // FIRST CONE
+            //-------------------------------------------------------------------------------
+
+            //finish the drive to mid field
+            rb.driveStraightInches(19, 0, .4);
+            //turn towards the high
+            rb.turnToAngle(-47, .3);
+            rb.driveStraightInches(10, -47, .3);
+            sleep(200);
             rb.collectorOpen();
+            //raise the roof so it doesn't catch
+            sleep(200);
+            //prepare for cone pile and cha cha real smooth away
+            rb.driveStraightInches(9, -47, -.4);
+            rb.lifterCS5();
+
+
+            //------------------------------------------------------------------------------------------
+            //  SECOND CONE
+            //------------------------------------------------------------------------------------------
+
+
+            //turn towards pile
             rb.turnToAngle(97, .3);
-            rb.driveStraightInches(19, 97, .4);
+            rb.driveStraightInches(15, 97, .4);
             rb.collectorClose();
             sleep(250);
+            //lift to be ready for high
             rb.lifterHigh();
             sleep(700);
-            rb.driveStraightInches(21, 97, -.4);
-            rb.turnToAngle(-43, .3);
-            rb.driveStraightInches(6, -43, .3);
+            rb.driveStraightInches(17, 97, -.4);
+            //turn towards the high
+            rb.turnToAngle(-45, .3);
+            rb.driveStraightInches(11, -45, .3);
             sleep(200);
             rb.collectorOpen();
             //raise the roof (so it doesn't catch)
             sleep(200);
             //back away
             rb.collectorClose();
-            rb.driveStraightInches(5, -43, -.4);
-
-        }
-
- */
+            rb.driveStraightInches(10, -45, -.4);
 
 
+            //------------------------------------------------------------------------------------------
+            // THIRD CONE
+            //------------------------------------------------------------------------------------------
+
+            //prepare for pile
+            rb.lifterCS4();
+            rb.collectorOpen();
+            rb.turnToAngle(97, .3);
+            rb.driveStraightInches(16, 97, .4);
+            rb.collectorClose();
+            sleep(250);
+            rb.lifterHigh();
+            sleep(700);
+            rb.driveStraightInches(20, 97, -.4);
+            rb.turnToAngle(-45, .3);
+            rb.driveStraightInches(9, -45, .3);
+            sleep(200);
+            rb.collectorOpen();
+            //raise the roof (so it doesn't catch)
+            sleep(200);
+            //back away
+            rb.collectorClose();
+            rb.driveStraightInches(4, -45, -.4);
 
 
-        rb.lifterZero();
-        rb.turnToAngle(0,.3);
+            rb.lifterZero();
+            rb.turnToAngle(0, .3);
 
 
-        switch(color){
-            case RED:
-                rb.driveStraightInches(3,0,-.5);
-                rb.driveStrafeInches(25,0,.5);
-                rb.driveStraightInches(6,0,-.5);
+            switch (color) {
+                case RED:
+                    rb.driveStraightInches(3, 0, -.5);
+                    rb.driveStrafeInches(25, 0, .5);
+                    rb.driveStraightInches(6, 0, -.5);
 
 
-                break;
+                    break;
 
-            case GREEN:
-            case NOT_DETECTED:
-                rb.driveStraightInches(6,0,-.5);
+                case GREEN:
+                case NOT_DETECTED:
+                    rb.driveStraightInches(6, 0, -.5);
 
-                break;
+                    break;
 
-            case BLUE:
-                rb.driveStraightInches(1,0,-.5);
-                rb.driveStrafeInches(35,0,-.5);
-                rb.driveStraightInches(6,0,-.5);
-                break;
+                case BLUE:
+                    rb.driveStraightInches(1, 0, -.5);
+                    rb.driveStrafeInches(35, 0, -.5);
+                    rb.driveStraightInches(6, 0, -.5);
+                    break;
+            }
+        }catch (DriveTimeoutException dte){
+            rb.motorShutdown();
         }
 
         sleep(1000);
 
 
 
+
+ */
 
     }
 

@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="BLUE Terminal RED Tape", group="Robot")
+@Autonomous(name = "BLUE Terminal RED Tape", group = "Robot")
 public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
 
     public M2RobotBase rb;
@@ -45,118 +45,115 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        rb = new M2RobotBase(hardwareMap,telemetry);
+        rb = new M2RobotBase(hardwareMap, telemetry);
         vision = new VisionBase(hardwareMap, telemetry);
 
         vision.initVision();
         rb.collectorClose();
 
+
         telemetry.addData("ready?", "ready");
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+/*
 
-        VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
-        timeRemainingAfterVision = getRuntime();
-        if (color == VisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "RED");
+        VisionBase.COLOR color = vision.findRGB(225, 300, 305, 360, true);
+
+        try {
+
+
+            if (color == VisionBase.COLOR.RED) {
+                telemetry.addData("Final Answer", "RED");
+            } else if (color == VisionBase.COLOR.GREEN) {
+                telemetry.addData("Final Answer", "GREEN");
+            } else if (color == VisionBase.COLOR.BLUE) {
+                telemetry.addData("Final Answer", "BLUE");
+            } else {
+                telemetry.addData("Final Answer", "NOT DETECTED");
+            }
+            telemetry.update();
+
+            rb.driveStraightInches(1, 0, .3);
+            rb.lifterLow();
+            rb.driveStrafeInches(35, 0, -.4);
+            rb.driveStraightInches(27, 0, .4);
+            rb.turnToAngle(85, .3);
+            rb.horizontalJunctionDistanceDetect(false, 90, 865, .4);
+            sleep(250);
+            rb.horizontalJunctionDistanceDetect(true, 90, 221, .3);
+            sleep(250);
+            rb.forwardJunctionDistanceDetect(444);
+            sleep(250);
+            rb.scootLifterDown();
+            sleep(500);
+
+            rb.collectorOpen();
+            sleep(250);
+            rb.driveStraightInches(2, 90, -.3);
+            rb.turnToAngle(-85, .3);
+            rb.driveStraightInches(3, -85, -.2);
+            rb.colorSensorDetect(false, -85, true, 3000);
+            rb.lifterCS5();
+            rb.coneDrive(4, -85, .3);
+            rb.collectorClose();
+            //-------------------------------------------------------------------------------
+            // second cone
+            //-------------------------------------------------------------------------------
+            sleep(500);
+            rb.lifterMedium();
+            sleep(250);
+            rb.driveStraightInches(22, -85, -.4);
+            rb.turnToAngle(90, -.3);
+            rb.horizontalJunctionDistanceDetect(true, 95, 3000, .4);
+            sleep(250);
+            rb.horizontalJunctionDistanceDetect(false, 95, 500, .3);
+            sleep(250);
+            rb.forwardJunctionDistanceDetect(140);
+            sleep(250);
+            rb.scootLifterDown();
+            sleep(250);
+            rb.collectorOpen();
+            sleep(250);
+            rb.lifterHigh();
+            rb.driveStraightInches(3, 95, -.3);
+            rb.turnToAngle(0, .3);
+
+
+            switch (color) {
+                case BLUE:
+                    rb.driveStraightInches(11, 0, -.4);
+                    rb.driveStrafeInches(32, 0, -.5);
+
+
+                    break;
+
+                case GREEN:
+                case NOT_DETECTED:
+
+
+                    break;
+
+                case RED:
+                    rb.driveStraightInches(11, 0, -.4);
+                    rb.driveStrafeInches(30, 0, .5);
+                    break;
+            }
+        } catch (DriveTimeoutException dte) {
+            //give up
+            rb.motorShutdown();
         }
-        else if (color == VisionBase.COLOR.GREEN) {
-            telemetry.addData("Final Answer", "GREEN");
-        }
-        else if (color == VisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "BLUE");
-        }
-        else {
-            telemetry.addData("Final Answer", "NOT DETECTED");
-        }
-        telemetry.update();
-
-        rb.driveStraightInches(1,0,.3);
-        rb.lifterLow();
-        rb.driveStrafeInches(35,0,-.4);
-        rb.driveStraightInches(27,0,.4);
-        rb.turnToAngle(85,.3);
-        rb.horizontalJunctionDistanceDetect(false,90,865,.4);
-        sleep(250);
-        rb.horizontalJunctionDistanceDetect(true,90,221, .3);
-        sleep(250);
-        rb.forwardJunctionDistanceDetect(444);
-        sleep(250);
-        rb.scootLifterDown();
-        sleep(500);
-
-        rb.collectorOpen();
-        sleep(250);
-        rb.driveStraightInches(2,90,-.3);
-        rb.turnToAngle(-85,.3);
-        rb.driveStraightInches(3,-85,-.2);
-        rb.colorSensorDetect(false,-85, true,3000);
-        rb.lifterCS5();
-        rb.coneDrive(4,-85,.3);
-        rb.collectorClose();
-        //-------------------------------------------------------------------------------
-        // second cone
-        //-------------------------------------------------------------------------------
-        sleep(500);
-        rb.lifterMedium();
-        sleep(250);
-        rb.driveStraightInches(22,-85,-.4);
-        rb.turnToAngle(90,-.3);
-//2000
-        rb.horizontalJunctionDistanceDetect(true,95,3000,.4);
-        sleep(250);
-        rb.horizontalJunctionDistanceDetect(false,95,500,.3);
-        sleep(250);
-        rb.forwardJunctionDistanceDetect(140);
-        sleep(250);
-        rb.scootLifterDown();
-        sleep(250);
-        rb.collectorOpen();
-        sleep(250);
-        rb.lifterHigh();
-        rb.driveStraightInches(3,95,-.3);
-        rb.turnToAngle(0,.3);
-
-
-
-
-
-
-
-        switch(color){
-            case BLUE:
-                rb.driveStraightInches(11,0,-.4);
-                rb.driveStrafeInches(32,0,-.5);
-
-
-
-                break;
-
-            case GREEN:
-            case NOT_DETECTED:
-
-
-                break;
-
-            case RED:
-                rb.driveStraightInches(11,0,-.4);
-                rb.driveStrafeInches(30,0,.5);
-                break;
-        }
-
         rb.collectorClose();
         rb.lifterZero();
-        rb.turnToAngle(0,0.2);
+        rb.turnToAngle(0, 0.2);
         sleep(5000);
 
 
 
-
-
+ */
     }
 
 
-        }
+}
 
 

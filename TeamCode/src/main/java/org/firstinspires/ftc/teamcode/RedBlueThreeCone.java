@@ -73,7 +73,7 @@ public class RedBlueThreeCone extends LinearOpMode {
         }
         telemetry.update();
 
-
+/*
         //-------------------------------------------------------------------------------
         // THE RELOCATION OF THE SIGNAL CONE
         //-------------------------------------------------------------------------------
@@ -167,18 +167,6 @@ public class RedBlueThreeCone extends LinearOpMode {
         rb.collectorClose();
         rb.driveStraightInches(5,70,-.4);
 
-        //------------------------------------------------------------------------------------------
-        // FOURTH CONE
-        //------------------------------------------------------------------------------------------
-
-        /*
-        if (timeRemainingAfterVision > 28){
-            telemetry.addData("hello", "i have time for a fourth cone");
-            telemetry.update();
-        }
-
-
-         */
 
         rb.lifterZero();
         rb.turnToAngle(7,.3);
@@ -209,6 +197,7 @@ public class RedBlueThreeCone extends LinearOpMode {
         sleep(2000);
 
 
+        */
     }
 
 

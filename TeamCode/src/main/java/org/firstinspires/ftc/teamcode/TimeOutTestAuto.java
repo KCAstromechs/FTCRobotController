@@ -30,13 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="BLUE Terminal 1 Cone", group="Robot")
-public class BlueTerm1Cone extends LinearOpMode {
+@Autonomous(name="Time Out Auto", group="Robot")
+public class TimeOutTestAuto extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
@@ -72,63 +71,13 @@ public class BlueTerm1Cone extends LinearOpMode {
             telemetry.addData("Final Answer", "NOT DETECTED");
         }
         telemetry.update();
-/*
-        //-------------------------------------------------------------------------------
-        // THE RELOCATION OF THE SIGNAL CONE
-        //-------------------------------------------------------------------------------
 
-        rb.driveStrafeInches(8,0,.4);
-        rb.driveStraightInches(25,0,.3);
-        rb.turnToAngle(-70,.2);
-        rb.driveStraightInches(3,-70,.3);
-        rb.driveStraightInches(3,-70,-.3);
-        sleep(250);
-        rb.lifterMedium();
-        rb.turnToAngle(40,.3);
-        sleep(1500);
-        rb.driveStraightInches(3,40,.3);
-        sleep(500);
-        rb.scootLifterDown();
-        sleep(250);
-        rb.collectorOpen();
-        rb.driveStraightInches(5,40,-.4);
-
-        rb.turnToAngle(0,.3);
-
-
-
-
-
-
-        switch(color){
-            case BLUE:
-                rb.driveStrafeInches(35,0,-.5);
-
-
-
-                break;
-
-            case GREEN:
-            case NOT_DETECTED:
-
-
-                break;
-
-            case RED:
-                rb.driveStrafeInches(30,0,.5);
-                break;
+        try {
+            rb.driveStrafeInches(1000, 0, .5, 2000, (int) runtime.milliseconds());
         }
-
-        rb.collectorClose();
-        rb.lifterZero();
-        rb.turnToAngle(0,0.2);
-        sleep(5000);
-
-
-
-
-
- */
+        catch (DriveTimeoutException dte){
+            rb.motorShutdown();
+        }
 
     }
 

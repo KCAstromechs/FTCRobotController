@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -70,11 +71,15 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98;
     final double lifterSpeed = 1;
     BNO055IMU imu;
+    ElapsedTime _runtime;
+
+
 
     //thing that happens when new is used (constructor)
-    public M2RobotBase(HardwareMap hardwareMap, Telemetry telemetry) {
+    public M2RobotBase(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime runtime) {
 
         //underscore means it's a private variable
+        _runtime = runtime;
         _telemetry = telemetry;
         _frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         _frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -263,55 +268,82 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     }
 
+    /***
+     * puts the lift into the preset low position
+     */
+
     public void lifterLow() {
         _lifter.setTargetPosition(lifterZero + LOW_HEIGHT);
         _lifter.setPower(lifterSpeed);
     }
 
+    /***
+     * puts the lift into the preset medium position
+     */
     public void lifterMedium() {
         _lifter.setTargetPosition(lifterZero + MID_HEIGHT);
         _lifter.setPower(lifterSpeed);
     }
 
+    /***
+     * puts the lift into the preset high position
+     */
     public void lifterHigh() {
         _lifter.setTargetPosition(lifterZero + HIGH_HEIGHT);
         _lifter.setPower(lifterSpeed);
 
     }
-
+    /***
+     * lowers the lifter a preset amount
+     */
     public void scootLifterDown() {
         _lifter.setTargetPosition(_lifter.getCurrentPosition() - DOWN_CORRECT);
         _lifter.setPower(lifterSpeed);
     }
-
+    /***
+     * brings the lifter up a preset amount
+     */
     public void scootLifterUp() {
         _lifter.setTargetPosition(_lifter.getCurrentPosition() + DOWN_CORRECT);
         _lifter.setPower(lifterSpeed);
     }
-
+    /***
+     * puts the lift into position for the fourth cone in the stack
+     */
     public void lifterCS4() {
         _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_4);
         _lifter.setPower(lifterSpeed);
 
     }
+    /***
+     * puts the lift into position for the third cone in the stack
+     */
 
     public void lifterCS3() {
         _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_3);
         _lifter.setPower(lifterSpeed);
 
     }
-
+    /***
+     * puts the lift into position for the second cone in the stack
+     */
     public void lifterCS2() {
         _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_2);
         _lifter.setPower(lifterSpeed);
 
     }
+    /***
+     * puts the lift into position for the first cone in the stack
+     */
 
     public void lifterCS1() {
         _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_1);
         _lifter.setPower(lifterSpeed);
 
     }
+    /***
+     * puts the lift into position for the fifth cone in the stack
+     */
 
     public void lifterCS5() {
         _lifter.setTargetPosition(lifterZero + CONE_STACK_LEVEL_5);
@@ -319,11 +351,19 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 
     }
 
+    /***
+     * puts the lift in its lowest point
+     */
     public void lifterZero() {
         _lifter.setTargetPosition(lifterZero + ZERO_HEIGHT);
         _lifter.setPower(lifterSpeed);
     }
 
+
+    /***
+     * allows for the teleOp control of the lifter by taking in the joystick y value
+     * @param position the value incoming from a y joystick value that adds/subtracts to the height of the lifter
+     */
     public void lifterControl(int position) {
         if (position != 0) {
             int newTargetPosition = _lifter.getCurrentPosition() + position;
@@ -393,6 +433,14 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 //AUTONOMOUS MOVEMENT
 //---------------------------------------------------------------------------------------------------------------
 
+    public void motorShutdown(){
+        _frontRight.setPower(0);
+        _frontLeft.setPower(0);
+        _backRight.setPower(0);
+        _backLeft.setPower(0);
+        _lifter.setPower(0);
+    }
+
     /***
      * @param inches number of inches you want the robot to move
      * @param desiredAngle given angle you want the robot to move in
@@ -427,6 +475,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
      * @param useCheat determine whether or not the robot is trying to move at an angle
      * @throws InterruptedException
      */
+
+
     public void driveStraight(int encoderClicks, double desiredAngle, double power, boolean useCheat) {
 
         //normalizes the angle and effectively moves where the discontinutity is for the purpose of this singlusar movement
@@ -474,15 +524,21 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _backLeft.setPower(0);
     }
 
-    public void driveStrafeInches(double inches, double desiredAngle, double power) throws InterruptedException {
-        driveStrafe((int) (inches * DRIVE_STRAFE_ENCODER_TO_INCHES), desiredAngle, power);
+    public void driveStrafeInches(double inches, double desiredAngle, double power, int timeLimitMS, int currentTime) throws InterruptedException, DriveTimeoutException {
+        driveStrafe((int) (inches * DRIVE_STRAFE_ENCODER_TO_INCHES), desiredAngle, power, timeLimitMS, currentTime);
     }
 
-    public void driveStrafe(int encoderClicks, double desiredAngle, double power) throws InterruptedException {
-        driveStrafe(encoderClicks, desiredAngle, power, false);
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power, int timeLimitMS, int currentTime) throws InterruptedException, DriveTimeoutException {
+        driveStrafe(encoderClicks, desiredAngle, power, false, timeLimitMS, currentTime);
     }
 
-    public void driveStrafe(int encoderClicks, double desiredAngle, double power, boolean useCheat) throws InterruptedException {
+    public void driveStrafe(int encoderClicks, double desiredAngle, double power, boolean useCheat,
+    int timeLimitMS, int currentTime)
+    throws InterruptedException, DriveTimeoutException {
+        int startTime = currentTime;
+
+
+        //throw new dte();
 
         if (useCheat) {
             desiredAngle = normalizeAngle(desiredAngle + 180);
@@ -505,9 +561,6 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             if (useCheat) {
                 zAngle = (float) normalizeAngle(zAngle + 180);
             }
-            // TODO: Issue with angles crossing the circle discontinutiy
-            //       e.g. yAngle = 171 and desiredAngle = -179
-            //
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
             double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the change in the y encoder value and converts it to a power value to modify the power parameter. Subracts zero because that's the number we want it to be at
 
@@ -516,15 +569,16 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             _backRight.setPower(-power - driveCorrect - strafeCorrect);
             _frontLeft.setPower(-power + driveCorrect - strafeCorrect);
             _backLeft.setPower(power + driveCorrect - strafeCorrect);
-
-
             information();
+
+            if (currentTime > (startTime + timeLimitMS)){
+                throw new DriveTimeoutException();
+            }
 
             // make +- strafe correct for angle
             // all addition because they all need to turn the same way for strafeCorrect
 
 
-            //all positives because negative signs are weird and we want those motors to have slightly less power so they don't mov too fast and cause a large correcton
 
         }
 
