@@ -39,14 +39,14 @@ public class TimeOutTestAuto extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
-    private VisionBase vision;
+    private ColorVisionBase vision;
     private ElapsedTime runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         rb = new M2RobotBase(hardwareMap,telemetry);
-        vision = new VisionBase(hardwareMap, telemetry);
+        vision = new ColorVisionBase(hardwareMap, telemetry);
 
         vision.initVision();
         rb.collectorClose();
@@ -56,15 +56,15 @@ public class TimeOutTestAuto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
+        ColorVisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
         timeRemainingAfterVision = getRuntime();
-        if (color == VisionBase.COLOR.RED) {
+        if (color == ColorVisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
         }
-        else if (color == VisionBase.COLOR.GREEN) {
+        else if (color == ColorVisionBase.COLOR.GREEN) {
             telemetry.addData("Final Answer", "GREEN");
         }
-        else if (color == VisionBase.COLOR.BLUE) {
+        else if (color == ColorVisionBase.COLOR.BLUE) {
             telemetry.addData("Final Answer", "BLUE");
         }
         else {

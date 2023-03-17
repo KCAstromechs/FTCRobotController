@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class DownCorrectTest extends LinearOpMode {
 
     public M2RobotBase rb;
-    private VisionBase vision;
+    private ColorVisionBase vision;
     private ElapsedTime runtime = new ElapsedTime();
 
 

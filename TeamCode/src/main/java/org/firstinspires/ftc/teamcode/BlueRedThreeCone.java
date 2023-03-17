@@ -40,14 +40,14 @@ public class BlueRedThreeCone extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
-    private VisionBase vision;
+    private ColorVisionBase vision;
     private ElapsedTime runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         rb = new M2RobotBase(hardwareMap,telemetry);
-        vision = new VisionBase(hardwareMap, telemetry);
+        vision = new ColorVisionBase(hardwareMap, telemetry);
 
         vision.initVision();
         rb.collectorClose();
@@ -57,7 +57,7 @@ public class BlueRedThreeCone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        VisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
+        ColorVisionBase.COLOR color = vision.findRGB(225,300,305,360, true);
         /*
         try {
 

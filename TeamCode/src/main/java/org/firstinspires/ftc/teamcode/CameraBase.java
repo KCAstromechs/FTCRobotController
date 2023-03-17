@@ -43,43 +43,13 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 
-
-public class VisionBase {
-
-    enum COLOR {
-        RED,
-        GREEN,
-        BLUE,
-        NOT_DETECTED
-    }
+public class CameraBase {
 
     //----------------------------------------------------------------------------------------------
-    // Analyzing-Related Variables
+    // Variables
     //----------------------------------------------------------------------------------------------
 
-    // color constants
-    int BLUE = -16776961;
-    int RED = -65536;
-    int WHITE = 0xffffffff;
-    // mapping values
-    int minX = 0;
-    int maxX = 0;
-    int minY = 0;
-    int maxY = 0;
-    int analyzedWidth = 0;
-    int analyzedHeight = 0;
-    int analyzedPixels = 0;
-    // other
-    COLOR mostRGB = COLOR.NOT_DETECTED;
-    HardwareMap hardwareMap;
-    Telemetry telemetry;
-
-    int EXPOSURE = 80;
-
-    //----------------------------------------------------------------------------------------------
-    // Stolen Camera Variables
-    //----------------------------------------------------------------------------------------------
-
+    // camera variables
     private static final String TAG = "Webcam Sample";
 
     /** How long we are to wait to be granted permission to use the camera before giving up. Here,
@@ -107,17 +77,29 @@ public class VisionBase {
      * if you're curious): no knowledge of multi-threading is needed here. */
     private Handler callbackHandler;
 
-    //----------------------------------------------------------------------------------------------
-    // Utilization in Auto / Interact with this Class
-    //----------------------------------------------------------------------------------------------
+    // color constants
+    int BLUE = -16776961;
+    int RED = -65536;
+    int WHITE = 0xffffffff;
+    // mapping values
+    int minX = 0;
+    int maxX = 0;
+    int minY = 0;
+    int maxY = 0;
+    int analyzedWidth = 0;
+    int analyzedHeight = 0;
+    int analyzedPixels = 0;
+    // other
+    HardwareMap hardwareMap;
+    Telemetry telemetry;
+    int EXPOSURE = 80;
 
-    public VisionBase(HardwareMap _hardwareMap, Telemetry _telemetry) {
-        hardwareMap = _hardwareMap;
-        telemetry = _telemetry;
-    }
+    //----------------------------------------------------------------------------------------------
+    // Interact with this Class
+    //----------------------------------------------------------------------------------------------
 
     // do this at the beginning
-    public void initVision() {
+    public void initCamera() {
         callbackHandler = CallbackLooper.getDefault().getHandler();
         cameraManager = ClassFactory.getInstance().getCameraManager();
         cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -141,11 +123,11 @@ public class VisionBase {
         telemetry.addData("Exposure", currentExposure);
         telemetry.addData("Gain", currentGain);
 
-        telemetry.addData("VISION", "initialized");
+        telemetry.addData("Camera", "initialized");
         telemetry.update();
     }
 
-    public COLOR findRGB(int _minX, int _maxX, int _minY, int _maxY, boolean save) {
+    public Bitmap returnBitmap(int _minX, int _maxX, int _minY, int _maxY, boolean save) {
         // setting up coords input as global
         minX = _minX;
         maxX = _maxX;
@@ -156,15 +138,15 @@ public class VisionBase {
         analyzedPixels = (analyzedWidth * analyzedHeight); // if analyzing every pixel
 
         // if something goes wrong with vision process, not detected will be returned
-        COLOR ret = COLOR.NOT_DETECTED;
+        Bitmap ret = null;
         try {
             openCamera();
             if (camera == null) {
-                return COLOR.NOT_DETECTED;
+                return null;
             }
             startCamera();
             if (cameraCaptureSession == null) {
-                return COLOR.NOT_DETECTED;
+                return null;
             }
 
             // loop until we receive an image from the camera
@@ -173,7 +155,7 @@ public class VisionBase {
                 Bitmap bmp = frameQueue.poll();
                 if (bmp != null) {
                     // if we have a frame, run operations and break from the loop
-                    ret = onNewFrame(bmp, save);
+                    onNewFrame(bmp, save);
                     haveBitmap = true;
                 }
             }
@@ -184,20 +166,17 @@ public class VisionBase {
         return ret;
     }
 
-    // do stuff with the frame
-    private COLOR onNewFrame(Bitmap frame, boolean save) {
-        COLOR ret = mostRGB(frame);
+    //----------------------------------------------------------------------------------------------
+    // Bitmap Operations
+    //----------------------------------------------------------------------------------------------
+
+    private void onNewFrame(Bitmap frame, boolean save) {
         if (save == true) {
             annotateBitmap(frame);
             saveBitmap(frame);
         }
         frame.recycle(); // not strictly necessary, but helpful
-        return ret;
     }
-
-    //----------------------------------------------------------------------------------------------
-    // Vision Analysis Operations
-    //----------------------------------------------------------------------------------------------
 
     private void annotateBitmap(Bitmap bitmap){
         // plot x axis
@@ -229,50 +208,6 @@ public class VisionBase {
         }
     }
 
-    private COLOR mostRGB(Bitmap bitmap){
-        int color = 0;
-        int redValue = 0;
-        int greenValue = 0;
-        int blueValue = 0;
-        int pixelCountR = 0;
-        int pixelCountG = 0;
-        int pixelCountB = 0;
-        int detectionThreshold = 50;
-        int minColorDifference = 20;
-
-        // loop thru image
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                // get color for this coordinate
-                color = bitmap.getPixel(x,y);
-                redValue = Color.red(color);
-                greenValue = Color.green(color);
-                blueValue = Color.blue(color);
-                // color
-                if (redValue > detectionThreshold || greenValue > detectionThreshold || blueValue > detectionThreshold) {
-                    if (redValue > greenValue + minColorDifference && redValue > blueValue + minColorDifference)
-                        pixelCountR++;
-                    else if (greenValue > redValue + minColorDifference && greenValue > blueValue)
-                        pixelCountG++;
-                    else if (blueValue > redValue + minColorDifference && blueValue > greenValue + minColorDifference)
-                        pixelCountB++;
-                }
-
-            }
-        }
-        if (pixelCountR > detectionThreshold || pixelCountG > detectionThreshold || pixelCountB > detectionThreshold) {
-            if(pixelCountR > pixelCountG && pixelCountR > pixelCountB)
-                mostRGB = COLOR.RED;
-            else if (pixelCountG > pixelCountR && pixelCountG > pixelCountB)
-                mostRGB = COLOR.GREEN;
-            else if (pixelCountB > pixelCountR && pixelCountB > pixelCountG)
-                mostRGB = COLOR.BLUE;
-            else
-                mostRGB = COLOR.NOT_DETECTED;
-        }
-        return mostRGB;
-    }
-
     private void saveBitmap(Bitmap bitmap) {
         DateFormat dateFormat = new SimpleDateFormat("MM-dd__hh-mm-ss");
         String strDate = dateFormat.format(new Date());
@@ -289,7 +224,7 @@ public class VisionBase {
     }
 
     //----------------------------------------------------------------------------------------------
-    // Stolen Camera Operations
+    // Camera Operations
     //----------------------------------------------------------------------------------------------
 
     private void initializeFrameQueue(int capacity) {

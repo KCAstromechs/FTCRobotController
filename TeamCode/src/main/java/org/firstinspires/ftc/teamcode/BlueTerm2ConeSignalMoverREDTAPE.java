@@ -39,14 +39,14 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
 
     public M2RobotBase rb;
     public double timeRemainingAfterVision;
-    private VisionBase vision;
+    private ColorVisionBase vision;
     private ElapsedTime runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         rb = new M2RobotBase(hardwareMap, telemetry);
-        vision = new VisionBase(hardwareMap, telemetry);
+        vision = new ColorVisionBase(hardwareMap, telemetry);
 
         vision.initVision();
         rb.collectorClose();

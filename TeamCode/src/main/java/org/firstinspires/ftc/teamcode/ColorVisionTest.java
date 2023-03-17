@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Vision Test")
-public class VisionTest extends LinearOpMode {
+public class ColorVisionTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
-        VisionBase vision = new VisionBase(hardwareMap, telemetry);
+        ColorVisionBase vision = new ColorVisionBase(hardwareMap, telemetry);
 
         // do this before match start
         vision.initVision();
@@ -25,14 +25,14 @@ public class VisionTest extends LinearOpMode {
 
         // now let's run vision, full image is 640 x 480
         // values for left line up:
-        VisionBase.COLOR color = vision.findRGB(187,268,200,280, true);
-        if (color == VisionBase.COLOR.RED) {
+        ColorVisionBase.COLOR color = vision.findRGB(187,268,200,280, true);
+        if (color == ColorVisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "RED");
         }
-        else if (color == VisionBase.COLOR.GREEN) {
+        else if (color == ColorVisionBase.COLOR.GREEN) {
             telemetry.addData("Final Answer", "GREEN");
         }
-        else if (color == VisionBase.COLOR.BLUE) {
+        else if (color == ColorVisionBase.COLOR.BLUE) {
             telemetry.addData("Final Answer", "BLUE");
         }
         else {
