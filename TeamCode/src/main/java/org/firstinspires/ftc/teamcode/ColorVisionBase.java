@@ -54,10 +54,18 @@ public class ColorVisionBase {
         int minColorDifference = 20;
 
         // retrieve bitmap
-        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save);
+        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save).copy(Bitmap.Config.ARGB_8888,false);
         if (bitmap == null) {
             return ZONE.NOT_DETECTED;
         }
+
+        // color correction
+        color = bitmap.getPixel(maxX,minY);
+        redValue = Color.red(color);
+        greenValue = Color.green(color);
+        blueValue = Color.blue(color);
+        double redToGreen = redValue / greenValue;
+        double redToBlue = redValue / blueValue;
 
         // loop thru bitmap
         for (int x = minX; x < maxX; x++) {
@@ -65,8 +73,8 @@ public class ColorVisionBase {
                 // get color for this coordinate
                 color = bitmap.getPixel(x,y);
                 redValue = Color.red(color);
-                greenValue = Color.green(color);
-                blueValue = Color.blue(color);
+                greenValue = (int) ((double)Color.green(color) * redToGreen);
+                blueValue = (int) ((double)Color.blue(color) * redToBlue);
                 // color
                 if (redValue > detectionThreshold || greenValue > detectionThreshold || blueValue > detectionThreshold) {
                     if (redValue > greenValue + minColorDifference && redValue > blueValue + minColorDifference)

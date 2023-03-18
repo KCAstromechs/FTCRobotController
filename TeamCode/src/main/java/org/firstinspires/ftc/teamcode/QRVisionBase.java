@@ -2,12 +2,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +18,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 public class QRVisionBase {
 
@@ -41,6 +40,10 @@ public class QRVisionBase {
     // robot variables
     HardwareMap hardwareMap;
     Telemetry telemetry;
+
+    ZONE currentZone = ZONE.THREE;
+    boolean barcodeComplete = false;
+    String rawValue = "nothing!";
 
     //----------------------------------------------------------------------------------------------
     // Utilization in Auto / Interact with this Class
@@ -66,36 +69,56 @@ public class QRVisionBase {
                         .build();
         BarcodeScanner scanner = BarcodeScanning.getClient();
         // retrieve bitmap
-        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save);
+        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save).copy(Bitmap.Config.ARGB_8888,false);
         if (bitmap == null) {
+            telemetry.addData("bitmap","NO BITMAP??");
+            telemetry.update();
             return ZONE.NOT_DETECTED;
         }
         // scan barcode
         InputImage image = InputImage.fromBitmap(bitmap, 0);
+
         Task<List<Barcode>> result = scanner.process(image)
                 .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
                     public void onSuccess(List<Barcode> barcodes) {
                         // Task completed successfully
                         for (Barcode barcode: barcodes) {
-                            Rect bounds = barcode.getBoundingBox();
-                            Point[] corners = barcode.getCornerPoints();
+                            rawValue = barcode.getRawValue();
+                            currentZone = ZONE.ONE;
+                            //telemetry.addData("rawValue", rawValue);
 
-                            String rawValue = barcode.getRawValue();
-
-                            int valueType = barcode.getValueType();
-                            }
                         }
+                        barcodeComplete = true;
+                    }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Task failed with an exception
                         // ...
+                        //telemetry.addData("success?","NO");
+                        currentZone = ZONE.TWO;
+                        barcodeComplete = true;
+                        e.printStackTrace();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
+                    @Override
+                    public void onComplete(@NonNull Task<List<Barcode>> task) {
+                        barcodeComplete = true;
                     }
                 });
 
-        return ZONE.ONE;
+        while(!barcodeComplete) {
+            try {
+                sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        telemetry.addData("rawValue", rawValue);
+        return currentZone; // placeholder
     }
 
 }

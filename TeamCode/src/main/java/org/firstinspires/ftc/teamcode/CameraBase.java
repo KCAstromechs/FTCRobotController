@@ -2,7 +2,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.os.Handler;
 
@@ -163,6 +162,7 @@ public class CameraBase {
                     // if we have a frame, run operations and break from the loop
                     onNewFrame(bmp, save);
                     haveBitmap = true;
+                    ret = bmp;
                 }
             }
 
@@ -181,7 +181,7 @@ public class CameraBase {
             annotateBitmap(frame);
             saveBitmap(frame);
         }
-        frame.recycle(); // not strictly necessary, but helpful
+        //frame.recycle(); // not strictly necessary, but helpful
     }
 
     private void annotateBitmap(Bitmap bitmap){

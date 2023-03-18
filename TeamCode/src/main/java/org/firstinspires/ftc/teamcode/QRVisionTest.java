@@ -6,12 +6,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="RGB Vision Test")
-public class ColorVisionTest extends LinearOpMode {
+@Autonomous(name="QR Vision Test")
+public class QRVisionTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        ColorVisionBase vision = new ColorVisionBase(hardwareMap, telemetry);
+        QRVisionBase vision = new QRVisionBase(hardwareMap, telemetry);
 
         // do this before match start
         vision.initVision();
@@ -20,14 +20,15 @@ public class ColorVisionTest extends LinearOpMode {
         waitForStart();
 
         // now let's run vision, full image is 640 x 480
-        ColorVisionBase.ZONE zone = vision.findZone(320,400,235,350, true);
-        if (zone == ColorVisionBase.ZONE.ONE) {
+        QRVisionBase.ZONE zone = QRVisionBase.ZONE.NOT_DETECTED;
+        zone = vision.findZone(0,639,0,479, true);
+        if (zone == QRVisionBase.ZONE.ONE) {
             telemetry.addData("Final Answer", "ONE");
         }
-        else if (zone == ColorVisionBase.ZONE.TWO) {
+        else if (zone == QRVisionBase.ZONE.TWO) {
             telemetry.addData("Final Answer", "TWO");
         }
-        else if (zone == ColorVisionBase.ZONE.THREE) {
+        else if (zone == QRVisionBase.ZONE.THREE) {
             telemetry.addData("Final Answer", "THREE");
         }
         else {
