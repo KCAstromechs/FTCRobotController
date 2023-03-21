@@ -69,7 +69,7 @@ public class QRVisionBase {
                         .build();
         BarcodeScanner scanner = BarcodeScanning.getClient();
         // retrieve bitmap
-        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save).copy(Bitmap.Config.ARGB_8888,false);
+        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save);
         if (bitmap == null) {
             telemetry.addData("bitmap","NO BITMAP??");
             telemetry.update();
@@ -85,7 +85,7 @@ public class QRVisionBase {
                         // Task completed successfully
                         for (Barcode barcode: barcodes) {
                             rawValue = barcode.getRawValue();
-                            currentZone = ZONE.ONE;
+                            //currentZone = ZONE.ONE;
                             //telemetry.addData("rawValue", rawValue);
 
                         }
@@ -98,7 +98,7 @@ public class QRVisionBase {
                         // Task failed with an exception
                         // ...
                         //telemetry.addData("success?","NO");
-                        currentZone = ZONE.TWO;
+                        //currentZone = ZONE.TWO;
                         barcodeComplete = true;
                         e.printStackTrace();
                     }
@@ -116,6 +116,19 @@ public class QRVisionBase {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        bitmap.recycle();
+        if (rawValue == "3409-1"){
+            currentZone = ZONE.ONE;
+        }
+        else if (rawValue == "3409-2"){
+            currentZone = ZONE.TWO;
+        }
+        else if (rawValue == "3409-3"){
+            currentZone = ZONE.THREE;
+        }
+        else {
+            currentZone = ZONE.NOT_DETECTED;
         }
         telemetry.addData("rawValue", rawValue);
         return currentZone; // placeholder

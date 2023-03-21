@@ -54,7 +54,7 @@ public class ColorVisionBase {
         int minColorDifference = 20;
 
         // retrieve bitmap
-        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save).copy(Bitmap.Config.ARGB_8888,false);
+        Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save);
         if (bitmap == null) {
             return ZONE.NOT_DETECTED;
         }
@@ -64,9 +64,10 @@ public class ColorVisionBase {
         redValue = Color.red(color);
         greenValue = Color.green(color);
         blueValue = Color.blue(color);
-        double redToGreen = redValue / greenValue;
-        double redToBlue = redValue / blueValue;
-
+        double redToGreen = (double) redValue / (double) greenValue;
+        double redToBlue = (double) redValue / (double) blueValue;
+        telemetry.addData("redToGreen", redToGreen);
+        telemetry.addData("redToBlue", redToBlue);
         // loop thru bitmap
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
@@ -87,6 +88,9 @@ public class ColorVisionBase {
 
             }
         }
+        telemetry.addData("red pixels",pixelCountR);
+        telemetry.addData("green pixels",pixelCountG);
+        telemetry.addData("blue pixels", pixelCountB);
         if (pixelCountR > detectionThreshold || pixelCountG > detectionThreshold || pixelCountB > detectionThreshold) {
             if(pixelCountR > pixelCountG && pixelCountR > pixelCountB)
                 mostRGB = ZONE.ONE;
@@ -97,6 +101,7 @@ public class ColorVisionBase {
             else
                 mostRGB = ZONE.NOT_DETECTED;
         }
+        bitmap.recycle();
         return mostRGB;
     }
 

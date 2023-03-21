@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.os.Handler;
+import android.widget.ZoomControls;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
@@ -109,11 +111,13 @@ public class CameraBase {
         cameraManager = ClassFactory.getInstance().getCameraManager();
         cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
-        initializeFrameQueue(2);
+        initializeFrameQueue(20);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
 
         openCamera();
         startCamera();
+
+        CameraControl c = camera.getControl(CameraControl.class);
 
         myExposureControl= camera.getControl(ExposureControl.class);
         myGainControl = camera.getControl(GainControl.class);
@@ -157,12 +161,15 @@ public class CameraBase {
             // loop until we receive an image from the camera
             boolean haveBitmap = false;
             while (!haveBitmap) {
-                Bitmap bmp = frameQueue.poll();
+                Bitmap bmp = frameQueue.poll().copy(Bitmap.Config.ARGB_8888,true);
+                ret = bmp.copy(Bitmap.Config.ARGB_8888,false);
+                //Bitmap bmp = Bitmap.createBitmap(frameQueue.poll().copy(Bitmap.Config.ARGB_8888,true),minX,minY,(maxX-minX),(maxY-minY));
                 if (bmp != null) {
                     // if we have a frame, run operations and break from the loop
                     onNewFrame(bmp, save);
                     haveBitmap = true;
-                    ret = bmp;
+                    //ret = bmp;
+                    bmp.recycle();
                 }
             }
 
