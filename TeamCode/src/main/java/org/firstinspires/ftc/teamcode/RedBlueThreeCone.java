@@ -57,7 +57,7 @@ public class RedBlueThreeCone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
+        ColorVisionBase.ZONE zone = vision.findZone(275,350,230,400, false);
         timeRemainingAfterVision = getRuntime();
         if (zone == ColorVisionBase.ZONE.ONE) {
             telemetry.addData("Final Answer", "ONE");
