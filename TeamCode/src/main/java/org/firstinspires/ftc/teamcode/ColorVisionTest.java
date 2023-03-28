@@ -20,7 +20,7 @@ public class ColorVisionTest extends LinearOpMode {
         waitForStart();
 
         // now let's run vision, full image is 640 x 480
-        ColorVisionBase.ZONE zone = vision.findZone(320,400,210,350, true);
+        ColorVisionBase.ZONE zone = vision.findZone(275,350,230,400, true);
         if (zone == ColorVisionBase.ZONE.ONE) {
             telemetry.addData("Final Answer", "ONE");
         }
