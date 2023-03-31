@@ -75,10 +75,10 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
             // THE RELOCATION OF THE SIGNAL CONE
             //-------------------------------------------------------------------------------
 
-            rb.driveStraightInches(1, 0, .3);
+            rb.driveStraightInches(1, 0, .3, 1000);
             rb.lifterLow();
             rb.driveStrafeInches(38, 0, .4, 40000);
-            rb.driveStraightInches(29, 0, .4);
+            rb.driveStraightInches(29, 0, .4, 3000);
             rb.turnToAngle(-85, .3);
             rb.horizontalJunctionDistanceDetect(true, -85, 865, .4);
             sleep(250);
@@ -91,11 +91,11 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
 
             rb.collectorOpen();
             sleep(250);
-            rb.driveStraightInches(2, -85, -.3);
+            rb.driveStraightInches(2, -85, -.3, 2000);
 
 
             rb.turnToAngle(90, .3);
-            rb.driveStraightInches(3, 90, -.2);
+            rb.driveStraightInches(3, 90, -.2,2000);
 
             rb.colorSensorDetect(false, 90, false, 2500);
             rb.lifterCS5();
@@ -104,7 +104,7 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
             sleep(250);
             rb.lifterMedium();
             sleep(250);
-            rb.driveStraightInches(22, 95, -.4);
+            rb.driveStraightInches(22, 95, -.4, 4000);
             rb.turnToAngle(-90, -.3);
             // 1032, 221
             rb.horizontalJunctionDistanceDetect(false, -90, 1500, .4);
@@ -118,14 +118,14 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
             rb.collectorOpen();
             sleep(250);
             rb.lifterHigh();
-            rb.driveStraightInches(3, -95, -.3);
+            rb.driveStraightInches(3, -95, -.3, 2000);
             rb.turnToAngle(0, .3);
 
 
             switch (zone) {
                 case ONE:
-                    rb.driveStraightInches(18, 0, -.4);
-                    rb.driveStrafeInches(32, 0, .5, 3000);
+                    rb.driveStraightInches(18, 0, -.4, 3000);
+                    rb.driveStrafeInches(32, 0, .5, 4000);
 
 
                     break;
@@ -137,8 +137,8 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
                     break;
 
                 case THREE:
-                    rb.driveStraightInches(15, 0, -.4);
-                    rb.driveStrafeInches(35, 0, -.5, 3000);
+                    rb.driveStraightInches(15, 0, -.4,3000);
+                    rb.driveStrafeInches(25, 0, -.5, 4000);
                     break;
             }
 

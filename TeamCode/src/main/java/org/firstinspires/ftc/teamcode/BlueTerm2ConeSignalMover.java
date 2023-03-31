@@ -56,18 +56,19 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.ZONE zone = vision.findZone(275,350,230,400, false);
-        /*
+        ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
+
+
 
         try {
 
 
             timeRemainingAfterVision = getRuntime();
-            if (zone == VisionBase.ZONE.ONE) {
+            if (zone == ColorVisionBase.ZONE.ONE) {
                 telemetry.addData("Final Answer", "ONE");
-            } else if (zone == VisionBase.ZONE.TWO) {
+            } else if (zone == ColorVisionBase.ZONE.TWO) {
                 telemetry.addData("Final Answer", "TWO");
-            } else if (zone == VisionBase.COLOR.THREE) {
+            } else if (zone == ColorVisionBase.ZONE.THREE) {
                 telemetry.addData("Final Answer", "THREE");
             } else {
                 telemetry.addData("Final Answer", "NOT DETECTED");
@@ -78,10 +79,10 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
             // THE RELOCATION OF THE SIGNAL CONE
             //-------------------------------------------------------------------------------
 
-            rb.driveStraightInches(1, 0, .3);
+            rb.driveStraightInches(1, 0, .3,1500);
             rb.lifterLow();
-            rb.driveStrafeInches(35, 0, -.4);
-            rb.driveStraightInches(27, 0, .4);
+            rb.driveStrafeInches(35, 0, -.4, 4000);
+            rb.driveStraightInches(27, 0, .4, 3000);
             rb.turnToAngle(85, .3);
             rb.horizontalJunctionDistanceDetect(false, 90, 865, .4);
             sleep(250);
@@ -94,9 +95,9 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
 
             rb.collectorOpen();
             sleep(250);
-            rb.driveStraightInches(2, 90, -.3);
+            rb.driveStraightInches(2, 90, -.3, 1500);
             rb.turnToAngle(-85, .3);
-            rb.driveStraightInches(3, -85, -.2);
+            rb.driveStraightInches(3, -85, -.2, 1500);
             rb.colorSensorDetect(true, -85, true, 3000);
             rb.lifterCS5();
             rb.coneDrive(4, -85, .3);
@@ -107,7 +108,7 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
             sleep(500);
             rb.lifterMedium();
             sleep(250);
-            rb.driveStraightInches(22, -85, -.4);
+            rb.driveStraightInches(22, -85, -.4, 3000);
             rb.turnToAngle(90, -.3);
 
             rb.horizontalJunctionDistanceDetect(true, 95, 3000, .4);
@@ -121,14 +122,14 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
             rb.collectorOpen();
             sleep(250);
             rb.lifterHigh();
-            rb.driveStraightInches(3, 95, -.3);
+            rb.driveStraightInches(3, 95, -.3, 1500);
             rb.turnToAngle(0, .3);
 
 
             switch (zone) {
                 case THREE:
-                    rb.driveStraightInches(11, 0, -.4);
-                    rb.driveStrafeInches(32, 0, -.5);
+                    rb.driveStraightInches(11, 0, -.4, 3000);
+                    rb.driveStrafeInches(32, 0, -.5, 4000);
 
 
                     break;
@@ -140,8 +141,8 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
                     break;
 
                 case ONE:
-                    rb.driveStraightInches(11, 0, -.4);
-                    rb.driveStrafeInches(30, 0, .5);
+                    rb.driveStraightInches(11, 0, -.4, 3000);
+                    rb.driveStrafeInches(30, 0, .5, 4000);
                     break;
             }
 
@@ -155,7 +156,7 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
             rb.motorShutdown();
         }
 
-         */
+
     }
 
 

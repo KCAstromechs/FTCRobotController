@@ -449,8 +449,9 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
      * This particular method uses the other driveStraight methods, but it does the conversion of encoder clicks
      * by multiplying the inches you want by a factor to convert.
      */
-    public void driveStraightInches(double inches, double desiredAngle, double power) {
-        driveStraight((int) (inches * 147.5), desiredAngle, power);
+    public void driveStraightInches(double inches, double desiredAngle, double power,
+    long timeLimitMS) throws DriveTimeoutException {
+        driveStraight((int) (inches * 147.5), desiredAngle, power, timeLimitMS);
     }
 
     /***
@@ -462,8 +463,9 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
      *
      * runs drivestraight in the cases that the robot is not using a degree measurement that falls within the angle discontinuity
      */
-    public void driveStraight(int encoderClicks, double desiredAngle, double power) {
-        driveStraight(encoderClicks, desiredAngle, power, false);
+    public void driveStraight(int encoderClicks, double desiredAngle, double power,
+    long timeLimitMs) throws DriveTimeoutException {
+        driveStraight(encoderClicks, desiredAngle, power, false, timeLimitMs);
     }
 
     /***
@@ -476,7 +478,10 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
      */
 
 
-    public void driveStraight(int encoderClicks, double desiredAngle, double power, boolean useCheat) {
+    public void driveStraight(int encoderClicks, double desiredAngle, double power, boolean useCheat,
+      long timeLimitMS) throws DriveTimeoutException {
+
+        long endTimeNS = (System.nanoTime() + (timeLimitMS*1000000L));
 
         //normalizes the angle and effectively moves where the discontinutity is for the purpose of this singlusar movement
         if (useCheat) {
@@ -514,6 +519,10 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             _backRight.setPower(power - driveCorrect);
             _frontLeft.setPower(power + driveCorrect);
             _backLeft.setPower(power + driveCorrect);
+
+            if (System.nanoTime() > endTimeNS){
+                throw new DriveTimeoutException();
+            }
 
         }
         //turns all the motors off after the desired distance is reached

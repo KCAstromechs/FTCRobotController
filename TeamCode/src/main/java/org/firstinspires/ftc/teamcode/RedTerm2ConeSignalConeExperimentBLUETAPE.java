@@ -56,15 +56,17 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.ZONE zone = vision.findZone(275,350,230,400, false);
-        /*
+
+        ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
+
+
         try {
             timeRemainingAfterVision = getRuntime();
-            if (zone == VisionBase.ZONE.ONE) {
+            if (zone == ColorVisionBase.ZONE.ONE) {
                 telemetry.addData("Final Answer", "ONE");
-            } else if (zone == VisionBase.ZONE.TWO) {
+            } else if (zone == ColorVisionBase.ZONE.TWO) {
                 telemetry.addData("Final Answer", "TWO");
-            } else if (zone == VisionBase.ZONE.THREE) {
+            } else if (zone == ColorVisionBase.ZONE.THREE) {
                 telemetry.addData("Final Answer", "THREE");
             } else {
                 telemetry.addData("Final Answer", "NOT DETECTED");
@@ -75,10 +77,10 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
             // THE RELOCATION OF THE SIGNAL CONE
             //-------------------------------------------------------------------------------
 
-            rb.driveStraightInches(1, 0, .3);
+            rb.driveStraightInches(1, 0, .3,1500);
             rb.lifterLow();
-            rb.driveStrafeInches(36, 0, .4);
-            rb.driveStraightInches(29, 0, .4);
+            rb.driveStrafeInches(36, 0, .4, 4000);
+            rb.driveStraightInches(29, 0, .4, 3000);
             rb.turnToAngle(-85, .3);
             rb.horizontalJunctionDistanceDetect(true, -85, 865, .4);
             sleep(250);
@@ -91,11 +93,11 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
 
             rb.collectorOpen();
             sleep(250);
-            rb.driveStraightInches(2, -85, -.3);
+            rb.driveStraightInches(2, -85, -.3, 1500);
 
 
             rb.turnToAngle(90, .3);
-            rb.driveStraightInches(3, 90, -.2);
+            rb.driveStraightInches(3, 90, -.2, 1500);
 
             rb.colorSensorDetect(true, 90, false, 2500);
             rb.lifterCS5();
@@ -104,7 +106,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
             sleep(250);
             rb.lifterMedium();
             sleep(250);
-            rb.driveStraightInches(22, 95, -.4);
+            rb.driveStraightInches(22, 95, -.4, 3000);
             rb.turnToAngle(-90, -.3);
             // 1032, 221
             rb.horizontalJunctionDistanceDetect(false, -90, 1500, .4);
@@ -118,14 +120,14 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
             rb.collectorOpen();
             sleep(250);
             rb.lifterHigh();
-            rb.driveStraightInches(3, -95, -.3);
+            rb.driveStraightInches(3, -95, -.3, 1500);
             rb.turnToAngle(0, .3);
 
 
             switch (zone) {
                 case ONE:
-                    rb.driveStraightInches(18, 0, -.4);
-                    rb.driveStrafeInches(32, 0, .5);
+                    rb.driveStraightInches(18, 0, -.4, 3000);
+                    rb.driveStrafeInches(32, 0, .5, 4000);
 
 
                     break;
@@ -137,8 +139,8 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
                     break;
 
                 case THREE:
-                    rb.driveStraightInches(15, 0, -.4);
-                    rb.driveStrafeInches(35, 0, -.5);
+                    rb.driveStraightInches(15, 0, -.4, 3000);
+                    rb.driveStrafeInches(25, 0, -.5, 4000);
                     break;
             }
 
@@ -157,7 +159,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
 
 
 
- */
+
 
     }
 
