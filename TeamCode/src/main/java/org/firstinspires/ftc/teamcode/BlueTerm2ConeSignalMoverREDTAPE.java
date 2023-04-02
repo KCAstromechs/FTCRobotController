@@ -93,7 +93,7 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
             rb.driveStraightInches(2, 90, -.3, 1500);
             rb.turnToAngle(-85, .3);
             rb.driveStraightInches(3, -85, -.2, 1500);
-            rb.colorSensorDetect(false, -85, true, 3000);
+            rb.colorSensorDetect(false, -85, true, 3000); //false true
             rb.lifterCS5();
             rb.coneDrive(4, -85, .3);
             rb.collectorClose();
@@ -107,6 +107,7 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
             rb.turnToAngle(90, -.3);
 
             //problem child
+
             rb.horizontalJunctionDistanceDetect(true, 95, 3000, .4);
             sleep(250);
             rb.horizontalJunctionDistanceDetect(false, 95, 500, .3);
@@ -118,14 +119,14 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
             rb.collectorOpen();
             sleep(250);
             rb.lifterHigh();
-            rb.driveStraightInches(3, 95, -.3, 1500);
-            rb.turnToAngle(0, .3);
+            rb.driveStraightInches(2, 95, -.3, 1500);
+            rb.turnToAngle(5, .3);
 
 
             switch (zone) {
                 case THREE:
-                    rb.driveStraightInches(11, 0, -.4, 3000);
-                    rb.driveStrafeInches(32, 0, -.5, 4000);
+                    rb.driveStraightInches(11, 5, -.4, 3000);
+                    rb.driveStrafeInches(32, 5, -.5, 4000);
 
 
                     break;
@@ -137,8 +138,8 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
                     break;
 
                 case ONE:
-                    rb.driveStraightInches(11, 0, -.4, 3000);
-                    rb.driveStrafeInches(25, 0, .5, 4000);
+                    rb.driveStraightInches(11, 5, -.4, 3000);
+                    rb.driveStrafeInches(35, 5, .5, 4000);
                     break;
             }
         } catch (DriveTimeoutException dte) {
@@ -149,7 +150,7 @@ public class BlueTerm2ConeSignalMoverREDTAPE extends LinearOpMode {
         }
         rb.collectorClose();
         rb.lifterZero();
-        rb.turnToAngle(0, 0.2);
+        rb.turnToAngle(5, 0.2);
         sleep(5000);
 
 

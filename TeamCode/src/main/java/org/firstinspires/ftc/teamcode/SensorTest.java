@@ -14,12 +14,14 @@ public class SensorTest extends OpMode{
     private ElapsedTime runtime = new ElapsedTime();
     public ColorSensor colorSensor;
     public DistanceSensor distanceSensor;
+    public M2RobotBase rb;
 
 
 
 
     @Override
     public void init() {
+        rb = new M2RobotBase(hardwareMap, telemetry);
 
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         distanceSensor = hardwareMap.get(DistanceSensor.class,"distanceSensor");
@@ -60,7 +62,22 @@ public class SensorTest extends OpMode{
     telemetry.addData("red sensed", colorSensor.red());
     telemetry.addData("green sensed", colorSensor.green());
     telemetry.addData("blue sensed", colorSensor.blue());
-    telemetry.addData("distance", distanceSensor.getDistance(DistanceUnit.CM));
+
+
+
+    boolean testVariable = true;
+    if (gamepad1.a){
+        testVariable = true;
+    }
+    if (gamepad1.b){
+        testVariable = false;
+    }
+
+    if (gamepad1.x){
+        telemetry.addData("distance sensor delay in MS", (rb.distanceSensorDelayTest()*.000001));
+    }
+
+    telemetry.addData("A = SLOW, B = OLD", rb.getDistanceReading());
     telemetry.update();
     }
 

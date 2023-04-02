@@ -39,7 +39,10 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     DistanceSensor _distanceSensor;
 
     int lifterAutoAdjust = (6*100);
-    double desiredDistanceFromCone = 0;
+    long endTimeNS = 0;
+    boolean slowPingMode = true;
+    double lastDistanceReading = 0.0;
+    double desiredDistanceFromCone = 2;
     double RIGHT_COLLECTOR_CLOSED = .45;
     double RIGHT_COLLECTOR_OPEN = .25;
     double LEFT_COLLECTOR_CLOSED = .65;
@@ -66,7 +69,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     double _turnPower;
     double FCSpeedK = 2;
     Telemetry _telemetry;
-    final double K_TURN = 0.02;
+    final double K_TURN = 0.03;
     final double K_STRAFE = 0.001;
     public static final double DRIVE_STRAFE_ENCODER_TO_INCHES = 98;
     final double lifterSpeed = 1;
@@ -687,6 +690,33 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         return Math.abs(a1 - (a2 + 360));
     }
 
+    public double getDistanceReading(){
+
+        if (slowPingMode) {
+            if (System.nanoTime() > endTimeNS) {
+                lastDistanceReading = _distanceSensor.getDistance(DistanceUnit.CM);
+                //50 is the amount of time we want to wait in between asking the question
+                endTimeNS = (System.nanoTime() + (50 * 1000000L));
+            }
+            return lastDistanceReading;
+        }
+        return _distanceSensor.getDistance(DistanceUnit.CM);
+    }
+
+    public void setDistanceSLowMode(boolean _s){
+        slowPingMode =_s;
+    }
+
+    public long distanceSensorDelayTest(){
+        long startTime = System.nanoTime();
+        long timeAfterAnswer = 0;
+        _distanceSensor.getDistance(DistanceUnit.CM);
+        timeAfterAnswer = System.nanoTime();
+        return (startTime - timeAfterAnswer);
+
+    }
+
+
     public void horizontalJunctionDistanceDetect(boolean moveLeft, float desiredAngle, int desiredClicks, double power) throws InterruptedException {
         //NEVER EVER NEVER EVER NEVER EVER MAKE THE POWER NEGATIVE IT'LL MESS EVERYTHING UP
         _frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -696,12 +726,12 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         Thread.sleep(250);
 
 //15
-            while ( (Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 20) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
+            while ( (Math.abs(getDistanceReading() - 4.5) > 20) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks)) {
                 float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 double driveCorrect = (zAngle - desiredAngle) * K_TURN;
                 double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
 
-                _telemetry.addData("HORIZONTAL distance", _distanceSensor.getDistance(DistanceUnit.CM));
+                _telemetry.addData("HORIZONTAL distance", getDistanceReading());
                 _telemetry.update();
 
 
@@ -743,9 +773,9 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         Thread.sleep(250);
 
 
-        while (((Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) > 5) && ((Math.abs(_distanceSensor.getDistance(DistanceUnit.CM) - 4.5) < 25))) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks))  {
+        while (((Math.abs(getDistanceReading() - 4.5) > 5) && ((Math.abs(getDistanceReading() - 4.5) < 25))) && (Math.abs(_frontRight.getCurrentPosition()) < desiredClicks))  {
 
-             _telemetry.addData("currentDistance", _distanceSensor.getDistance(DistanceUnit.CM));
+             _telemetry.addData("currentDistance", getDistanceReading());
              _telemetry.update();
 
                 _frontLeft.setPower(.2);
@@ -869,7 +899,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Thread.sleep(250);
 
-        while (Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveMaxDistanceInches*147.5) && _distanceSensor.getDistance(DistanceUnit.CM) - 4.5 >= desiredDistanceFromCone){
+        while (Math.abs(_frontLeft.getCurrentPosition()) < (coneDriveMaxDistanceInches*147.5) && getDistanceReading() - 4.5 >= desiredDistanceFromCone){
             float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
             double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
@@ -886,7 +916,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _backRight.setPower(0);
 
         // did we hit max distance or see the cone?
-        if (_distanceSensor.getDistance(DistanceUnit.CM) - 4.5 <= 9) {
+        if (getDistanceReading() - 4.5 <= 9) {
             _telemetry.addData("status","detected");
             _telemetry.update();
             return true;
@@ -992,10 +1022,10 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
         double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)))) * 1.4;
 
-        _telemetry.addData("distance", (_distanceSensor.getDistance(DistanceUnit.CM)));
+        _telemetry.addData("distance", (getDistanceReading()));
         _telemetry.update();
 
-        if (autoGrab && (_distanceSensor.getDistance(DistanceUnit.CM) - 6.0) <= 0) {
+        if (autoGrab && (getDistanceReading() - 6.0) <= 0) {
             // MAKE SURE ROBOT IS SAFE DURING THREAD.SLEEP
             _inputX = 0;
             _inputY = 0;

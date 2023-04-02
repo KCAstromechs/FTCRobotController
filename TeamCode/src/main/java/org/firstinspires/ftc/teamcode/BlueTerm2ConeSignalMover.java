@@ -123,13 +123,13 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
             sleep(250);
             rb.lifterHigh();
             rb.driveStraightInches(3, 95, -.3, 1500);
-            rb.turnToAngle(0, .3);
+            rb.turnToAngle(5, .3);
 
 
             switch (zone) {
                 case THREE:
-                    rb.driveStraightInches(11, 0, -.4, 3000);
-                    rb.driveStrafeInches(32, 0, -.5, 4000);
+                    rb.driveStraightInches(11, 5, -.4, 3000);
+                    rb.driveStrafeInches(32, 5, -.5, 4000);
 
 
                     break;
@@ -141,14 +141,14 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
                     break;
 
                 case ONE:
-                    rb.driveStraightInches(11, 0, -.4, 3000);
-                    rb.driveStrafeInches(30, 0, .5, 4000);
+                    rb.driveStraightInches(11, 5, -.4, 3000);
+                    rb.driveStrafeInches(35, 5, .5, 4000);
                     break;
             }
 
             rb.collectorClose();
             rb.lifterZero();
-            rb.turnToAngle(0, 0.2);
+            rb.turnToAngle(5, 0.2);
             sleep(5000);
 
 
