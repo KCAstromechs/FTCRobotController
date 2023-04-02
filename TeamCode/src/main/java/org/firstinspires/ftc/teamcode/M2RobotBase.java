@@ -1044,6 +1044,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         }
 
         if (UseSlowMode || (_lifter.getCurrentPosition() > MID_HEIGHT-200)) {
+            _turnPower *= 1.25;
              fLPower = ((robotX + robotY) + _turnPower) / K;
              fRPower = ((robotX - robotY) - _turnPower) / K;
              bRPower = ((robotX + robotY) - _turnPower) / K;

@@ -89,10 +89,6 @@ public class M2FieldCentric extends OpMode {
             }
         }
 
-        // drive now :)
-        rb.FCDrive(Math.cbrt(inputX)*.75, Math.cbrt(inputY)*.75, Math.cbrt(turnPower)*.5);
-
-
         // RESET ANGLE ?
         if (gamepad1.left_bumper) {
             angleOffset = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
@@ -162,6 +158,8 @@ public class M2FieldCentric extends OpMode {
             rb.lifterZero();
         }
 
+        // drive now :)
+        rb.FCDrive(Math.cbrt(inputX)*.75, Math.cbrt(inputY)*.75, Math.cbrt(turnPower)*.5);
 
         try {
             rb.performFCUpdates(angleOffset, slow, autoGrab);
