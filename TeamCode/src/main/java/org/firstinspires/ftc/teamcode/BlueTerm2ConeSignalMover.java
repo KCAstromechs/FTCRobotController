@@ -56,7 +56,7 @@ public class BlueTerm2ConeSignalMover extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.ZONE zone = vision.findZone(225,300,305,360, true);
+        ColorVisionBase.ZONE zone = vision.findZone(230,305,180,320, true);
 
 
 

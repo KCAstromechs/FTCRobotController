@@ -52,6 +52,7 @@ public class ColorVisionBase {
         int pixelCountB = 0;
         int detectionThreshold = 50;
         int minColorDifference = 20;
+        int countThreshold = 500;
 
         // retrieve bitmap
         Bitmap bitmap = cb.returnBitmap(minX, maxX, minY, maxY, save);
@@ -91,7 +92,7 @@ public class ColorVisionBase {
         telemetry.addData("red pixels",pixelCountR);
         telemetry.addData("green pixels",pixelCountG);
         telemetry.addData("blue pixels", pixelCountB);
-        if (pixelCountR > detectionThreshold || pixelCountG > detectionThreshold || pixelCountB > detectionThreshold) {
+        if (pixelCountR > countThreshold || pixelCountG > countThreshold || pixelCountB > countThreshold) {
             if(pixelCountR > pixelCountG && pixelCountR > pixelCountB)
                 mostRGB = ZONE.ONE;
             else if (pixelCountG > pixelCountR && pixelCountG > pixelCountB)
