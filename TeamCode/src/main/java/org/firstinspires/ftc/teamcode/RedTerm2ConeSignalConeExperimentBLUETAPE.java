@@ -57,7 +57,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         waitForStart();
 
 
-        ColorVisionBase.ZONE zone = vision.findZone(230,305,180,320, true);
+        ColorVisionBase.ZONE zone = vision.findZone(230,305,180,320, false);
 
 
         try {
@@ -79,7 +79,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
 
             rb.driveStraightInches(1, 0, .3,1500);
             rb.lifterLow();
-            rb.driveStrafeInches(36, 0, .4, 4000);
+            rb.driveStrafeInches(36, 0, .4, 3000);
             rb.driveStraightInches(29, 0, .4, 3000);
             rb.turnToAngle(-85, .3);
             rb.horizontalJunctionDistanceDetect(true, -85, 865, .4);
@@ -89,7 +89,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
             rb.forwardJunctionDistanceDetect(444);
             sleep(250);
             rb.scootLifterDown();
-            sleep(500);
+            sleep(250);
 
             rb.collectorOpen();
             sleep(250);
@@ -152,7 +152,7 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         rb.collectorClose();
         rb.lifterZero();
         rb.turnToAngle(5,0.2);
-        sleep(5000);
+        sleep(2500);
 
 
 
