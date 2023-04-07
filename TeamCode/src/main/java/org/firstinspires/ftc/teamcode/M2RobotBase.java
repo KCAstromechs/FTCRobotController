@@ -43,9 +43,9 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     boolean slowPingMode = true;
     double lastDistanceReading = 0.0;
     double desiredDistanceFromCone = 2;
-    double RIGHT_COLLECTOR_CLOSED = .45;
-    double RIGHT_COLLECTOR_OPEN = .25;
-    double LEFT_COLLECTOR_CLOSED = .65;
+    double RIGHT_COLLECTOR_CLOSED = .4;//45
+    double RIGHT_COLLECTOR_OPEN = .25;//25
+    double LEFT_COLLECTOR_CLOSED = .75; //65
     double LEFT_COLLECTOR_OPEN = .9;
     int lifterZero = 0;
     int DOWN_CORRECT = 500;
