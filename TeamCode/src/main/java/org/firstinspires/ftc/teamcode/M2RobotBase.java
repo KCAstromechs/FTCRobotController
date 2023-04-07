@@ -52,8 +52,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
     int TOP_SAFETY = 4800;
     int BOTTOM_SAFETY = -200;
     int ZERO_HEIGHT = 0;
-    int LOW_HEIGHT = 1750;
-    int MID_HEIGHT = 2900;
+    int LOW_HEIGHT = 1850;
+    int MID_HEIGHT = 3000;
     int HIGH_HEIGHT = 4000;
     int CONE_STACK_LEVEL_1 = 50;
     int CONE_STACK_LEVEL_2 = 185;
@@ -695,6 +695,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         if (slowPingMode) {
             if (System.nanoTime() > endTimeNS) {
                 lastDistanceReading = _distanceSensor.getDistance(DistanceUnit.CM);
+               // _distanceSensor.close();
                 //50 is the amount of time we want to wait in between asking the question
                 endTimeNS = (System.nanoTime() + (50 * 1000000L));
             }
@@ -903,7 +904,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             float zAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             double driveCorrect = (zAngle - desiredAngle) * K_TURN;
             double strafeCorrect = (-_frontLeft.getCurrentPosition() - 0.0) * K_STRAFE;  // target is 0, finds the chan
-            _telemetry.addData("status", "seeking");
+            //_telemetry.addData("status", "seeking");
+
             _frontRight.setPower(power - driveCorrect);
             _backRight.setPower(power - driveCorrect);
             _frontLeft.setPower(power + driveCorrect);
@@ -919,11 +921,13 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         if (getDistanceReading() - 4.5 <= 9) {
             _telemetry.addData("status","detected");
             _telemetry.update();
+            _colorSensor.enableLed(false);
             return true;
         }
         else {
             _telemetry.addData("status","distance exceeded");
             _telemetry.update();
+            _colorSensor.enableLed(false);
             return false;
         }
     }
@@ -1022,10 +1026,11 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         double robotX = (_inputX * Math.sin(zAngle)) + (_inputY * Math.sin(zAngle + (PI / 2)));
         double robotY = ((_inputX * Math.cos(zAngle)) + (_inputY * Math.cos(zAngle + (PI / 2)))) * 1.4;
 
-        _telemetry.addData("distance", (getDistanceReading()));
-        _telemetry.update();
+
 
         if (autoGrab && (getDistanceReading() - 6.0) <= 0) {
+            _telemetry.addData("distance", (getDistanceReading()));
+            _telemetry.update();
             // MAKE SURE ROBOT IS SAFE DURING THREAD.SLEEP
             _inputX = 0;
             _inputY = 0;
@@ -1042,6 +1047,8 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
             _lifter.setPower(.5);
             _lifter.setTargetPosition((_lifter.getCurrentPosition() +lifterAutoAdjust));
         }
+
+
 
         if (UseSlowMode || (_lifter.getCurrentPosition() > MID_HEIGHT-200)) {
             _turnPower *= 1.25;

@@ -62,6 +62,7 @@ public class M2FieldCentric extends OpMode {
     @Override
     public void loop() {
         // input from gamepad sticks
+        rb.setDistanceSLowMode(true);
         double turnPower = (gamepad1.left_stick_x);
         double inputX = gamepad1.right_stick_x;
         double inputY = -gamepad1.right_stick_y;

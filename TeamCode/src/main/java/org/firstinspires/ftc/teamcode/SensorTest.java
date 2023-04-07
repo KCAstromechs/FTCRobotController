@@ -65,6 +65,7 @@ public class SensorTest extends OpMode{
 
 
 
+
     boolean testVariable = true;
     if (gamepad1.a){
         testVariable = true;
