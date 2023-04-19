@@ -57,7 +57,8 @@ public class RedTerm2ConeSignalConeExperimentBLUETAPE extends LinearOpMode {
         waitForStart();
 
 
-        ColorVisionBase.ZONE zone = vision.findZone(230,305,180,320, false);
+        ColorVisionBase.ZONE zone = vision.findZone(250,325,180,320, true);
+
 
 
         try {

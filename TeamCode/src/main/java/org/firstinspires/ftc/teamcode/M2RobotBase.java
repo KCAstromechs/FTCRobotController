@@ -877,6 +877,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
                 _frontRight.setPower(0);
                 _backLeft.setPower(0);
                 _backRight.setPower(0);
+                _colorSensor.enableLed(false);
                 return true;
             }
         }
@@ -889,6 +890,7 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
         _frontRight.setPower(0);
         _backLeft.setPower(0);
         _backRight.setPower(0);
+        _colorSensor.enableLed(false);
         return false;
     }
 
@@ -941,6 +943,23 @@ public class M2RobotBase extends AstromechsRobotBase implements TankDriveable, S
 //----------------------------------------------------------------------------------------------------------------------------------
 //TELEMETRY AND TROUBLESHOOTING
 //-----------------------------------------------------------------------------------------------------------------------------------
+
+    public void frontLeftTest(){
+       _frontLeft.setPower(.4);
+    }
+    public void backLeftTest(){
+        _backLeft.setPower(.4);
+    }
+    public void frontRightTest(){
+        _frontRight.setPower(.4);
+    }
+    public void backRightTest(){
+        _backRight.setPower(.4);
+    }
+
+    public void turnColorLEDOff(){
+        _colorSensor.enableLed(false);
+    }
 
     public void information() {
         double convertedClicks = _frontLeft.getCurrentPosition() * 147.5;

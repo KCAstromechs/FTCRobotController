@@ -56,7 +56,8 @@ public class RedTerm2ConeSignalConeExperiment extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.ZONE zone = vision.findZone(230,305,180,320, true);
+        ColorVisionBase.ZONE zone = vision.findZone(250,325,180,320, true);
+
         try {
             timeRemainingAfterVision = getRuntime();
             if (zone == ColorVisionBase.ZONE.ONE) {

@@ -26,6 +26,7 @@ public class M2FieldCentric extends OpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         rb = new M2RobotBase(hardwareMap, telemetry, true);
 
+        rb.turnColorLEDOff();
         // original angle
         fieldAngle = -imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
 
