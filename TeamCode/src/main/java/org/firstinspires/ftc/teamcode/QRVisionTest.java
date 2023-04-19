@@ -20,7 +20,7 @@ public class QRVisionTest extends LinearOpMode {
         waitForStart();
 
         // now let's run vision, full image is 640 x 480
-        QRVisionBase.ZONE zone = vision.findZone(320,400,210,350, true);
+        QRVisionBase.ZONE zone = vision.findZone(215,280,250,370, true);
         if (zone == QRVisionBase.ZONE.ONE) {
             telemetry.addData("Final Answer", "ONE");
         }

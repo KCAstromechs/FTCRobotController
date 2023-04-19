@@ -93,7 +93,10 @@ public class ColorVisionBase {
         telemetry.addData("green pixels",pixelCountG);
         telemetry.addData("blue pixels", pixelCountB);
         if (pixelCountR > countThreshold || pixelCountG > countThreshold || pixelCountB > countThreshold) {
-            if(pixelCountR > pixelCountG && pixelCountR > pixelCountB)
+            if (pixelCountR < 1000 && pixelCountB < 1000){
+                mostRGB = ZONE.TWO;
+            }
+            else if(pixelCountR > pixelCountG && pixelCountR > pixelCountB)
                 mostRGB = ZONE.ONE;
             else if (pixelCountG > pixelCountR && pixelCountG > pixelCountB)
                 mostRGB = ZONE.TWO;

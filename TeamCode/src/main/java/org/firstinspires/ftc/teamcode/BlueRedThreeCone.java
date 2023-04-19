@@ -57,7 +57,7 @@ public class BlueRedThreeCone extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        ColorVisionBase.ZONE zone = vision.findZone(230,305,180,320, true);
+        ColorVisionBase.ZONE zone = vision.findZone(215,280,250,370, false);
 
         /*
         try {
