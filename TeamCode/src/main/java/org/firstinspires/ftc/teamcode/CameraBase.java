@@ -94,7 +94,7 @@ public class CameraBase {
     // other
     HardwareMap hardwareMap;
     Telemetry telemetry;
-    int EXPOSURE = 80;
+    int EXPOSURE = 0;
 
     //----------------------------------------------------------------------------------------------
     // Interact with this Class
