@@ -45,10 +45,15 @@ public class NewDriveMethod extends LinearOpMode {
             // Put run blocks here.
             while (opModeIsActive()) {
                 // Put loop blocks here.
-                double backRightPower = gamepad1.left_stick_y + -gamepad1.left_stick_x + gamepad1.right_stick_x;
-                double backLeftPower = gamepad1.left_stick_y + gamepad1.left_stick_x + -gamepad1.right_stick_x;
-                double frontRightPower = gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x;
-                double frontLeftPower = gamepad1.left_stick_y + -gamepad1.left_stick_x + -gamepad1.right_stick_x;
+                if (gamepad1.right_bumper || gamepad1.left_bumper) {
+                    Speed_percentage = 1;
+                } else {
+                    Speed_percentage = 0.6;
+                }
+                double backRightPower = (gamepad1.left_stick_y + -gamepad1.left_stick_x + gamepad1.right_stick_x) * Speed_percentage;
+                double backLeftPower = (gamepad1.left_stick_y + gamepad1.left_stick_x + -gamepad1.right_stick_x) * Speed_percentage;
+                double frontRightPower = (gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * Speed_percentage;
+                double frontLeftPower = (gamepad1.left_stick_y + -gamepad1.left_stick_x + -gamepad1.right_stick_x) * Speed_percentage;
 
                 telemetry.addData("Power of backLeft", backLeftPower);
                 telemetry.addData("Power of backRight", backRightPower);
