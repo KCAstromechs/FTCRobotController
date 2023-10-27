@@ -51,10 +51,17 @@ public class NewDriveMethod extends LinearOpMode {
                     Speed_percentage = 0.6;
                 }
 
-                double backRightPower = (gamepad1.left_stick_y + -gamepad1.left_stick_x + gamepad1.right_stick_x) * Speed_percentage;
-                double backLeftPower = (gamepad1.left_stick_y + gamepad1.left_stick_x + -gamepad1.right_stick_x) * Speed_percentage;
-                double frontRightPower = (gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * Speed_percentage;
-                double frontLeftPower = (gamepad1.left_stick_y + -gamepad1.left_stick_x + -gamepad1.right_stick_x) * Speed_percentage;
+                double robotInputY = gamepad1.left_stick_y;
+                double robotInputX = gamepad1.left_stick_x;
+
+                double theta = 0;
+
+                double robotInputY = -(gamepad1.left_stick_y * Math.sin(theta) + gamepad1.left_stick_y * Math.cos(theta));
+
+                double backRightPower = (robotInputY + -robotInputX + gamepad1.right_stick_x) * Speed_percentage;
+                double backLeftPower = (robotInputY + robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
+                double frontRightPower = (robotInputY + robotInputX + gamepad1.right_stick_x) * Speed_percentage;
+                double frontLeftPower = (robotInputY + -robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
 
                 telemetry.addData("Power of backLeft", backLeftPower);
                 telemetry.addData("Power of backRight", backRightPower);
