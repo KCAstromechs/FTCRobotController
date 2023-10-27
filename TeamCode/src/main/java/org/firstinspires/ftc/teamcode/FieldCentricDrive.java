@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "NewDriveMethod (Java)")
 
-public class NewDriveMethod extends LinearOpMode {
+public class FieldCentricDrive extends LinearOpMode {
 
     private DcMotor backLeft;
     private DcMotor frontLeft;
@@ -51,12 +51,13 @@ public class NewDriveMethod extends LinearOpMode {
                     Speed_percentage = 0.6;
                 }
 
-                double robotInputY = gamepad1.left_stick_y;
-                double robotInputX = gamepad1.left_stick_x;
+//                double robotInputY = gamepad1.left_stick_y;
+//                double robotInputX = gamepad1.left_stick_x;
 
                 double theta = 0;
 
-                double robotInputY = -(gamepad1.left_stick_y * Math.sin(theta) + gamepad1.left_stick_y * Math.cos(theta));
+                double robotInputY = gamepad1.left_stick_y * Math.cos(theta) + gamepad1.left_stick_x * Math.sin(theta);
+                double robotInputX = gamepad1.left_stick_y * Math.sin(theta) + gamepad1.left_stick_x * Math.cos(theta);
 
                 double backRightPower = (robotInputY + -robotInputX + gamepad1.right_stick_x) * Speed_percentage;
                 double backLeftPower = (robotInputY + robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
