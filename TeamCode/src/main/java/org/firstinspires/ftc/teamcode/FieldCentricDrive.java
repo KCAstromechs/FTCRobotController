@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "NewDriveMethod (Java)")
+@TeleOp(name = "FieldCentricDrive (Java)")
 
 public class FieldCentricDrive extends LinearOpMode {
 
@@ -37,7 +37,7 @@ public class FieldCentricDrive extends LinearOpMode {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         Speed_percentage = 0.6;
         // Speed_percentage = 60% speed
         waitForStart();
@@ -54,7 +54,7 @@ public class FieldCentricDrive extends LinearOpMode {
 //                double robotInputY = gamepad1.left_stick_y;
 //                double robotInputX = gamepad1.left_stick_x;
 
-                double theta = 0;
+                double theta = -(3.141592653589 * 0.5);
 
                 double robotInputY = gamepad1.left_stick_y * Math.cos(theta) + gamepad1.left_stick_x * Math.sin(theta);
                 double robotInputX = gamepad1.left_stick_y * Math.sin(theta) + gamepad1.left_stick_x * Math.cos(theta);
@@ -64,10 +64,21 @@ public class FieldCentricDrive extends LinearOpMode {
                 double frontRightPower = (robotInputY + robotInputX + gamepad1.right_stick_x) * Speed_percentage;
                 double frontLeftPower = (robotInputY + -robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
 
-                telemetry.addData("Power of backLeft", backLeftPower);
-                telemetry.addData("Power of backRight", backRightPower);
-                telemetry.addData("Power of frontLeft", frontLeftPower);
-                telemetry.addData("Power of frontRight", frontRightPower);
+                //telemetry.addData("Power of backLeft", backLeftPower);
+                //telemetry.addData("Power of backRight", backRightPower);
+                //telemetry.addData("Power of frontLeft", frontLeftPower);
+                //telemetry.addData("Power of frontRight", frontRightPower);
+                telemetry.addData("stick_y", gamepad1.left_stick_y);
+                telemetry.addData("robotInputY", robotInputY);
+                telemetry.addData("leftYCos", gamepad1.left_stick_y * Math.cos(theta));
+                telemetry.addData("leftXSin", gamepad1.left_stick_x * Math.sin(theta));
+                telemetry.addData("stick_x", gamepad1.left_stick_x);
+                telemetry.addData("robotInputX", robotInputX);
+                telemetry.addData("leftYSin", gamepad1.left_stick_y * Math.sin(theta));
+                telemetry.addData("LeftXCos", gamepad1.left_stick_x * Math.cos(theta));
+                telemetry.addData("rightStickY", gamepad1.right_stick_y);
+                telemetry.addData("rightStickX", gamepad1.right_stick_x);
+
 
                 /* highestPower is the highest value out of all of the absolute values of
                 backRightPower, backLeftPower, frontRightPower, and frontLeftPower. */
