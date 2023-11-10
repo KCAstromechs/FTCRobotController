@@ -120,6 +120,12 @@ public class FieldCentricDriveM2 extends LinearOpMode {
                 //telemetry.addData("Power of backRight", backRightPower);
                 //telemetry.addData("Power of frontLeft", frontLeftPower);
                 //telemetry.addData("Power of frontRight", frontRightPower);
+
+                //telemtry
+
+                //current position (testing for autonomous)
+                telemetry.addData("frontLeft Current Position", frontLeft.getCurrentPosition());
+
                 telemetry.addData("stick_y", gamepad1.left_stick_y);
 
                 telemetry.addData("robotInputY", robotInputY);
