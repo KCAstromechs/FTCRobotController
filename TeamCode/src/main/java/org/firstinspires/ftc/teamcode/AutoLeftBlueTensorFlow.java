@@ -17,8 +17,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name = "AutoLeftRedTensorFlow (Java)", preselectTeleOp = "TeleOpTestOne (Java)")
-public class AutoLeftRedTensorFlow extends LinearOpMode {
+@Autonomous(name = "AutoLeftBlueTensorFlow (Java)", preselectTeleOp = "TeleOpTestOne (Java)")
+public class AutoLeftBlueTensorFlow extends LinearOpMode {
 
     boolean USE_WEBCAM;
     TfodProcessor myTfodProcessor;
@@ -66,9 +66,8 @@ public class AutoLeftRedTensorFlow extends LinearOpMode {
         if (opModeIsActive()) {
             // Put run blocks here.
 //            MOVE_FORWARD(1300); move forward approx one square
-            MOVE_FORWARD(2500);
-            TURN_RIGHT(790);
-            MOVE_FORWARD(3600);
+            STRAFE_RIGHT(100);
+            MOVE_FORWARD(2000);
             while (opModeIsActive()) {
                 // Put loop blocks here.
                 telemetryTfod();
