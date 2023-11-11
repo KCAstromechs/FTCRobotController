@@ -66,8 +66,8 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
         if (opModeIsActive()) {
             // Put run blocks here.
 //            MOVE_FORWARD(1300); move forward approx one square
-            STRAFE_RIGHT(100);
             MOVE_FORWARD(2000);
+            MOVE_BACKWARD(100);
             while (opModeIsActive()) {
                 // Put loop blocks here.
                 telemetryTfod();

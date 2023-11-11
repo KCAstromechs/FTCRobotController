@@ -67,7 +67,7 @@ public class AutoLeftRedTensorFlow extends LinearOpMode {
             // Put run blocks here.
 //            MOVE_FORWARD(1300); move forward approx one square
             MOVE_FORWARD(2500);
-            TURN_RIGHT(790);
+            TURN_RIGHT(830);
             MOVE_FORWARD(3600);
             while (opModeIsActive()) {
                 // Put loop blocks here.
