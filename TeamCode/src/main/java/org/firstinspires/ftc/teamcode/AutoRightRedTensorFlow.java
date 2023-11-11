@@ -165,7 +165,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         frontRight.setPower(speed);
         backLeft.setPower(speed);
         backRight.setPower(speed);
-        while (frontLeft.getCurrentPosition() < distanceEncoders) {
+        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
             telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
             telemetry.update();
         }
@@ -184,7 +184,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         frontRight.setPower(-speed);
         backLeft.setPower(-speed);
         backRight.setPower(-speed);
-        while (frontLeft.getCurrentPosition() < distanceEncoders) {
+        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
             telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
             telemetry.update();
         }
@@ -203,7 +203,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         frontRight.setPower(-speed);
         backLeft.setPower(-speed);
         backRight.setPower(speed);
-        while (frontLeft.getCurrentPosition() < distanceEncoders) {
+        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
             telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
             telemetry.update();
         }
@@ -222,7 +222,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         frontRight.setPower(speed);
         backLeft.setPower(speed);
         backRight.setPower(-speed);
-        while (frontLeft.getCurrentPosition() < distanceEncoders) {
+        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
             telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
             telemetry.update();
         }
@@ -241,7 +241,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         frontRight.setPower(-speed);
         backLeft.setPower(speed);
         backRight.setPower(-speed);
-        while (frontLeft.getCurrentPosition() < distanceEncoders) {
+        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
             telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
             telemetry.update();
         }
@@ -261,7 +261,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         frontRight.setPower(speed);
         backLeft.setPower(-speed);
         backRight.setPower(speed);
-        while (frontLeft.getCurrentPosition() < distanceEncoders) {
+        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
             telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
             telemetry.update();
         }
