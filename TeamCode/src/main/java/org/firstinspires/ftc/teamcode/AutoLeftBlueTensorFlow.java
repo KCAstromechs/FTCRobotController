@@ -66,8 +66,26 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
         if (opModeIsActive()) {
             // Put run blocks here.
 //            MOVE_FORWARD(1300); move forward approx one square
+            /**
+             * Autonomous START
+             */
             MOVE_FORWARD(2000);
             MOVE_BACKWARD(100);
+            /* New auto idea:
+            Move forward 1 tile
+            Check for pixel/team prop starting from center
+            If pixel/team prop is in center, do this:
+                Place purple pixel on center spike mark
+                Turn left 90 degrees
+                Move forward until reached backdrop
+                Place yellow pixel on center backdrop area (scan before placing to ensure placement)
+            Else, if pixel/team prop is on right spike mark, do this:
+                Place purple pixel on right spike mark
+                TODO
+            Else, if pixel/team prop is on left spike mark, do this:
+                Place purple pixel on left spike mark
+                TODO
+             */
             while (opModeIsActive()) {
                 // Put loop blocks here.
                 telemetryTfod();

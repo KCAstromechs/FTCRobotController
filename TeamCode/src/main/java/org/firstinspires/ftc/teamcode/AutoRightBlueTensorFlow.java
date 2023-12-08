@@ -66,9 +66,37 @@ public class AutoRightBlueTensorFlow extends LinearOpMode {
         if (opModeIsActive()) {
             // Put run blocks here.
 //            MOVE_FORWARD(1300); move forward approx one square
+            /**
+             * Autonomous start
+             */
             MOVE_FORWARD(2500);
             TURN_LEFT(850);
             MOVE_FORWARD(3600);
+            /* New auto idea:
+            Move forward 1 tile
+            Check for pixel/team prop starting from center
+            If pixel/team prop is in center, do this:
+                Place purple pixel on center spike mark
+                Strafe left 1 tile
+                Forward 1 tile
+                Turn left 90 degrees
+                Forward ALL THE WAAYYYYYYY
+                Let go of yellow pixel and scoot backward a teeny little bit
+            Else, if pixel/team prop is on right spike mark, do this:
+                Place purple pixel on right spike mark
+                Turn back to original forward
+                Forward 1 tile
+                Turn left 90 degrees
+                Forward ALL THE WAAYYYYYYY
+                Let go of yellow pixel and scoot backward a teeny little bit
+            Else, if pixel/team prop is on left spike mark, do this:
+                Place purple pixel on left spike mark
+                Turn back to original forward
+                Forward 1 tile
+                Turn left 90 degrees
+                Forward ALL THE WAAYYYYYYY
+                Let go of yellow pixel and scoot backward a teeny little bit
+             */
             while (opModeIsActive()) {
                 // Put loop blocks here.
                 telemetryTfod();
