@@ -14,7 +14,7 @@ public class TankDriveM2 extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor backRight;
     private DcMotor frontRight;
-    private DcMotor hang;
+//    private DcMotor hang;
     private Servo planeLauncher;
     private Servo leftGrabber;
     private Servo rightGrabber;
@@ -35,7 +35,7 @@ public class TankDriveM2 extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
         // Hang motor (attachment)
-        hang = hardwareMap.get(DcMotor.class, "hang");
+//        hang = hardwareMap.get(DcMotor.class, "hang");
 
         // Servos (precision attachments)
         planeLauncher = hardwareMap.get(Servo.class, "planeLauncher");
@@ -48,7 +48,7 @@ public class TankDriveM2 extends LinearOpMode {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         Speed_percentage = 0.6;
@@ -65,6 +65,8 @@ public class TankDriveM2 extends LinearOpMode {
                 double frontRightPower = gamepad1.right_stick_y + -gamepad1.left_trigger + gamepad1.right_trigger;
                 double frontLeftPower = gamepad1.left_stick_y + gamepad1.left_trigger + -gamepad1.right_trigger;
 
+                telemetry.addData("Position of left grabber", leftGrabber.getPosition());
+                telemetry.addData("Position of right grabber", rightGrabber.getPosition());
                 telemetry.addData("Power of backLeft", backLeft.getPower());
                 telemetry.addData("Power of backRight", backRight.getPower());
                 telemetry.addData("Power of frontLeft", frontLeft.getPower());
@@ -82,12 +84,12 @@ public class TankDriveM2 extends LinearOpMode {
                 frontLeft.setPower((frontLeftPower) * Speed_percentage);
 
                 // Hang control
-                hang.setPower(gamepad2.left_stick_y * hang_speed); // no safety measures implemented yet
+//                hang.setPower(gamepad2.right_stick_y * hang_speed); // no safety measures implemented yet
 
                 // Close?
                 if (gamepad2.a) {
                     rightGrabber.setPosition(0);
-                    leftGrabber.setPosition(0.125);
+                    leftGrabber.setPosition(.125);
                 }
                 // Open?
                 if (gamepad2.b) {
