@@ -76,6 +76,8 @@ public class TankDriveM2 extends LinearOpMode {
                 telemetry.addData("Power of frontRight", frontRight.getPower());
                 telemetry.addData("Position of planeLauncher", planeLauncher.getPosition());
                 telemetry.addData("planeLauncher", "loaded");
+                telemetry.addData("left trigger position", gamepad2.left_trigger);
+                telemetry.addData("right trigger position", gamepad2.right_trigger);
 
                 if (gamepad1.left_bumper || gamepad1.right_bumper) {
                     Speed_percentage = 1;
@@ -92,7 +94,7 @@ public class TankDriveM2 extends LinearOpMode {
 //                hang.setPower(gamepad2.left_trigger + -gamepad2.right_trigger);
 
                 // planelaunch YES (launch)
-                if (gamepad2.dpad_down || gamepad2.dpad_up || gamepad2.dpad_left || gamepad2.dpad_right || gamepad2.circle) {
+                if (gamepad2.dpad_down || gamepad2.dpad_up || gamepad2.dpad_left || gamepad2.dpad_right || gamepad2.ps) {
                     planeLauncher.setPosition(0);
                     telemetry.addData("planeLauncher", "launched");
                 }
@@ -101,15 +103,15 @@ public class TankDriveM2 extends LinearOpMode {
                     planeLauncher.setPosition(.225);
                 }
 
-                // open grabber
+                // open grabber if either trigger is pressed enough
                 if (gamepad2.left_trigger >= .5 || gamepad2.right_trigger >= .5) {
+                    rightGrabber.setPosition(.1);
+                    leftGrabber.setPosition(0);
+                    telemetry.addData("Grabber status", "closed");
+                } else {
                     rightGrabber.setPosition(0);
                     leftGrabber.setPosition(.1);
                     telemetry.addData("Grabber status", "open");
-                } else {
-                    rightGrabber.setPosition(0.1);
-                    leftGrabber.setPosition(0);
-                    telemetry.addData("Grabber status", "closed");
                 }
                 // Reset
 //                if (gamepad2.x) {
