@@ -14,7 +14,7 @@ public class TankDriveM2 extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor backRight;
     private DcMotor frontRight;
-//    private DcMotor hang;
+    private DcMotor hang;
     private Servo planeLauncher;
     private Servo leftGrabber;
     private Servo rightGrabber;
@@ -35,24 +35,26 @@ public class TankDriveM2 extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
         // Hang motor (attachment)
-//        hang = hardwareMap.get(DcMotor.class, "hang");
+//        hang = hardwareMap.get(DcMotor.class, "hang"); (NO LONGER USED)
 
         // Servos (precision attachments)
         planeLauncher = hardwareMap.get(Servo.class, "planeLauncher");
         leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
         rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
+        // lock planeLauncher temp
+        planeLauncher.setPosition(.225);
 
         // Put initialization blocks here.
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); (NO LONGER USED)
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         Speed_percentage = 0.6;
-        hang_speed = 0.3;
+        hang_speed = 0.1;
         // Speed_percentage = 60% speed
         waitForStart();
         if (opModeIsActive()) {
@@ -67,10 +69,13 @@ public class TankDriveM2 extends LinearOpMode {
 
                 telemetry.addData("Position of left grabber", leftGrabber.getPosition());
                 telemetry.addData("Position of right grabber", rightGrabber.getPosition());
+                telemetry.addData("Grabber status", "neutral");
                 telemetry.addData("Power of backLeft", backLeft.getPower());
                 telemetry.addData("Power of backRight", backRight.getPower());
                 telemetry.addData("Power of frontLeft", frontLeft.getPower());
                 telemetry.addData("Power of frontRight", frontRight.getPower());
+                telemetry.addData("Position of planeLauncher", planeLauncher.getPosition());
+                telemetry.addData("planeLauncher", "loaded");
 
                 if (gamepad1.left_bumper || gamepad1.right_bumper) {
                     Speed_percentage = 1;
@@ -83,20 +88,39 @@ public class TankDriveM2 extends LinearOpMode {
                 frontRight.setPower((frontRightPower) * Speed_percentage);
                 frontLeft.setPower((frontLeftPower) * Speed_percentage);
 
-                // Hang control
-//                hang.setPower(gamepad2.right_stick_y * hang_speed); // no safety measures implemented yet
+                // Hang control (NO LONGER USED)
+//                hang.setPower(gamepad2.left_trigger + -gamepad2.right_trigger);
 
-                // Close?
+                // planelaunch YES (launch)
+                if (gamepad2.dpad_down || gamepad2.dpad_up || gamepad2.dpad_left || gamepad2.dpad_right) {
+                    planeLauncher.setPosition(0);
+                    telemetry.addData("planeLauncher", "launched");
+                }
+                // RESET
                 if (gamepad2.a) {
+                    planeLauncher.setPosition(.225);
+                }
+
+                // open
+                if (gamepad2.left_bumper) {
                     rightGrabber.setPosition(0);
-                    leftGrabber.setPosition(.125);
+                    leftGrabber.setPosition(.1);
+                    telemetry.addData("Grabber status", "open");
                 }
-                // Open?
-                if (gamepad2.b) {
-                    rightGrabber.setPosition(0.15);
+                // close
+                if (gamepad2.right_bumper) {
+                    rightGrabber.setPosition(0.1);
                     leftGrabber.setPosition(0);
-                    telemetry.update();
+                    telemetry.addData("Grabber status", "closed");
                 }
+                // Reset
+//                if (gamepad2.x) {
+//                    rightGrabber.setPosition(0);
+//                    leftGrabber.setPosition(0);
+
+
+                telemetry.update();
+
             }
         }
     }
