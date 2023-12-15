@@ -103,8 +103,8 @@ public class TankDriveM2 extends LinearOpMode {
                     planeLauncher.setPosition(.225);
                 }
 
-                // open grabber if either trigger is pressed enough
-                if (gamepad2.left_trigger >= .5 || gamepad2.right_trigger >= .5) {
+                // open grabber if either bumpers/ triggert
+                if (gamepad2.left_trigger >= .5 || gamepad2.right_trigger >= .5 || gamepad2.left_bumper || gamepad2.right_bumper) {
                     rightGrabber.setPosition(.1);
                     leftGrabber.setPosition(0);
                     telemetry.addData("Grabber status", "closed");
