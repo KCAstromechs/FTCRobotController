@@ -16,8 +16,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "AutoLeftRedTensorFlow (Java)", preselectTeleOp = "TeleOpTestOne (Java)")
+@Autonomous(name = "AutoLeftRedTensorFlow (Java)", preselectTeleOp = "TankDriveM2 (Java)")
 public class AutoLeftRedTensorFlow extends LinearOpMode {
 
     boolean USE_WEBCAM;
@@ -28,6 +29,8 @@ public class AutoLeftRedTensorFlow extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontRight;
+    private Servo leftGrabber;
+    private Servo rightGrabber;
 
     double speed;
 
@@ -41,6 +44,9 @@ public class AutoLeftRedTensorFlow extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+
+        leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
+        rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
         // Initialize motor settings (and speed)
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -295,5 +301,27 @@ public class AutoLeftRedTensorFlow extends LinearOpMode {
             telemetry.update();
         }
         STOP_ROBOT();
+    }
+
+
+    /**
+     * Open grabber
+     */
+    private void OPEN_GRABBER() {
+        rightGrabber.setPosition(.1);
+        leftGrabber.setPosition(0);
+        telemetry.addData("Grabber status", "open");
+        telemetry.update();
+    }
+
+
+    /**
+     * Close grabber
+     */
+    private void CLOSE_GRABBER() {
+        rightGrabber.setPosition(0);
+        leftGrabber.setPosition(.1);
+        telemetry.addData("Grabber status", "closed");
+        telemetry.update();
     }
 }
