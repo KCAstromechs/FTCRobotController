@@ -8,6 +8,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import java.io.Closeable;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -63,7 +65,7 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
         // This 2023-2024 OpMode illustrates the basics of TensorFlow Object Detection.
         USE_WEBCAM = true;
         // Initialize TFOD before waitForStart.
-        initTfod();
+//        initTfod();
         // Wait for the match to begin.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
@@ -75,7 +77,9 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
             /**
              * Autonomous START
              */
+            CLOSE_GRABBER();
             MOVE_FORWARD(2000);
+            OPEN_GRABBER();
             MOVE_BACKWARD(100);
             /* New auto idea:
             Move forward 1 tile
@@ -93,48 +97,48 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
                 TODO
              */
             while (opModeIsActive()) {
-                // Put loop blocks here.
-                telemetryTfod();
-                // Push telemetry to the Driver Station.
-                telemetry.update();
-                if (gamepad1.dpad_down) {
-                    // Temporarily stop the streaming session.
-                    myVisionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    // Resume the streaming session if previously stopped.
-                    myVisionPortal.resumeStreaming();
-                }
-                // Share the CPU.
-                sleep(20);
+//                // Put loop blocks here.
+//                telemetryTfod();
+//                // Push telemetry to the Driver Station.
+//                telemetry.update();
+//                if (gamepad1.dpad_down) {
+//                    // Temporarily stop the streaming session.
+//                    myVisionPortal.stopStreaming();
+//                } else if (gamepad1.dpad_up) {
+//                    // Resume the streaming session if previously stopped.
+//                    myVisionPortal.resumeStreaming();
+//                }
+//                // Share the CPU.
+//                sleep(20);
             }
         }
     }
 
-    /**
-     * Initialize TensorFlow Object Detection.
-     */
-    private void initTfod() {
-        TfodProcessor.Builder myTfodProcessorBuilder;
-        VisionPortal.Builder myVisionPortalBuilder;
-
-        // First, create a TfodProcessor.Builder.
-        myTfodProcessorBuilder = new TfodProcessor.Builder();
-        // Create a TfodProcessor by calling build.
-        myTfodProcessor = myTfodProcessorBuilder.build();
-        // Next, create a VisionPortal.Builder and set attributes related to the camera.
-        myVisionPortalBuilder = new VisionPortal.Builder();
-        if (USE_WEBCAM) {
-            // Use a webcam.
-            myVisionPortalBuilder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        } else {
-            // Use the device's back camera.
-            myVisionPortalBuilder.setCamera(BuiltinCameraDirection.BACK);
-        }
-        // Add myTfodProcessor to the VisionPortal.Builder.
-        myVisionPortalBuilder.addProcessor(myTfodProcessor);
-        // Create a VisionPortal by calling build.
-        myVisionPortal = myVisionPortalBuilder.build();
-    }
+//    /**
+//     * Initialize TensorFlow Object Detection.
+//     */
+//    private void initTfod() {
+//        TfodProcessor.Builder myTfodProcessorBuilder;
+//        VisionPortal.Builder myVisionPortalBuilder;
+//
+//        // First, create a TfodProcessor.Builder.
+//        myTfodProcessorBuilder = new TfodProcessor.Builder();
+//        // Create a TfodProcessor by calling build.
+//        myTfodProcessor = myTfodProcessorBuilder.build();
+//        // Next, create a VisionPortal.Builder and set attributes related to the camera.
+//        myVisionPortalBuilder = new VisionPortal.Builder();
+//        if (USE_WEBCAM) {
+//            // Use a webcam.
+//            myVisionPortalBuilder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+//        } else {
+//            // Use the device's back camera.
+//            myVisionPortalBuilder.setCamera(BuiltinCameraDirection.BACK);
+//        }
+//        // Add myTfodProcessor to the VisionPortal.Builder.
+//        myVisionPortalBuilder.addProcessor(myTfodProcessor);
+//        // Create a VisionPortal by calling build.
+//        myVisionPortal = myVisionPortalBuilder.build();
+//    }
 
     /**
      * Display info (using telemetry) for a detected object
@@ -297,8 +301,8 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
      * Open grabber
      */
     private void OPEN_GRABBER() {
-        rightGrabber.setPosition(.1);
-        leftGrabber.setPosition(0);
+        rightGrabber.setPosition(0);
+        leftGrabber.setPosition(.1);
         telemetry.addData("Grabber status", "open");
         telemetry.update();
     }
@@ -308,8 +312,8 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
      * Close grabber
      */
     private void CLOSE_GRABBER() {
-        rightGrabber.setPosition(0);
-        leftGrabber.setPosition(.1);
+        rightGrabber.setPosition(.1);
+        leftGrabber.setPosition(0);
         telemetry.addData("Grabber status", "closed");
         telemetry.update();
     }
