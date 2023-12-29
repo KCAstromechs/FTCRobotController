@@ -26,6 +26,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.PtzControl;
 import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
 import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -94,6 +95,7 @@ public class VisionBase {
     private CameraCaptureSession cameraCaptureSession;
     ExposureControl myExposureControl;
     GainControl myGainControl;
+    PtzControl myPtzControl;
 
     /** The queue into which all frames from the camera are placed as they become available.
      * Frames which are not processed by the OpMode are automatically discarded. */
@@ -131,16 +133,24 @@ public class VisionBase {
 
         myExposureControl= camera.getControl(ExposureControl.class);
         myGainControl = camera.getControl(GainControl.class);
+        myPtzControl = camera.getControl(PtzControl.class);
 
         myExposureControl.setMode(ExposureControl.Mode.Manual);
         myExposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
         myGainControl.setGain(20);
+        myPtzControl.setZoom(1);
 
         long currentExposure = myExposureControl.getExposure(TimeUnit.MILLISECONDS);
         int currentGain = myGainControl.getGain();
+        int MaxZoom = myPtzControl.getMaxZoom();
+        int MinZoom = myPtzControl.getMinZoom();
+        int zoom = myPtzControl.getZoom();
 
         telemetry.addData("Exposure", currentExposure);
         telemetry.addData("Gain", currentGain);
+        telemetry.addData("Max Zoom", MaxZoom); // MaxZoom is generally 5
+        telemetry.addData("Min Zoom", MinZoom); // MinZoom is generally 1
+        telemetry.addData("Zoom", zoom);
 
         telemetry.addData("VISION", "initialized");
         telemetry.update();
