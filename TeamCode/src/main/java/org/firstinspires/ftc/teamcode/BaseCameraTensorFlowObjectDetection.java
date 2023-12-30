@@ -27,7 +27,7 @@ public class BaseCameraTensorFlowObjectDetection extends LinearOpMode {
         // Initialize TFOD before waitForStart.
         initTfod();
         // Wait for the match to begin.
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addData("DS preview on/off", "3 dots, Camera St.ream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         waitForStart();

@@ -19,6 +19,9 @@ public class TankDriveM2 extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
+    private DcMotor Launcher1;
+    private DcMotor Launcher2;
+
 
     /**
      * This function is executed when this Op Mode is selected from the Driver Station.
@@ -36,6 +39,8 @@ public class TankDriveM2 extends LinearOpMode {
 
         // Hang motor (attachment)
 //        hang = hardwareMap.get(DcMotor.class, "hang"); (NO LONGER USED)
+        Launcher1 = hardwareMap.get(DcMotor.class, "Launcher1");
+        Launcher2 = hardwareMap.get(DcMotor.class, "Launcher2");
 
         // Servos (precision attachments)
         planeLauncher = hardwareMap.get(Servo.class, "planeLauncher");
@@ -50,6 +55,8 @@ public class TankDriveM2 extends LinearOpMode {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Launcher1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Launcher2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); (NO LONGER USED)
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -78,6 +85,7 @@ public class TankDriveM2 extends LinearOpMode {
                 telemetry.addData("planeLauncher", "loaded");
                 telemetry.addData("left trigger position", gamepad2.left_trigger);
                 telemetry.addData("right trigger position", gamepad2.right_trigger);
+                telemetry.addData("launcher_on", "NO");
 
                 if (gamepad1.left_bumper || gamepad1.right_bumper) {
                     Speed_percentage = 1;
@@ -101,6 +109,18 @@ public class TankDriveM2 extends LinearOpMode {
                 // planeLauncher RESET
                 if (gamepad2.a) {
                     planeLauncher.setPosition(.225);
+                }
+
+                // new launch code
+                if (gamepad2.y) {
+                    Launcher1.setPower(1);
+                    Launcher2.setPower(-1);
+                    telemetry.addData("launcher_on", "YES");
+                }
+                if (gamepad2.x) {
+                    Launcher1.setPower(0);
+                    Launcher2.setPower(0);
+                    telemetry.addData("launcher_on", "NO");
                 }
 
                 // close grabber if either bumpers/ trigger is pressed
