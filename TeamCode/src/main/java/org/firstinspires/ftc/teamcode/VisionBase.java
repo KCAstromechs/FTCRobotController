@@ -120,6 +120,8 @@ public class VisionBase {
     }
 
     // do this at the beginning
+
+
     public void initVision() {
         callbackHandler = CallbackLooper.getDefault().getHandler();
         cameraManager = ClassFactory.getInstance().getCameraManager();

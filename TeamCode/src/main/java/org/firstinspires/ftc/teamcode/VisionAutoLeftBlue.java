@@ -49,13 +49,17 @@ public class VisionAutoLeftBlue extends LinearOpMode {
         waitForStart();
 
         // now let's run vision, full image is 640 x 480
-        // values for left line up:
-        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(0, 52, 211, 290, true);
+
+
+        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(0, 52, 211, 275, true);
         VisionBase.COLOR SpikeMarkCenter = vision.findRGB(272, 344, 205, 275, true);
-        VisionBase.COLOR SpikeMarkRight = vision.findRGB(572, 638, 230, 325, true);
+        VisionBase.COLOR SpikeMarkRight = vision.findRGB(572, 638, 230, 276, true);
         if (SpikeMarkLeft == VisionBase.COLOR.BLUE) {
             telemetry.addData("Final Answer", "Left BLUE");
+            telemetry.update();
+            sleep(4000);
             // Move forward about half a square
+            MOVE_FORWARD(600);
             // Strafe left to line grabber up with team prop
             // Move forward (maybe) a tad bit
             // Place purple pixel on spike mark
@@ -68,9 +72,12 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             // Move forward to park
         }
         else if (SpikeMarkCenter == VisionBase.COLOR.BLUE) {
+
             telemetry.addData("Final Answer", "Center BLUE");
+            telemetry.update();
+            sleep(4000);
             // Move forward 1 square
-            MOVE_BACKWARD(1200);
+            MOVE_FORWARD(1126);
             // Strafe left a bit
             // Move forward a TAD
             // Place purple pixel on spike mark
@@ -84,9 +91,14 @@ public class VisionAutoLeftBlue extends LinearOpMode {
         }
         else if (SpikeMarkRight == VisionBase.COLOR.BLUE) {
             telemetry.addData("Final Answer", "Right BLUE");
+            telemetry.update();
+            sleep(4000);
             // Move forward a TADDDD
+            MOVE_FORWARD(100);
             // Turn right 90 degrees
+            TURN_RIGHT(930);
             // Strafe left 1 square
+            STRAFE_LEFT(1020);
             // Move forward a bit
             // Place purple pixel on spike mark
             // Move backward a bit
@@ -98,7 +110,24 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             // Move forward to park
         }
         else {
-            telemetry.addData("Final Answer", "BLUE NOT DETECTED");
+            telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
+            telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
+            telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
+            telemetry.addData("What we actually saw on the right", SpikeMarkRight);
+            telemetry.update();
+            sleep(4000);
+            // Move forward 1 square
+            MOVE_FORWARD(1126);
+            // Strafe left a bit
+            // Move forward a TAD
+            // Place purple pixel on spike mark
+            // Move backward a TAd
+            // Turn left 90 degrees
+            // Move forward until touching backdrop
+            // Place yellow pixel on backdrop (should correspond with Blue Alliance Center April tag thingasjdlf;kj)
+            // Move backward a TAD
+            // Strafe left 1 square
+            // Move forward to park
         }
 
         telemetry.update();
@@ -194,7 +223,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
 
     /**
      * Turn right certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * @param distanceEncoders degrees turned in terms of encoders (930 encoder clicks is about 90 degrees)
      */
     private void TURN_RIGHT(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -214,7 +243,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
 
     /**
      * Turn left certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * @param distanceEncoders degrees to turn in terms of encoders (930 encoder clicks is about 90 degrees)
      */
     private void TURN_LEFT(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

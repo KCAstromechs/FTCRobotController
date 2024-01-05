@@ -162,8 +162,8 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
     }
 
     /**
-     * Move forward certain distance (in terms of front_left motor encoders
-     * @param distanceEncoders
+     * Move forward certain distance
+     * @param distanceEncoders distance to travel in terms of encoders
      */
     private void MOVE_FORWARD(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -182,7 +182,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
 
     /**
      * Move backward certain distance (in terms of front_left motor encoders)
-     * @param distanceEncoders
+     * @param distanceEncoders distance to travel in terms of encoders
      */
     private void MOVE_BACKWARD(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -201,7 +201,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
 
     /**
      * Strafe right certain distance (in terms of front_left motor encoders)
-     * @param distanceEncoders
+     * @param distanceEncoders distance to travel in terms of encoders
      */
     private void STRAFE_RIGHT(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -220,7 +220,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
 
     /**
      * Strafe left certain distance (in terms of front_left motor encoders)
-     * @param distanceEncoders
+     * @param distanceEncoders distance to travel in terms of encoders
      */
     private void STRAFE_LEFT(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -239,7 +239,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
 
     /**
      * Turn right certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * @param distanceEncoders degrees to turn in terms of encoders
      */
     private void TURN_RIGHT(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -259,7 +259,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
 
     /**
      * Turn left certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * @param distanceEncoders distance to turn in terms of encoders
      */
     private void TURN_LEFT(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

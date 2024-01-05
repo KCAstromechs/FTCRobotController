@@ -49,12 +49,15 @@ public class VisionAutoLeftRed extends LinearOpMode {
 
         // now let's run vision, full image is 640 x 480
         // values for left line up:
-        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(0, 52, 211, 290, true);
+        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(0, 52, 211, 275, true);
         VisionBase.COLOR SpikeMarkCenter = vision.findRGB(272, 344, 205, 275, true);
-        VisionBase.COLOR SpikeMarkRight = vision.findRGB(572, 638, 230, 325, true);
+        VisionBase.COLOR SpikeMarkRight = vision.findRGB(572, 638, 230, 276, true);
         if (SpikeMarkLeft == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "Left RED");
+            telemetry.update();
+            sleep(4000);
             // Move forward about half a square
+            MOVE_FORWARD(600);
             // Strafe left to line grabber up with team prop
             // Move forward (maybe) a tad bit
             // Place purple pixel on spike mark
@@ -66,7 +69,10 @@ public class VisionAutoLeftRed extends LinearOpMode {
         }
         else if (SpikeMarkCenter == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "Center RED");
+            telemetry.update();
+            sleep(4000);
             // Move forward 1 square
+            MOVE_FORWARD(1126);
             // Strafe left a bit
             // Move forward a TAD
             // Place purple pixel on spike mark
@@ -78,9 +84,14 @@ public class VisionAutoLeftRed extends LinearOpMode {
         }
         else if (SpikeMarkRight == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "Right RED");
+            telemetry.update();
+            sleep(4000);
             // Move forward a TADDDD
+            MOVE_FORWARD(100);
             // Turn right 90 degrees
+            TURN_RIGHT(930);
             // Strafe left 1 square
+            STRAFE_LEFT(1100);
             // Move forward a bit
             // Place purple pixel on spike mark
             // Move backward a bit
@@ -89,6 +100,21 @@ public class VisionAutoLeftRed extends LinearOpMode {
         }
         else {
             telemetry.addData("Final Answer", "RED NOT DETECTED");
+            telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
+            telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
+            telemetry.addData("What we actually saw on the right", SpikeMarkRight);
+            telemetry.update();
+            sleep(4000);
+            // Move forward 1 square
+            MOVE_FORWARD(1126);
+            // Strafe left a bit
+            // Move forward a TAD
+            // Place purple pixel on spike mark
+            // Move backward a TAd
+            // Strafe left 1 square
+            // Move forward 2 square
+            // Turn right 90 degrees
+            // Move forward (under main gate) and park (5 squares)
         }
 
         telemetry.update();
