@@ -72,7 +72,7 @@ public class FieldCentricDriveM2 extends LinearOpMode {
             while (opModeIsActive()) {
                 telemetry.addData("Yaw", "Press Circle or B on Gamepad to reset.");
                 // Check to see if reset yaw is requested.
-                if (gamepad1.circle) {
+                if (gamepad1.circle || gamepad1.b)   {
                     imu.resetYaw();
                 }
                 orientation = imu.getRobotYawPitchRollAngles();
