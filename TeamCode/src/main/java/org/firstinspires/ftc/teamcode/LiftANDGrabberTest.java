@@ -49,7 +49,7 @@ public class LiftANDGrabberTest extends LinearOpMode {
                     rightGrabber.setPosition(.1);
                     leftGrabber.setPosition(0);
                     telemetry.addData("Grabber status", "closed");
-                } else { // open grabber
+                } else { // open grabber TODO set as reset position?
                     rightGrabber.setPosition(0);
                     leftGrabber.setPosition(.1);
                     telemetry.addData("Grabber status", "open");
