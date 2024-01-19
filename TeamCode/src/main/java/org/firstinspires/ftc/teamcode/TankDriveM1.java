@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "TestOpTestOne (Java)")
+@TeleOp(name = "TankDriveM1 (Java)")
 
-public class TeleOpTestOne extends LinearOpMode {
+public class TankDriveM1 extends LinearOpMode {
 
     private DcMotor backLeft;
     private DcMotor frontLeft;
