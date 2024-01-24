@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="VisionAutoRightRed (Java)")
+//@Autonomous(name="VisionAutoRightRed (Java)")
 public class VisionAutoRightRed extends LinearOpMode {
 
     /* Declare OpMode members. */

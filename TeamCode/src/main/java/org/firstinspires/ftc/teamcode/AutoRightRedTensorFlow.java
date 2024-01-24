@@ -18,7 +18,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//@Autonomous(name = "AutoRightRedTensorFlow (Java)", preselectTeleOp = "TankDriveM2 (Java)")
+@Autonomous(name = "AutoRightRedTensorFlow (Java)", preselectTeleOp = "TankDriveM3 (Java)")
 public class AutoRightRedTensorFlow extends LinearOpMode {
 
     boolean USE_WEBCAM;
@@ -32,6 +32,8 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
+    private DcMotor lift;
+
     double speed;
 
     /**
@@ -40,6 +42,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        lift = hardwareMap.get(DcMotor.class, "lift");
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
@@ -49,6 +52,9 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
         // Initialize motor settings (and speed)
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -59,6 +65,7 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         speed = 0.3;
 
+        CLOSE_GRABBER();
 
         // This 2023-2024 OpMode illustrates the basics of TensorFlow Object Detection.
 //        USE_WEBCAM = true;
@@ -72,9 +79,8 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         if (opModeIsActive()) {
             // Put run blocks here.
 //            MOVE_FORWARD(1300); move forward approx one square
-            CLOSE_GRABBER();
+
             MOVE_FORWARD(2000);
-            OPEN_GRABBER();
             MOVE_BACKWARD(100);
             while (opModeIsActive()) {
 //                // Put loop blocks here.
@@ -296,5 +302,30 @@ public class AutoRightRedTensorFlow extends LinearOpMode {
         leftGrabber.setPosition(0);
         telemetry.addData("Grabber status", "closed");
         telemetry.update();
+    }
+
+
+    /**
+     * Moves lift to target position 'encoderPos'
+     * @param encoderPos target position of lift in terms of encoders
+     * @param lift_towards_back whether or not the lift it rotating towards the back of the robot
+     */
+    private void lift_move(boolean lift_towards_back,int encoderPos) {
+        sleep(200);
+        if (lift_towards_back == true) {
+            lift.setPower(-0.5);
+            while (lift.getCurrentPosition() > encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        } else {
+            lift.setPower(0.5);
+            while (lift.getCurrentPosition() < encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        }
     }
 }

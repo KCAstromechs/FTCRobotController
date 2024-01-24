@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "ServoPositionTest (Java)")
@@ -30,7 +29,12 @@ public class ServoPositionTest extends LinearOpMode {
 
                 // Telemetry for the Servo positions
                 telemetry.addData("leftGrabberPosition", leftGrabber.getPosition());
-                telemetry.addData("leftGrabberPosition", rightGrabber.getPosition());
+                telemetry.addData("rightGrabberPosition", rightGrabber.getPosition());
+
+                /*
+                ***NOTICE***     Servo.class.getPosition() needs a Servo.class.setPosition()
+                statement before it or else it will return Double.NaN (null)
+                 */
 
                 telemetry.update();
 

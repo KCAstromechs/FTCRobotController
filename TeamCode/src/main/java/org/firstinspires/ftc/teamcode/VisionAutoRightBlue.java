@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="VisionAutoRightBlue (Java)")
+//@Autonomous(name="VisionAutoRightBlue (Java)")
 public class VisionAutoRightBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -18,6 +18,11 @@ public class VisionAutoRightBlue extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontRight;
+
+    private DcMotor lift;
+
+    private Servo leftGrabber;
+    private Servo rightGrabber;
 
     double speed;
 
@@ -30,7 +35,15 @@ public class VisionAutoRightBlue extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
+        lift = hardwareMap.get(DcMotor.class, "lift");
+
+        leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
+        rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
+
         // Initialize motor settings (and speed)
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -275,5 +288,34 @@ public class VisionAutoRightBlue extends LinearOpMode {
             telemetry.update();
         }
         STOP_ROBOT();
+    }
+
+
+    /**
+     * Open grabber
+     */
+    private void OPEN_GRABBER() {
+        rightGrabber.setPosition(.05);
+        leftGrabber.setPosition(.17);
+        telemetry.addData("Grabber status", "open");
+    }
+
+
+    /**
+     * Close grabber
+     */
+    private void CLOSE_GRABBER() {
+        rightGrabber.setPosition(.15);
+        leftGrabber.setPosition(.07);
+        telemetry.addData("Grabber status", "closed");
+    }
+
+
+    /**
+     * Moves lift to target position 'encoderPos'
+     * @param encoderPos target position of lift in terms of encoders
+     */
+    private void lift_move(int encoderPos) {
+        lift.setTargetPosition(encoderPos);
     }
 }

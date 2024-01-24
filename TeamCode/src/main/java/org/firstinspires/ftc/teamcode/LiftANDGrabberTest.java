@@ -46,19 +46,45 @@ public class LiftANDGrabberTest extends LinearOpMode {
 
                 // close grabber if either bumpers/ trigger is pressed
                 if (gamepad2.left_trigger >= .5 || gamepad2.right_trigger >= .5 || gamepad2.left_bumper || gamepad2.right_bumper) {
-                    rightGrabber.setPosition(.1);
-                    leftGrabber.setPosition(0);
+                    rightGrabber.setPosition(.15);
+                    leftGrabber.setPosition(.075);
                     telemetry.addData("Grabber status", "closed");
-                } else { // open grabber TODO set as reset position?
-                    rightGrabber.setPosition(0);
-                    leftGrabber.setPosition(.1);
+                    telemetry.addData("rightGrabberPos", rightGrabber.getPosition());
+                    telemetry.addData("leftGrabberPos", leftGrabber.getPosition());
+                } else { // open grabber
+                    rightGrabber.setPosition(.05);
+                    leftGrabber.setPosition(.175);
                     telemetry.addData("Grabber status", "open");
+                    telemetry.addData("rightGrabberPos", rightGrabber.getPosition());
+                    telemetry.addData("leftGrabberPos", leftGrabber.getPosition());
                 }
                 // Reset grabber
                 if (gamepad2.x) {
                     rightGrabber.setPosition(0);
                     leftGrabber.setPosition(0);
                 }
+
+
+//                if (gamepad2.x) {
+//                    rightGrabber.setPosition(0); // opens
+//                    leftGrabber.setPosition(0); // closes
+//                }
+//
+//                if (gamepad2.y) {
+//                    rightGrabber.setPosition(0.1); // closes
+//                    leftGrabber.setPosition(0.1); // opens
+//                }
+//
+//                if (gamepad2.a) {
+//                    rightGrabber.setPosition(0.1); // closes
+//                    leftGrabber.setPosition(0); // closes
+//                }
+//
+//                if (gamepad2.b) {
+//                    rightGrabber.setPosition(0); // opens
+//                    leftGrabber.setPosition(0.1); // opens
+//                }
+
 
                 lift.setPower(lift_power * speed_limit);
 
@@ -68,7 +94,12 @@ public class LiftANDGrabberTest extends LinearOpMode {
                 For lift:
                 Up is negative encoders
                 Down is positive encoders
+
+                -900 encoders is going to be angle of board
+                -1400 encoders is floor behind robot
                  */
+
+
 
                 telemetry.update();
             }

@@ -20,7 +20,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//@Autonomous(name = "AutoLeftBlueTensorFlow (Java)", preselectTeleOp = "TankDriveM2 (Java)")
+@Autonomous(name = "AutoLeftBlueTensorFlow (Java)", preselectTeleOp = "TankDriveM3 (Java)")
 public class AutoLeftBlueTensorFlow extends LinearOpMode {
 
     boolean USE_WEBCAM;
@@ -33,6 +33,8 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
     private DcMotor frontRight;
     private Servo leftGrabber;
     private Servo rightGrabber;
+
+    private DcMotor lift;
 
     double speed;
 
@@ -50,7 +52,12 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
         leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
         rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
+        lift = hardwareMap.get(DcMotor.class, "lift");
+
         // Initialize motor settings (and speed)
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -61,6 +68,7 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         speed = 0.3;
 
+        CLOSE_GRABBER();
 
         // This 2023-2024 OpMode illustrates the basics of TensorFlow Object Detection.
         USE_WEBCAM = true;
@@ -77,9 +85,7 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
             /**
              * Autonomous START
              */
-            CLOSE_GRABBER();
             MOVE_FORWARD(2000);
-            OPEN_GRABBER();
             MOVE_BACKWARD(100);
             /* New auto idea:
             Move forward 1 tile
@@ -301,8 +307,8 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
      * Open grabber
      */
     private void OPEN_GRABBER() {
-        rightGrabber.setPosition(0);
-        leftGrabber.setPosition(.1);
+        rightGrabber.setPosition(.05);
+        leftGrabber.setPosition(.17);
         telemetry.addData("Grabber status", "open");
         telemetry.update();
     }
@@ -312,9 +318,34 @@ public class AutoLeftBlueTensorFlow extends LinearOpMode {
      * Close grabber
      */
     private void CLOSE_GRABBER() {
-        rightGrabber.setPosition(.1);
-        leftGrabber.setPosition(0);
+        rightGrabber.setPosition(.15);
+        leftGrabber.setPosition(.07);
         telemetry.addData("Grabber status", "closed");
         telemetry.update();
+    }
+
+
+    /**
+     * Moves lift to target position 'encoderPos'
+     * @param encoderPos target position of lift in terms of encoders
+     * @param lift_towards_back whether or not the lift it rotating towards the back of the robot
+     */
+    private void lift_move(boolean lift_towards_back,int encoderPos) {
+        sleep(200);
+        if (lift_towards_back == true) {
+            lift.setPower(-0.5);
+            while (lift.getCurrentPosition() > encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        } else {
+            lift.setPower(0.5);
+            while (lift.getCurrentPosition() < encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        }
     }
 }

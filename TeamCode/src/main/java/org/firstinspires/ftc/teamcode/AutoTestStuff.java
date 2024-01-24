@@ -8,29 +8,40 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//@Autonomous(name="VisionAutoLeftRed (Java)")
-public class VisionAutoLeftRed extends LinearOpMode {
+@Autonomous(name="AutoTestStuff (Java)")
+public class AutoTestStuff extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeft;
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontRight;
 
+    private DcMotor lift;
+
+    private Servo leftGrabber;
+    private Servo rightGrabber;
+
     double speed;
 
     @Override
     public void runOpMode() {
-        VisionBase vision = new VisionBase(hardwareMap, telemetry);
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
+        lift = hardwareMap.get(DcMotor.class, "lift");
+
+        leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
+        rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
+
         // Initialize motor settings (and speed)
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -41,85 +52,15 @@ public class VisionAutoLeftRed extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         speed = 0.3;
 
-        // do this before match start
-        vision.initVision();
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // now let's run vision, full image is 640 x 480
-        // values for left line up:
-        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(0, 52, 211, 275, true);
-        VisionBase.COLOR SpikeMarkCenter = vision.findRGB(272, 344, 205, 275, true);
-        VisionBase.COLOR SpikeMarkRight = vision.findRGB(572, 638, 230, 276, true);
-        if (SpikeMarkLeft == VisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "Left RED");
-            telemetry.update();
-            sleep(4000);
-            // Move forward about half a square
-            MOVE_FORWARD(600);
-            // Strafe left to line grabber up with team prop
-            // Move forward (maybe) a tad bit
-            // Place purple pixel on spike mark
-            // Move backward a tad bit
-            // Strafe left about half a square
-            // Move forward about 2 squares
-            // Turn right 90 degrees
-            // Move forward (under main gate) to park (5 squares)
-        }
-        else if (SpikeMarkCenter == VisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "Center RED");
-            telemetry.update();
-            sleep(4000);
-            // Move forward 1 square
-            MOVE_FORWARD(1126);
-            // Strafe left a bit
-            // Move forward a TAD
-            // Place purple pixel on spike mark
-            // Move backward a TAd
-            // Strafe left 1 square
-            // Move forward 2 square
-            // Turn right 90 degrees
-            // Move forward (under main gate) and park (5 squares)
-        }
-        else if (SpikeMarkRight == VisionBase.COLOR.RED) {
-            telemetry.addData("Final Answer", "Right RED");
-            telemetry.update();
-            sleep(4000);
-            // Move forward a TADDDD
-            MOVE_FORWARD(100);
-            // Turn right 90 degrees
-            TURN_RIGHT(930);
-            // Strafe left 1 square
-            STRAFE_LEFT(1100);
-            // Move forward a bit
-            // Place purple pixel on spike mark
-            // Move backward a bit
-            // Strafe left 1 square
-            // Move forward (under the main gate) and park (4 squares)
-        }
-        else {
-            telemetry.addData("Final Answer", "RED NOT DETECTED");
-            telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
-            telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
-            telemetry.addData("What we actually saw on the right", SpikeMarkRight);
-            telemetry.update();
-            sleep(4000);
-            // Move forward 1 square
-            MOVE_FORWARD(1126);
-            // Strafe left a bit
-            // Move forward a TAD
-            // Place purple pixel on spike mark
-            // Move backward a TAd
-            // Strafe left 1 square
-            // Move forward 2 square
-            // Turn right 90 degrees
-            // Move forward (under main gate) and park (5 squares)
-        }
-
-        telemetry.update();
-
-        sleep(5000);
+        CLOSE_GRABBER();
+        TURN_RIGHT(1000);
+        lift_move(true, -755);
+        lift_move(false, -400);
+        OPEN_GRABBER();
+        sleep(1000);
 
     }
     /**
@@ -210,7 +151,7 @@ public class VisionAutoLeftRed extends LinearOpMode {
 
     /**
      * Turn right certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * @param distanceEncoders 90 degrees is about
      */
     private void TURN_RIGHT(int distanceEncoders) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -245,5 +186,52 @@ public class VisionAutoLeftRed extends LinearOpMode {
             telemetry.update();
         }
         STOP_ROBOT();
+    }
+
+
+    /**
+     * Open grabber
+     */
+    private void OPEN_GRABBER() {
+        rightGrabber.setPosition(.05);
+        leftGrabber.setPosition(.17);
+        telemetry.addData("Grabber status", "open");
+        sleep(200);
+    }
+
+
+    /**
+     * Close grabber
+     */
+    private void CLOSE_GRABBER() {
+        rightGrabber.setPosition(.15);
+        leftGrabber.setPosition(.07);
+        telemetry.addData("Grabber status", "closed");
+        sleep(200);
+    }
+
+
+    /**
+     * Moves lift to target position 'encoderPos'
+     * @param encoderPos target position of lift in terms of encoders
+     * @param lift_towards_back whether or not the lift it rotating towards the back of the robot
+     */
+    private void lift_move(boolean lift_towards_back,int encoderPos) {
+        sleep(200);
+        if (lift_towards_back == true) {
+            lift.setPower(-0.5);
+            while (lift.getCurrentPosition() > encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        } else {
+            lift.setPower(0.5);
+            while (lift.getCurrentPosition() < encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        }
     }
 }

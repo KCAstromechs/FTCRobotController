@@ -83,9 +83,9 @@ public class TankDriveM2 extends LinearOpMode {
                 telemetry.addData("Power of frontRight", frontRight.getPower());
                 telemetry.addData("Position of planeLauncher", planeLauncher.getPosition());
                 telemetry.addData("planeLauncher", "loaded");
-                telemetry.addData("left trigger position", gamepad2.left_trigger);
-                telemetry.addData("right trigger position", gamepad2.right_trigger);
-                telemetry.addData("launcher_on", "NO");
+//                telemetry.addData("left trigger position", gamepad2.left_trigger);
+//                telemetry.addData("right trigger position", gamepad2.right_trigger);
+//                telemetry.addData("launcher_on", "NO");
 
                 if (gamepad1.left_bumper || gamepad1.right_bumper) {
                     Speed_percentage = 1;
@@ -111,7 +111,7 @@ public class TankDriveM2 extends LinearOpMode {
                     planeLauncher.setPosition(.225);
                 }
 
-                // new launch code
+                // new launch code (using green rubber wheels)
                 if (gamepad2.y) {
                     Launcher1.setPower(1);
                     Launcher2.setPower(-1);
