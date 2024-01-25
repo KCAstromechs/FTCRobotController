@@ -329,7 +329,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
      * position -800 is backdrop angle if backed all the way up the board
      *
      * @param encoderPos target position of lift in terms of encoders
-     * @param lift_towards_back whether or not the lift it rotating towards the back of the robot
+     * @param lift_towards_back whether or not the lift it rotating towards the back of the robot from the starting position
      */
     private void lift_move(boolean lift_towards_back,int encoderPos) {
         sleep(200);
