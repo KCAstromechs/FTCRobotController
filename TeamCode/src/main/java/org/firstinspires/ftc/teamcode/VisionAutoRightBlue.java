@@ -101,28 +101,16 @@ public class VisionAutoRightBlue extends LinearOpMode {
             STRAFE_LEFT(5000);
         }
         else if (SpikeMarkRight == VisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "Right BLUE");
+            // TODO fine adjustments to be made
+            telemetry.addData("Final Answer", "Right RED");
             telemetry.update();
             sleep(4000);
-            // Move forward about half a square
-            MOVE_FORWARD(600);
-            // Strafe right to line grabber up with team prop
+            // Strafe right half a square
             STRAFE_RIGHT(600);
-            // Turn left 180
-            TURN_LEFT(1900);
-            // Place purple pixel on spike mark
-            // TODO complete above comment
-            sleep(500);
-            // Move forward a tad bit
-            MOVE_FORWARD(50);
-            // Strafe right about half a square
-            STRAFE_RIGHT(600);
-            // Move backward about 2 squares
-            MOVE_BACKWARD(1500);
-            // Turn right 90 degrees
-            TURN_RIGHT(930);
-            // Move forward (under main gate) to park (5 squares)
-            MOVE_FORWARD(4769);
+            // Move forward to place purple pixel
+            MOVE_FORWARD(1100);
+            // Scoot back a bit
+            MOVE_BACKWARD(400);
         }
         else {
             telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
@@ -133,24 +121,20 @@ public class VisionAutoRightBlue extends LinearOpMode {
             telemetry.addData("What we actually saw on the right", SpikeMarkRight);
             telemetry.update();
             sleep(4000);
-            // Move forward 1 square
-            MOVE_FORWARD(1050);
-            // Strafe right a bit
-            STRAFE_RIGHT(150);
-            // Turn right 180 degrees
-            TURN_RIGHT(1870);
-            // Place purple pixel on spike mark
-            // TODO complete above comment
-            // Move forward a TAd
-            MOVE_FORWARD(20);
-            // Strafe left 1 square
-            STRAFE_LEFT(875);
-            // Move backward 2 square
-            MOVE_BACKWARD(1500);
-            // Turn right 90 degrees
-            TURN_RIGHT(930);
-            // Move forward (under main gate) and park (5 squares)
-            MOVE_FORWARD(4769);
+            // TODO fine adjustments to be made
+            telemetry.addData("Final Answer", "Center BLUE");
+            telemetry.update();
+            sleep(4000);
+            // Move forward to place purple pixel on center spike mark
+            MOVE_FORWARD(1510);
+            // Scoot back a bit
+            MOVE_BACKWARD(400);
+            // Strafe right to avoid the placed purple pixel
+            STRAFE_RIGHT(100);
+            // Move forward to like up with the stage door
+            MOVE_FORWARD(1600);
+            // Strafe left to park in the backstage
+            STRAFE_LEFT(5000);
         }
 
         telemetry.update();
