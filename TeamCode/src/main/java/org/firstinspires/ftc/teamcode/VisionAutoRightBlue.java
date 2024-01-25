@@ -54,17 +54,22 @@ public class VisionAutoRightBlue extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         speed = 0.3;
 
+        CLOSE_GRABBER();
+
         // do this before match start
         vision.initVision();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        // Move the lift out of the way of the camera
+        lift_move(true, -400);
+
         // now let's run vision, full image is 640 x 480
         // values for left line up:
-        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(0, 52, 211, 260, true);
-        VisionBase.COLOR SpikeMarkCenter = vision.findRGB(272, 344, 205, 265, true);
-        VisionBase.COLOR SpikeMarkRight = vision.findRGB(572, 638, 230, 276, true);
+        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(20, 90, 75, 105, true);
+        VisionBase.COLOR SpikeMarkCenter = vision.findRGB(284, 342, 64, 98, true);
+        VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.BLUE) {
             telemetry.addData("Final Answer", "Left BLUE");
             telemetry.update();
@@ -313,9 +318,30 @@ public class VisionAutoRightBlue extends LinearOpMode {
 
     /**
      * Moves lift to target position 'encoderPos'
+     *
+     * position -1350 is ground level
+     *
+     * position -800 is backdrop angle if backed all the way up the board
+     *
      * @param encoderPos target position of lift in terms of encoders
+     * @param lift_towards_back whether or not the lift it rotating towards the back of the robot from the starting position
      */
-    private void lift_move(int encoderPos) {
-        lift.setTargetPosition(encoderPos);
+    private void lift_move(boolean lift_towards_back,int encoderPos) {
+        sleep(200);
+        if (lift_towards_back == true) {
+            lift.setPower(-0.5);
+            while (lift.getCurrentPosition() > encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        } else {
+            lift.setPower(0.5);
+            while (lift.getCurrentPosition() < encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        }
     }
 }

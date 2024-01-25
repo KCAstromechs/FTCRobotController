@@ -41,17 +41,22 @@ public class VisionAutoRightRed extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         speed = 0.3;
 
+        CLOSE_GRABBER();
+
         // do this before match start
         vision.initVision();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        // Move the lift out of the way of the camera
+        lift_move(true, -400);
+
         // now let's run vision, full image is 640 x 480
         // values for left line up:
-        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(0, 52, 211, 290, true);
-        VisionBase.COLOR SpikeMarkCenter = vision.findRGB(272, 344, 205, 275, true);
-        VisionBase.COLOR SpikeMarkRight = vision.findRGB(572, 638, 230, 325, true);
+        VisionBase.COLOR SpikeMarkLeft = vision.findRGB(20, 90, 75, 105, true);
+        VisionBase.COLOR SpikeMarkCenter = vision.findRGB(284, 342, 64, 98, true);
+        VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.RED) {
             telemetry.addData("Final Answer", "Left RED");
             // Move forward a TADDDD
@@ -82,18 +87,36 @@ public class VisionAutoRightRed extends LinearOpMode {
             // Move forward to park
         }
         else if (SpikeMarkRight == VisionBase.COLOR.RED) {
+            // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Right RED");
-            // Move forward about half a square
-            // Strafe right to line grabber up with team prop
-            // Move forward (maybe) a tad bit
-            // Place purple pixel on spike mark
-            // Move backward a tad bit
-            // Turn right 90 degrees
-            // Move forward until touching backdrop
-            // Place yellow pixel on board (should correspond with Red Alliance Right April tag thingyaslkfa jsd;fj )
-            // Back up a tad
-            // Strafe right 3/4 of a square
-            // Move forward to park
+            telemetry.update();
+            sleep(4000);
+            // Strafe right half a square
+            STRAFE_RIGHT(600);
+            // Move forward to place purple pixel
+            MOVE_FORWARD(1100);
+            // Scoot back a bit
+            MOVE_BACKWARD(400);
+            // Turn left 90 degrees to face back of robot at the backdrop
+            TURN_LEFT(1050);
+            // Move backward towards the backdrop
+            MOVE_BACKWARD(900);
+            // Strafe right enough to line up with the backdrop
+            STRAFE_RIGHT(500);
+            // Move backward into the backdrop
+            MOVE_BACKWARD(400);
+            // Move lift up to backdrop (IDK THE VALUE BUT WOOO)
+            lift_move(true, -800);
+            // Open grabber to drop yellow pixel
+            OPEN_GRABBER();
+            // Move lift away from board to avoid disturbance
+            lift_move(false, -400);
+            // Move forward a bit away from the board
+            MOVE_FORWARD(200);
+            // Strafe left a square to move away from the board
+            STRAFE_LEFT(1000);
+            // Move backward to confirm park
+            MOVE_BACKWARD(200);
         }
         else {
             telemetry.addData("Final Answer", "RED NOT DETECTED");
@@ -227,5 +250,55 @@ public class VisionAutoRightRed extends LinearOpMode {
             telemetry.update();
         }
         STOP_ROBOT();
+    }
+
+
+    /**
+     * Open grabber
+     */
+    private void OPEN_GRABBER() {
+        rightGrabber.setPosition(.05);
+        leftGrabber.setPosition(.17);
+        telemetry.addData("Grabber status", "open");
+    }
+
+
+    /**
+     * Close grabber
+     */
+    private void CLOSE_GRABBER() {
+        rightGrabber.setPosition(.15);
+        leftGrabber.setPosition(.07);
+        telemetry.addData("Grabber status", "closed");
+    }
+
+
+    /**
+     * Moves lift to target position 'encoderPos'
+     *
+     * position -1350 is ground level
+     *
+     * position -800 is backdrop angle if backed all the way up the board
+     *
+     * @param encoderPos target position of lift in terms of encoders
+     * @param lift_towards_back whether or not the lift it rotating towards the back of the robot from the starting position
+     */
+    private void lift_move(boolean lift_towards_back,int encoderPos) {
+        sleep(200);
+        if (lift_towards_back == true) {
+            lift.setPower(-0.5);
+            while (lift.getCurrentPosition() > encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        } else {
+            lift.setPower(0.5);
+            while (lift.getCurrentPosition() < encoderPos) {
+                telemetry.addData("lift position", lift.getCurrentPosition());
+                telemetry.update();
+            }
+            lift.setPower(0);
+        }
     }
 }
