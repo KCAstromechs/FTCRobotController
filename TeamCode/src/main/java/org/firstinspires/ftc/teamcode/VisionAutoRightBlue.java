@@ -71,46 +71,34 @@ public class VisionAutoRightBlue extends LinearOpMode {
         VisionBase.COLOR SpikeMarkCenter = vision.findRGB(284, 342, 64, 98, true);
         VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.BLUE) {
-            telemetry.addData("Final Answer", "Left BLUE");
+            // TODO fine adjustments to be made
+            telemetry.addData("Final Answer", "Right BLUE");
             telemetry.update();
             sleep(4000);
-            // Move forward a TADDDD
-            MOVE_FORWARD(50);
-            // Turn right 90 degrees
-            TURN_RIGHT(935);
-            // Strafe left 1 square
-            STRAFE_LEFT(1001);
-            // Move forward a bit (optional)
-            MOVE_FORWARD(10);
-            // Place purple pixel on spike mark
-            // TODO complete above comment
-            // Strafe left 1 square
-            STRAFE_LEFT(1200);
-            // Move backward (under the main gate) and park (4 squares)
-            MOVE_BACKWARD(4000);
+            // Move forward to line up with left spike mark
+            MOVE_FORWARD(1425);
+            // Turn left 90 degrees to aim robot at right spike mark
+            TURN_LEFT(1000);
+            // Move forward a bit to get the purple pixel on the right spike mark
+            MOVE_FORWARD(500);
+            // Back up a bit
+            MOVE_BACKWARD(400);
         }
         else if (SpikeMarkCenter == VisionBase.COLOR.BLUE) {
+            // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Center BLUE");
             telemetry.update();
             sleep(4000);
-            // Move forward 1 square
-            MOVE_FORWARD(1050);
-            // Strafe right a bit
-            STRAFE_RIGHT(150);
-            // Turn right 180 degrees
-            TURN_RIGHT(1870);
-            // Place purple pixel on spike mark
-            // TODO complete above comment
-            // Move forward a TAd
-            MOVE_FORWARD(20);
-            // Strafe left 1 square
-            STRAFE_LEFT(875);
-            // Move backward 2 square
-            MOVE_BACKWARD(1500);
-            // Turn right 90 degrees
-            TURN_RIGHT(930);
-            // Move forward (under main gate) and park (5 squares)
-            MOVE_FORWARD(4769);
+            // Move forward to place purple pixel on center spike mark
+            MOVE_FORWARD(1510);
+            // Scoot back a bit
+            MOVE_BACKWARD(400);
+            // Strafe right to avoid the placed purple pixel
+            STRAFE_RIGHT(100);
+            // Move forward to like up with the stage door
+            MOVE_FORWARD(1600);
+            // Strafe left to park in the backstage
+            STRAFE_LEFT(5000);
         }
         else if (SpikeMarkRight == VisionBase.COLOR.BLUE) {
             telemetry.addData("Final Answer", "Right BLUE");
