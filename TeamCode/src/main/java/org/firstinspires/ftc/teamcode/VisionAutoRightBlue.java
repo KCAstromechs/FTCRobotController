@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//@Autonomous(name="VisionAutoRightBlue (Java)")
+@Autonomous(name="VisionAutoRightBlue (Java)", preselectTeleOp="TankDriveM3 (Java")
 public class VisionAutoRightBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -72,13 +72,13 @@ public class VisionAutoRightBlue extends LinearOpMode {
         VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.BLUE) {
             // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Right BLUE");
+            telemetry.addData("Final Answer", "Left BLUE");
             telemetry.update();
             sleep(4000);
             // Move forward to line up with left spike mark
-            MOVE_FORWARD(1425);
+            MOVE_FORWARD(14);
             // Turn left 90 degrees to aim robot at right spike mark
-            TURN_LEFT(1000);
+            TURN_LEFT(1050);
             // Move forward a bit to get the purple pixel on the right spike mark
             MOVE_FORWARD(500);
             // Back up a bit
@@ -90,27 +90,29 @@ public class VisionAutoRightBlue extends LinearOpMode {
             telemetry.update();
             sleep(4000);
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1510);
+            MOVE_FORWARD(1600);
             // Scoot back a bit
             MOVE_BACKWARD(400);
-            // Strafe right to avoid the placed purple pixel
-            STRAFE_RIGHT(100);
-            // Move forward to like up with the stage door
-            MOVE_FORWARD(1600);
-            // Strafe left to park in the backstage
-            STRAFE_LEFT(5000);
         }
         else if (SpikeMarkRight == VisionBase.COLOR.BLUE) {
             // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Right RED");
+            telemetry.addData("Final Answer", "Right BLUE");
             telemetry.update();
             sleep(4000);
+            // Move forward a bit
+            MOVE_FORWARD(500);
             // Strafe right half a square
-            STRAFE_RIGHT(600);
+            STRAFE_RIGHT(700);
             // Move forward to place purple pixel
-            MOVE_FORWARD(1100);
+            MOVE_FORWARD(600);
             // Scoot back a bit
             MOVE_BACKWARD(400);
+            // Strafe left half a square
+            STRAFE_LEFT(700);
+            // Move forward so that the lift doesn't hit the wall
+            MOVE_FORWARD(400);
+            // Move the attachment dOWN To the GROUnd
+            lift_move(true, -1350);
         }
         else {
             telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
@@ -129,12 +131,6 @@ public class VisionAutoRightBlue extends LinearOpMode {
             MOVE_FORWARD(1510);
             // Scoot back a bit
             MOVE_BACKWARD(400);
-            // Strafe right to avoid the placed purple pixel
-            STRAFE_RIGHT(100);
-            // Move forward to like up with the stage door
-            MOVE_FORWARD(1600);
-            // Strafe left to park in the backstage
-            STRAFE_LEFT(5000);
         }
 
         telemetry.update();

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//@Autonomous(name="VisionAutoRightRed (Java)")
+@Autonomous(name="VisionAutoRightRed (Java)", preselectTeleOp="TankDriveM3 (Java)")
 public class VisionAutoRightRed extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -18,6 +18,10 @@ public class VisionAutoRightRed extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontRight;
+
+    private Servo rightGrabber;
+    private Servo leftGrabber;
+    private DcMotor lift;
 
     double speed;
 
@@ -29,6 +33,11 @@ public class VisionAutoRightRed extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+
+        lift = hardwareMap.get(DcMotor.class, "lift");
+
+        leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
+        rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
         // Initialize motor settings (and speed)
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

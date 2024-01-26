@@ -18,7 +18,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "AutoRightBlueTensorFlow (Java)", preselectTeleOp = "TankDriveM3 (Java)")
+//@Autonomous(name = "AutoRightBlueTensorFlow (Java)", preselectTeleOp = "TankDriveM3 (Java)")
 public class AutoRightBlueTensorFlow extends LinearOpMode {
 
     boolean USE_WEBCAM;
