@@ -81,10 +81,6 @@ public class TankDriveM3 extends LinearOpMode {
 
 
                 // If Statements
-                // Lift safety
-                if (lift.getCurrentPosition() > 0) {
-                    lift_power = -Math.abs(lift_power);
-                }
 
                 // Telemetry
                 // Drive motor telemetry
