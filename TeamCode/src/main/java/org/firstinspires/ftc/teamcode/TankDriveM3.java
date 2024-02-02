@@ -79,6 +79,7 @@ public class TankDriveM3 extends LinearOpMode {
 
                 double lift_power = -gamepad2.right_stick_y;
 
+
                 // Telemetry
                 // Drive motor telemetry
                 telemetry.addData("Power of backLeft", backLeft.getPower());
