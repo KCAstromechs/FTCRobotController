@@ -61,7 +61,7 @@ public class VisionAutoLeftRed extends LinearOpMode {
         waitForStart();
 
         // Move the lift out of the way of the camera
-        lift_move(true, -400);
+        lift_move(true, -300);
 
         // now let's run vision, full image is 640 x 480
         // values for left line up:
@@ -70,57 +70,68 @@ public class VisionAutoLeftRed extends LinearOpMode {
         VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.RED) {
             // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Left BLUE");
+            telemetry.addData("Final Answer", "Left RED");
             telemetry.update();
-            sleep(4000);
+            // Move forward a bit
+            MOVE_FORWARD(500);
             // Strafe left half a square
-            STRAFE_LEFT(600);
+            STRAFE_LEFT(700);
             // Move forward to place purple pixel
-            MOVE_FORWARD(1100);
+            MOVE_FORWARD(600);
             // Scoot back a bit
             MOVE_BACKWARD(400);
+            // Strafe right half a square
+            STRAFE_RIGHT(700);
+            // Move forward so that the lift doesn't hit the wall
+            MOVE_FORWARD(400);
+            // Move the attachment dOWN To the GROUnd
+            lift_move(true, -1350);
         }
         else if (SpikeMarkCenter == VisionBase.COLOR.RED) {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Center BLUE");
             telemetry.update();
-            sleep(4000);
+
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1510);
+            MOVE_FORWARD(1600);
             // Scoot back a bit
             MOVE_BACKWARD(400);
+            // Move the attachment dOWn to the GROUnd
+            lift_move(true, -1350);
         }
         else if (SpikeMarkRight == VisionBase.COLOR.RED) {
             // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Right BLUE");
+            telemetry.addData("Final Answer", "Right RED");
             telemetry.update();
-            sleep(4000);
+
             // Move forward to line up with right spike mark
             MOVE_FORWARD(1425);
+            // Strafe left a little bit to avoid hitting the truss while turning
+            STRAFE_LEFT(100);
             // Turn right 90 degrees to aim robot at right spike mark
             TURN_RIGHT(1000);
             // Move forward a bit to get the purple pixel on the right spike mark
-            MOVE_FORWARD(500);
+            MOVE_FORWARD(600);
             // Move backward a bit
             MOVE_BACKWARD(400);
+            // Move the attachment dOWn to the GROUnd
+            lift_move(true, -1350);
         }
         else {
-            telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
+            telemetry.addData("Final Answer", "RED NOT DETECTED... GOING CENTER");
             telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
             telemetry.addLine();
             telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
             telemetry.addLine();
             telemetry.addData("What we actually saw on the right", SpikeMarkRight);
             telemetry.update();
-            sleep(4000);
-            // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Center BLUE");
-            telemetry.update();
-            sleep(4000);
+
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1500);
+            MOVE_FORWARD(1600);
             // Scoot back a bit
             MOVE_BACKWARD(300);
+            // Move the attachment dOWn to the GROUnd
+            lift_move(true, -1350);
         }
 
         telemetry.update();

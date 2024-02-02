@@ -67,7 +67,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
         waitForStart();
 
         // Move the lift out of the way of the camera
-        lift_move(true, -400);
+        lift_move(true, -300);
 
         // now let's run vision, full image is 640 x 480
         VisionBase.COLOR SpikeMarkLeft = vision.findRGB(20, 90, 75, 105, true);
@@ -77,7 +77,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Left BLUE");
             telemetry.update();
-            sleep(4000);
+
             // Strafe left half a square
             STRAFE_LEFT(600);
             // Move forward to place purple pixel
@@ -109,9 +109,9 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Center BLUE");
             telemetry.update();
-            sleep(4000);
+
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1510);
+            MOVE_FORWARD(1600);
             // Scoot back a bit
             MOVE_BACKWARD(400);
             // Turn right 90 degrees to aim back of robot at backdrop
@@ -127,7 +127,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             // Move forward a bit away from the board
             MOVE_FORWARD(200);
             // Strafe right a square to move away from the board
-            STRAFE_RIGHT(1000);
+            STRAFE_RIGHT(1200);
             // Move backward to confirm park
             MOVE_BACKWARD(200);
         }
@@ -135,16 +135,29 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Right BLUE");
             telemetry.update();
-            sleep(4000);
+
             // Move forward to line up with right spike mark
             MOVE_FORWARD(1425);
+            // Strafe left a tad so turning will not hit the truss
+            STRAFE_LEFT(100);
             // Turn right 90 degrees to aim robot at right spike mark
             TURN_RIGHT(1000);
             // Move forward a bit to get the purple pixel on the right spike mark
-            MOVE_FORWARD(500);
+            MOVE_FORWARD(600);
             // Move backward all the way to the back drop to place the yellow pixel
-            MOVE_BACKWARD(2000);
+            MOVE_BACKWARD(2100);
             // Move lift up to backdrop (IDK THE VALUE BUT WOOO)
+            lift_move(true, 800);
+            // Open the grabber to release the yellow pixel
+            OPEN_GRABBER();
+            // Move lift away from board to avoid disturbance
+            lift_move(false, -400);
+            // Move forward a bit away from the board
+            MOVE_FORWARD(200);
+            // Strafe right a square to move away from the board
+            STRAFE_RIGHT(1200);
+            // Move backward to confirm park
+            MOVE_BACKWARD(200);
         }
         else {
             telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
@@ -154,7 +167,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("What we actually saw on the right", SpikeMarkRight);
             telemetry.update();
-            sleep(4000);
+
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Center BLUE");
             telemetry.update();

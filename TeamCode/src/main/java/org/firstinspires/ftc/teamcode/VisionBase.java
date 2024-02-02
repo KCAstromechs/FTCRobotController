@@ -160,7 +160,7 @@ public class VisionBase {
     }
 
     public COLOR findRGB(int _minX, int _maxX, int _minY, int _maxY, boolean save) {
-        // setting up coords input as global
+        // setting up cords input as global
         minX = _minX;
         maxX = _maxX;
         minY = _minY;

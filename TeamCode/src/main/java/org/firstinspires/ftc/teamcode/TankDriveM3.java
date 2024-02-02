@@ -75,16 +75,9 @@ public class TankDriveM3 extends LinearOpMode {
                 double Speed_percentage = .6; // Normal drive will be 60% of max power
 
                 // Lift stuff
-                double lift_speed_limit = .5; // Normal lift speed will be 50% of max power
+                double lift_speed_limit = .7; // Normal lift speed will be 50% of max power
 
                 double lift_power = -gamepad2.right_stick_y;
-
-
-                // If Statements
-                // Lift safety
-                if (lift.getCurrentPosition() > 0) {
-                    lift_power = -Math.abs(lift_power);
-                }
 
                 // Telemetry
                 // Drive motor telemetry

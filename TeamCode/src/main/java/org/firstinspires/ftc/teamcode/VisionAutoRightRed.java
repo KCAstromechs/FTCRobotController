@@ -40,6 +40,9 @@ public class VisionAutoRightRed extends LinearOpMode {
         rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
         // Initialize motor settings (and speed)
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -59,7 +62,7 @@ public class VisionAutoRightRed extends LinearOpMode {
         waitForStart();
 
         // Move the lift out of the way of the camera
-        lift_move(true, -400);
+        lift_move(true, -300);
 
         // now let's run vision, full image is 640 x 480
         // values for left line up:
@@ -68,24 +71,37 @@ public class VisionAutoRightRed extends LinearOpMode {
         VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.RED) {
             // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Right BLUE");
+            telemetry.addData("Final Answer", "Right RED");
             telemetry.update();
-            sleep(4000);
+
             // Move forward to line up with left spike mark
             MOVE_FORWARD(1425);
+            // Strafe right to not hit truss while turning
+            STRAFE_RIGHT(100);
             // Turn left 90 degrees to aim robot at right spike mark
             TURN_LEFT(1000);
             // Move forward a bit to get the purple pixel on the right spike mark
-            MOVE_FORWARD(500);
+            MOVE_FORWARD(600);
             // Move backward all the way to the back drop to place the yellow pixel
             MOVE_BACKWARD(2000);
             // Move lift up to backdrop (IDK THE VALUE BUT WOOO)
+            lift_move(true, 800);
+            // Open the grabber to release the yellow pixel
+            OPEN_GRABBER();
+            // Move lift away from board to avoid disturbance
+            lift_move(false, -400);
+            // Move forward a bit away from the board
+            MOVE_FORWARD(200);
+            // Strafe left a square to move away from the board
+            STRAFE_LEFT(1200);
+            // Move backward to confirm park
+            MOVE_BACKWARD(200);
         }
         else if (SpikeMarkCenter == VisionBase.COLOR.RED) {
             // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Center BLUE");
+            telemetry.addData("Final Answer", "Center RED");
             telemetry.update();
-            sleep(4000);
+
             // Move forward to place purple pixel on center spike mark
             MOVE_FORWARD(1510);
             // Scoot back a bit
@@ -111,7 +127,7 @@ public class VisionAutoRightRed extends LinearOpMode {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Right RED");
             telemetry.update();
-            sleep(4000);
+
             // Strafe right half a square
             STRAFE_RIGHT(600);
             // Move forward to place purple pixel
@@ -147,7 +163,7 @@ public class VisionAutoRightRed extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("What we actually saw on the right", SpikeMarkRight);
             telemetry.update();
-            sleep(4000);
+
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Center BLUE");
             telemetry.update();

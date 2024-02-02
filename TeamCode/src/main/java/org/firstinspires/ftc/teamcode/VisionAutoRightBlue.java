@@ -63,7 +63,7 @@ public class VisionAutoRightBlue extends LinearOpMode {
         waitForStart();
 
         // Move the lift out of the way of the camera
-        lift_move(true, -400);
+        lift_move(true, -300);
 
         // now let's run vision, full image is 640 x 480
         // values for left line up:
@@ -74,31 +74,36 @@ public class VisionAutoRightBlue extends LinearOpMode {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Left BLUE");
             telemetry.update();
-            sleep(4000);
             // Move forward to line up with left spike mark
-            MOVE_FORWARD(14);
+            MOVE_FORWARD(1425);
+            // Strafe left a little bit to avoid hitting the truss while turning
+            STRAFE_LEFT(100);
             // Turn left 90 degrees to aim robot at right spike mark
             TURN_LEFT(1050);
             // Move forward a bit to get the purple pixel on the right spike mark
-            MOVE_FORWARD(500);
+            MOVE_FORWARD(600);
             // Back up a bit
             MOVE_BACKWARD(400);
+            // Move the attachment dOWn to the GROUnd
+            lift_move(true, -1350);
         }
         else if (SpikeMarkCenter == VisionBase.COLOR.BLUE) {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Center BLUE");
             telemetry.update();
-            sleep(4000);
+
             // Move forward to place purple pixel on center spike mark
             MOVE_FORWARD(1600);
             // Scoot back a bit
             MOVE_BACKWARD(400);
+            // Move the attachment dOWn to the GROUnd
+            lift_move(true, -1350);
         }
         else if (SpikeMarkRight == VisionBase.COLOR.BLUE) {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Right BLUE");
             telemetry.update();
-            sleep(4000);
+
             // Move forward a bit
             MOVE_FORWARD(500);
             // Strafe right half a square
@@ -122,15 +127,17 @@ public class VisionAutoRightBlue extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("What we actually saw on the right", SpikeMarkRight);
             telemetry.update();
-            sleep(4000);
+
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Center BLUE");
             telemetry.update();
             sleep(4000);
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1510);
+            MOVE_FORWARD(1600);
             // Scoot back a bit
             MOVE_BACKWARD(400);
+            // Move the attachment dOWn to the GROUnd
+            lift_move(true, -1350);
         }
 
         telemetry.update();
