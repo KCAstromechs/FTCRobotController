@@ -6,12 +6,11 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,6 +23,13 @@ public class FieldCentricDriveM3 extends LinearOpMode {
     private DcMotor backRight;
     private DcMotor frontRight;
     private IMU imu;
+
+    private DcMotor lift;
+
+    private Servo leftGrabber;
+    private Servo rightGrabber;
+
+    private Servo planeLauncher;
     //private BNO055IMU imu;
 
     /**
@@ -34,7 +40,7 @@ public class FieldCentricDriveM3 extends LinearOpMode {
         YawPitchRollAngles orientation;
         AngularVelocity angularVelocity;
         double yawAngle;
-        double speedPercentage;
+        double Speed_percentage;
 
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -42,11 +48,17 @@ public class FieldCentricDriveM3 extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
         imu = hardwareMap.get(IMU.class, "imu");
-        //imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+        leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
+        rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
+
+        lift = hardwareMap.get(DcMotor.class, "lift");
+
+        planeLauncher = hardwareMap.get(Servo.class, "planeLauncher");
 
 
         // Put motor initialization code here
+
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -54,7 +66,9 @@ public class FieldCentricDriveM3 extends LinearOpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        speedPercentage = 0.6;
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        Speed_percentage = 0.6;
         yawAngle = 0;
         // Initialize the IMU.
         // Initialize the IMU with non-default settings. To use this block,
@@ -76,19 +90,18 @@ public class FieldCentricDriveM3 extends LinearOpMode {
                     imu.resetYaw();
                 }
                 orientation = imu.getRobotYawPitchRollAngles();
-                angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-                yawAngle = orientation.getYaw(AngleUnit.RADIANS);
+
 // Booster Button!
                 if (gamepad1.right_bumper || gamepad1.left_bumper) {
-                    speedPercentage = 1;
+                    Speed_percentage = 1;
                 } else {
-                    speedPercentage = 0.6;
+                    Speed_percentage = 0.6;
                 }
 
 //                double robotInputY = gamepad1.left_stick_y;
 //                double robotInputX = gamepad1.left_stick_x;
 
-//                yawAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYX, AngleUnit.DEGREES).thirdAngle;
+                yawAngle = orientation.getYaw(AngleUnit.RADIANS);
 
                 // Uncomment this line when possible
                 double theta = yawAngle;
@@ -103,10 +116,10 @@ public class FieldCentricDriveM3 extends LinearOpMode {
 
 
                 // Robot-centric drive base code (with edits to robotInputY and robotInputX turn this into Field-centric drive)
-                double backRightPower = (robotInputY + -robotInputX + gamepad1.right_stick_x) * speedPercentage;
-                double backLeftPower = (robotInputY + robotInputX + -gamepad1.right_stick_x) * speedPercentage;
-                double frontRightPower = (robotInputY + robotInputX + gamepad1.right_stick_x) * speedPercentage;
-                double frontLeftPower = (robotInputY + -robotInputX + -gamepad1.right_stick_x) * speedPercentage;
+                double backRightPower = (robotInputY + -robotInputX + gamepad1.right_stick_x) * Speed_percentage;
+                double backLeftPower = (robotInputY + robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
+                double frontRightPower = (robotInputY + robotInputX + gamepad1.right_stick_x) * Speed_percentage;
+                double frontLeftPower = (robotInputY + -robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
 
 
                 // A whole bunch of telemetry for testing... I didn't feel like deleting it yet
@@ -116,6 +129,69 @@ public class FieldCentricDriveM3 extends LinearOpMode {
                 //telemetry.addData("Power of frontRight", frontRightPower);
 
                 //telemtry
+
+                // Lift stuff
+                double lift_speed_limit = .7; // Normal lift speed will be 50% of max power
+
+                double lift_power = -gamepad2.right_stick_y;
+
+
+                // Telemetry
+                // Drive motor telemetry
+                telemetry.addData("Power of backLeft", backLeft.getPower());
+                telemetry.addData("Power of backRight", backRight.getPower());
+                telemetry.addData("Power of frontLeft", frontLeft.getPower());
+                telemetry.addData("Power of frontRight", frontRight.getPower());
+
+                // Lift telemetry
+                telemetry.addData("lift_power", lift.getPower());
+                telemetry.addData("lift_position", lift.getCurrentPosition());
+                /*
+                For lift:
+                Up is negative encoders
+                Down is positive encoders
+                 */
+
+                // Grabber telemetry
+                telemetry.addData("Position of left grabber", leftGrabber.getPosition());
+                telemetry.addData("Position of right grabber", rightGrabber.getPosition());
+                telemetry.addData("Grabber status", "neutral");
+
+                // Plane Launcher telemetry
+                telemetry.addData("Position of planeLauncher", planeLauncher.getPosition());
+                telemetry.addData("planeLauncher", "loaded");
+
+                // ------------------IF statements------------------
+
+                // BOOSTER BUTTON!!!!!
+                if (gamepad1.left_bumper || gamepad1.right_bumper) {
+                    Speed_percentage = 1;
+                } else {
+                    Speed_percentage = 0.6;
+                }
+
+                // GRABBER
+                // close grabber if either bumpers/ trigger is pressed
+                if (gamepad2.left_trigger >= .5 || gamepad2.right_trigger >= .5 || gamepad2.left_bumper || gamepad2.right_bumper) {
+                    rightGrabber.setPosition(.15);
+                    leftGrabber.setPosition(.07);
+                    telemetry.addData("Grabber status", "closed");
+                } else { // open grabber when bumpers/ triggers are not pressed
+                    rightGrabber.setPosition(.05);
+                    leftGrabber.setPosition(.17);
+                    telemetry.addData("Grabber status", "open");
+                }
+
+                // Plane launcher
+                // planelaunch YES (launch)
+                if (gamepad2.dpad_down || gamepad2.dpad_up || gamepad2.dpad_left || gamepad2.dpad_right || gamepad2.ps) {
+                    planeLauncher.setPosition(.3);
+                    telemetry.addData("planeLauncher", "launched");
+                }
+                // planeLauncher RESET
+                if (gamepad2.a) {
+                    planeLauncher.setPosition(0);
+                }
 
                 //current position (testing for autonomous)
                 telemetry.addData("frontLeft Current Position", frontLeft.getCurrentPosition());
@@ -169,16 +245,10 @@ public class FieldCentricDriveM3 extends LinearOpMode {
 
                 orientation = imu.getRobotYawPitchRollAngles();
                 angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-                telemetry.addData("Yaw Angle", JavaUtil.formatNumber(yawAngle, 2));
-                telemetry.addData("Yaw (Z)", JavaUtil.formatNumber(orientation.getYaw(AngleUnit.DEGREES), 2));
-                telemetry.addData("Pitch (X)", JavaUtil.formatNumber(orientation.getPitch(AngleUnit.DEGREES), 2));
-                telemetry.addData("Roll (Y)", JavaUtil.formatNumber(orientation.getRoll(AngleUnit.DEGREES), 2));
-                // Display angular velocity.
-                telemetry.addData("Yaw (Z) velocity", JavaUtil.formatNumber(angularVelocity.zRotationRate, 2));
-                telemetry.addData("Pitch (X) velocity", JavaUtil.formatNumber(angularVelocity.xRotationRate, 2));
-                telemetry.addData("Roll (Y) velocity", JavaUtil.formatNumber(angularVelocity.yRotationRate, 2));
+                telemetry.addData("Yaw Angle", JavaUtil.formatNumber(yawAngle, 2));;
                 telemetry.update();
-                // Display yaw, pitch, and roll.
+                // Lift
+                lift.setPower(lift_power * lift_speed_limit);
             }
         }
     }

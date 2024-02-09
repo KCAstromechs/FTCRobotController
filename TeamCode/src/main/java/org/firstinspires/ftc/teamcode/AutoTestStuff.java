@@ -2,11 +2,21 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.JavaUtil;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @Autonomous(name="AutoTestStuff (Java)")
 public class AutoTestStuff extends LinearOpMode {
@@ -23,10 +33,18 @@ public class AutoTestStuff extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
+    private IMU imu_IMU;
+
     double speed;
+    double yawAngle;
 
     @Override
     public void runOpMode() {
+
+        YawPitchRollAngles orientation;
+        AngularVelocity angularVelocity;
+
+        imu_IMU = hardwareMap.get(IMU.class, "imu");
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -51,16 +69,39 @@ public class AutoTestStuff extends LinearOpMode {
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         speed = 0.3;
+        yawAngle = 0;
+
+        // Initialize the IMU.
+        // Initialize the IMU with non-default settings. To use this block,
+        // plug one of the "new IMU.Parameters" blocks into the parameters socket.
+        // Create a Parameters object for use with an IMU in a REV Robotics Control Hub or
+        // Expansion Hub, specifying the hub's orientation on the robot via the direction that
+        // the REV Robotics logo is facing and the direction that the USB ports are facing.
+        imu_IMU.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        CLOSE_GRABBER();
-        TURN_RIGHT(1000);
-        lift_move(true, -755);
-        lift_move(false, -400);
-        OPEN_GRABBER();
-        sleep(1000);
+
+        telemetry.addData("Yaw", "Press Circle or B on Gamepad to reset.");
+        // Check to see if reset yaw is requested.
+        if (gamepad1.circle) {
+            imu_IMU.resetYaw();
+        }
+        // Get the orientation and angular velocity.
+        orientation = imu_IMU.getRobotYawPitchRollAngles();
+        angularVelocity = imu_IMU.getRobotAngularVelocity(AngleUnit.DEGREES);
+        yawAngle = orientation.getYaw(AngleUnit.RADIANS);
+
+        // Display yaw, pitch, and roll.
+        telemetry.addData("Yaw (Z)", JavaUtil.formatNumber(orientation.getYaw(AngleUnit.DEGREES), 2));
+        telemetry.addData("Pitch (X)", JavaUtil.formatNumber(orientation.getPitch(AngleUnit.DEGREES), 2));
+        telemetry.addData("Roll (Y)", JavaUtil.formatNumber(orientation.getRoll(AngleUnit.DEGREES), 2));
+        // Display angular velocity.
+        telemetry.addData("Yaw (Z) velocity", JavaUtil.formatNumber(angularVelocity.zRotationRate, 2));
+        telemetry.addData("Pitch (X) velocity", JavaUtil.formatNumber(angularVelocity.xRotationRate, 2));
+        telemetry.addData("Roll (Y) velocity", JavaUtil.formatNumber(angularVelocity.yRotationRate, 2));
+        telemetry.update();
 
     }
     /**
