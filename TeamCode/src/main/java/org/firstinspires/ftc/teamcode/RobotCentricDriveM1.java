@@ -66,6 +66,7 @@ public class NewDriveMethod extends LinearOpMode {
                 double highestPower = Math.max(Math.max(Math.abs(backRightPower), Math.abs(backLeftPower)),
                         Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)));
 
+                // Motor power optimization
                 if (highestPower > 1) {
                     backLeftPower = backLeftPower / highestPower;
                     backRightPower = backRightPower / highestPower;
