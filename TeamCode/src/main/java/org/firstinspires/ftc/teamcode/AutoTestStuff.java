@@ -82,6 +82,9 @@ public class AutoTestStuff extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        TURN_LEFT(90);
+        TURN_RIGHT(90);
+
 
         telemetry.addData("Yaw", "Press Circle or B on Gamepad to reset.");
         // Check to see if reset yaw is requested.
@@ -192,41 +195,69 @@ public class AutoTestStuff extends LinearOpMode {
 
     /**
      * Turn right certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders 90 degrees is about
+     * Turn right certain # of degrees
+     * @param degrees
      */
-    private void TURN_RIGHT(int distanceEncoders) {
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    private void TURN_RIGHT(int degrees) {
+        imu_IMU.resetYaw();
+        yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         sleep(200);
         frontLeft.setPower(speed);
         frontRight.setPower(-speed);
         backLeft.setPower(speed);
         backRight.setPower(-speed);
-        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
-            telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
+        while (Math.abs(yawAngle) < degrees) {
+            yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+            telemetry.addData("yawAngle", yawAngle);
             telemetry.update();
         }
         STOP_ROBOT();
+//        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        sleep(200);
+//        frontLeft.setPower(speed);
+//        frontRight.setPower(-speed);
+//        backLeft.setPower(speed);
+//        backRight.setPower(-speed);
+//        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
+//            telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
+//            telemetry.update();
+//        }
+//        STOP_ROBOT();
     }
 
 
     /**
      * Turn left certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * @param degrees
      */
-    private void TURN_LEFT(int distanceEncoders) {
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    private void TURN_LEFT(int degrees) {
+        imu_IMU.resetYaw();
+        yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         sleep(200);
         frontLeft.setPower(-speed);
         frontRight.setPower(speed);
         backLeft.setPower(-speed);
         backRight.setPower(speed);
-        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
-            telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
+        while (Math.abs(yawAngle) < degrees) {
+            yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+            telemetry.addData("yawAngle", yawAngle);
             telemetry.update();
         }
         STOP_ROBOT();
+
+//        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        sleep(200);
+//        frontLeft.setPower(-speed);
+//        frontRight.setPower(speed);
+//        backLeft.setPower(-speed);
+//        backRight.setPower(speed);
+//        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
+//            telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
+//            telemetry.update();
+//        }
+//        STOP_ROBOT();
     }
 
 

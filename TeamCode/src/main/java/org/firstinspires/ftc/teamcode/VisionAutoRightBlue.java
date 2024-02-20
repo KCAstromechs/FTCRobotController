@@ -2,11 +2,17 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @Autonomous(name="VisionAutoRightBlue (Java)", preselectTeleOp="TankDriveM3 (Java")
 public class VisionAutoRightBlue extends LinearOpMode {
@@ -24,10 +30,18 @@ public class VisionAutoRightBlue extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
+    private IMU imu_IMU;
+
     double speed;
+
+    double yawAngle;
 
     @Override
     public void runOpMode() {
+
+
+        imu_IMU = hardwareMap.get(IMU.class, "imu");
+
         VisionBase vision = new VisionBase(hardwareMap, telemetry);
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -54,6 +68,16 @@ public class VisionAutoRightBlue extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         speed = 0.3;
 
+        // Initialize the IMU.
+        // Initialize the IMU with non-default settings. To use this block,
+        // plug one of the "new IMU.Parameters" blocks into the parameters socket.
+        // Create a Parameters object for use with an IMU in a REV Robotics Control Hub or
+        // Expansion Hub, specifying the hub's orientation on the robot via the direction that
+        // the REV Robotics logo is facing and the direction that the USB ports are facing.
+        imu_IMU.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+
+        yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+
         CLOSE_GRABBER();
 
         // do this before match start
@@ -75,15 +99,15 @@ public class VisionAutoRightBlue extends LinearOpMode {
             telemetry.addData("Final Answer", "Left BLUE");
             telemetry.update();
             // Move forward to line up with left spike mark
-            MOVE_FORWARD(1425);
-            // Strafe left a little bit to avoid hitting the truss while turning
-            STRAFE_LEFT(100);
+            MOVE_FORWARD(1300);
+            // Strafe right a little bit to avoid hitting the truss while turning
+            STRAFE_RIGHT(100);
             // Turn left 90 degrees to aim robot at right spike mark
-            TURN_LEFT(1050);
+            TURN_LEFT(90);
             // Move forward a bit to get the purple pixel on the right spike mark
-            MOVE_FORWARD(600);
+            MOVE_FORWARD(325);
             // Back up a bit
-            MOVE_BACKWARD(400);
+            MOVE_BACKWARD(300);
             // Move the attachment dOWn to the GROUnd
             lift_move(true, -1350);
         }
@@ -107,7 +131,7 @@ public class VisionAutoRightBlue extends LinearOpMode {
             // Move forward a bit
             MOVE_FORWARD(500);
             // Strafe right half a square
-            STRAFE_RIGHT(700);
+            STRAFE_RIGHT(600);
             // Move forward to place purple pixel
             MOVE_FORWARD(600);
             // Scoot back a bit
@@ -232,19 +256,20 @@ public class VisionAutoRightBlue extends LinearOpMode {
     }
 
     /**
-     * Turn right certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * Turn right certain # of degrees
+     * @param degrees
      */
-    private void TURN_RIGHT(int distanceEncoders) {
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    private void TURN_RIGHT(int degrees) {
+        imu_IMU.resetYaw();
+        yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         sleep(200);
         frontLeft.setPower(speed);
         frontRight.setPower(-speed);
         backLeft.setPower(speed);
         backRight.setPower(-speed);
-        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
-            telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
+        while (Math.abs(yawAngle) < degrees) {
+            yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+            telemetry.addData("yawAngle", yawAngle);
             telemetry.update();
         }
         STOP_ROBOT();
@@ -252,19 +277,20 @@ public class VisionAutoRightBlue extends LinearOpMode {
 
 
     /**
-     * Turn left certain # of encoder clicks (in terms of front_left)
-     * @param distanceEncoders
+     * Turn left certain # of degrees
+     * @param degrees
      */
-    private void TURN_LEFT(int distanceEncoders) {
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    private void TURN_LEFT(int degrees) {
+        imu_IMU.resetYaw();
+        yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         sleep(200);
         frontLeft.setPower(-speed);
         frontRight.setPower(speed);
         backLeft.setPower(-speed);
         backRight.setPower(speed);
-        while (Math.abs(frontLeft.getCurrentPosition()) < distanceEncoders) {
-            telemetry.addData("frontLeft.getCurrentPosition()", frontLeft.getCurrentPosition());
+        while (Math.abs(yawAngle) < degrees) {
+            yawAngle = imu_IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+            telemetry.addData("yawAngle", yawAngle);
             telemetry.update();
         }
         STOP_ROBOT();

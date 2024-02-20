@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "TankDriveM2 (Java)")
+@Disabled
 
 public class TankDriveM2 extends LinearOpMode {
 
@@ -111,7 +113,8 @@ public class TankDriveM2 extends LinearOpMode {
                     planeLauncher.setPosition(.225);
                 }
 
-                // new launch code (using green rubber wheels)
+                // new launch code (using green rubber
+                // wheels)
                 if (gamepad2.y) {
                     Launcher1.setPower(1);
                     Launcher2.setPower(-1);

@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "NewDriveMethod (Java)")
+@TeleOp(name = "RobotCentricDriveM1 (Java)")
 
-public class NewDriveMethod extends LinearOpMode {
+public class RobotCentricDriveM1 extends LinearOpMode {
 
     private DcMotor backLeft;
     private DcMotor frontLeft;

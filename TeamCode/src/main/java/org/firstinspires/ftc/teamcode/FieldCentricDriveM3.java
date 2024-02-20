@@ -183,7 +183,7 @@ public class FieldCentricDriveM3 extends LinearOpMode {
                 }
 
                 // Plane launcher
-                // planelaunch YES (launch)
+                // planelauncher YES (launch)
                 if (gamepad2.dpad_down || gamepad2.dpad_up || gamepad2.dpad_left || gamepad2.dpad_right || gamepad2.ps) {
                     planeLauncher.setPosition(.3);
                     telemetry.addData("planeLauncher", "launched");
