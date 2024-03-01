@@ -104,7 +104,7 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             // Strafe left half a square
             STRAFE_LEFT(600);
             // Move forward to place purple pixel
-            MOVE_FORWARD(1100);
+            MOVE_FORWARD(1200);
             // Scoot back a bit
             MOVE_BACKWARD(400);
             // Turn right 90 degrees to face back of robot at the backdrop
@@ -134,13 +134,13 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             telemetry.update();
 
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1600);
+            MOVE_FORWARD(1400);
             // Scoot back a bit
-            MOVE_BACKWARD(400);
+            MOVE_BACKWARD(300);
             // Turn right 90 degrees to aim back of robot at backdrop
             TURN_RIGHT(90);
             // Move backward into the backdrop
-            MOVE_BACKWARD(1810);
+            MOVE_BACKWARD(1600);
             // Move lift up to backdrop (IDK THE VALUE BUT WOOO)
             lift_move(true, -800);
             // Open grabber to release yellow pixel
