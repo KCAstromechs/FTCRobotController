@@ -160,13 +160,13 @@ public class VisionAutoLeftBlue extends LinearOpMode {
             telemetry.update();
 
             // Move forward to line up with right spike mark
-            MOVE_FORWARD(1425);
+            MOVE_FORWARD(1300);
             // Strafe left a tad so turning will not hit the truss
             STRAFE_LEFT(100);
             // Turn right 90 degrees to aim robot at right spike mark
             TURN_RIGHT(90);
             // Move forward a bit to get the purple pixel on the right spike mark
-            MOVE_FORWARD(600);
+            MOVE_FORWARD(550);
             // Move backward all the way to the back drop to place the yellow pixel
             MOVE_BACKWARD(2100);
             // Move lift up to backdrop (IDK THE VALUE BUT WOOO)
