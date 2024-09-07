@@ -93,7 +93,7 @@ public class VisionAutoRightBlue extends LinearOpMode {
         // values for left line up:
         VisionBase.COLOR SpikeMarkLeft = vision.findRGB(20, 90, 75, 105, true);
         VisionBase.COLOR SpikeMarkCenter = vision.findRGB(284, 342, 64, 98, true);
-        VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
+//        VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.BLUE) {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Left BLUE");
@@ -117,13 +117,13 @@ public class VisionAutoRightBlue extends LinearOpMode {
             telemetry.update();
 
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1600);
+            MOVE_FORWARD(1570);
             // Scoot back a bit
             MOVE_BACKWARD(400);
             // Move the attachment dOWn to the GROUnd
             lift_move(true, -1350);
         }
-        else if (SpikeMarkRight == VisionBase.COLOR.BLUE) {
+        else {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Right BLUE");
             telemetry.update();
@@ -131,7 +131,7 @@ public class VisionAutoRightBlue extends LinearOpMode {
             // Move forward a bit
             MOVE_FORWARD(500);
             // Strafe right half a square
-            STRAFE_RIGHT(600);
+            STRAFE_RIGHT(700);
             // Move forward to place purple pixel
             MOVE_FORWARD(600);
             // Scoot back a bit
@@ -143,26 +143,26 @@ public class VisionAutoRightBlue extends LinearOpMode {
             // Move the attachment dOWN To the GROUnd
             lift_move(true, -1350);
         }
-        else {
-            telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
-            telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
-            telemetry.addLine();
-            telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
-            telemetry.addLine();
-            telemetry.addData("What we actually saw on the right", SpikeMarkRight);
-            telemetry.update();
-
-            // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Center BLUE");
-            telemetry.update();
-            sleep(4000);
-            // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1600);
-            // Scoot back a bit
-            MOVE_BACKWARD(400);
-            // Move the attachment dOWn to the GROUnd
-            lift_move(true, -1350);
-        }
+//        else {
+//            telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
+//            telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
+//            telemetry.addLine();
+//            telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
+//            telemetry.addLine();
+//            telemetry.addData("What we actually saw on the right", SpikeMarkRight);
+//            telemetry.update();
+//
+//            // TODO fine adjustments to be made
+//            telemetry.addData("Final Answer", "Center BLUE");
+//            telemetry.update();
+//            sleep(4000);
+//            // Move forward to place purple pixel on center spike mark
+//            MOVE_FORWARD(1570);
+//            // Scoot back a bit
+//            MOVE_BACKWARD(300);
+//            // Move the attachment dOWn to the GROUnd
+//            lift_move(true, -1350);
+//        }
 
         telemetry.update();
 

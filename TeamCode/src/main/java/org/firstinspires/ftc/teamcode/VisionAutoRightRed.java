@@ -92,7 +92,7 @@ public class VisionAutoRightRed extends LinearOpMode {
         // values for left line up:
         VisionBase.COLOR SpikeMarkLeft = vision.findRGB(20, 90, 75, 105, true);
         VisionBase.COLOR SpikeMarkCenter = vision.findRGB(284, 342, 64, 98, true);
-        VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
+//        VisionBase.COLOR SpikeMarkRight = vision.findRGB(515, 581, 64, 95, true);
         if (SpikeMarkLeft == VisionBase.COLOR.RED) {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Left RED");
@@ -129,9 +129,9 @@ public class VisionAutoRightRed extends LinearOpMode {
             telemetry.update();
 
             // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1510);
+            MOVE_FORWARD(1570);
             // Scoot back a bit
-            MOVE_BACKWARD(400);
+            MOVE_BACKWARD(300);
             // Turn left 90 degrees to aim back of robot at backdrop
             TURN_LEFT(90);
             // Move backward into the backdrop
@@ -149,7 +149,7 @@ public class VisionAutoRightRed extends LinearOpMode {
             // Move backward to confirm park
             MOVE_BACKWARD(200);
         }
-        else if (SpikeMarkRight == VisionBase.COLOR.RED) {
+        else {
             // TODO fine adjustments to be made
             telemetry.addData("Final Answer", "Right RED");
             telemetry.update();
@@ -181,40 +181,40 @@ public class VisionAutoRightRed extends LinearOpMode {
             // Move backward to confirm park
             MOVE_BACKWARD(200);
         }
-        else {
-            telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
-            telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
-            telemetry.addLine();
-            telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
-            telemetry.addLine();
-            telemetry.addData("What we actually saw on the right", SpikeMarkRight);
-            telemetry.update();
-
-            // TODO fine adjustments to be made
-            telemetry.addData("Final Answer", "Center BLUE");
-            telemetry.update();
-            sleep(4000);
-            // Move forward to place purple pixel on center spike mark
-            MOVE_FORWARD(1510);
-            // Scoot back a bit
-            MOVE_BACKWARD(400);
-            // Turn left 90 degrees to aim back of robot at backdrop
-            TURN_LEFT(90);
-            // Move backward into the backdrop
-            MOVE_BACKWARD(1810);
-            // Move lift up to backdrop (IDK THE VALUE BUT WOOO)
-            lift_move(true, -800);
-            // Open grabber to release yellow pixel
-            OPEN_GRABBER();
-            // Move lift away from board to avoid disturbance
-            lift_move(false, -400);
-            // Move forward a bit away from the board
-            MOVE_FORWARD(200);
-            // Strafe left a square to move away from the board
-            STRAFE_LEFT(1000);
-            // Move backward to confirm park
-            MOVE_BACKWARD(200);
-        }
+//        else {
+//            telemetry.addData("Final Answer", "BLUE NOT DETECTED... GOING CENTER");
+//            telemetry.addData("What we actually saw on the left", SpikeMarkLeft);
+//            telemetry.addLine();
+//            telemetry.addData("What we actually saw in the center", SpikeMarkCenter);
+//            telemetry.addLine();
+//            telemetry.addData("What we actually saw on the right", SpikeMarkRight);
+//            telemetry.update();
+//
+//            // TODO fine adjustments to be made
+//            telemetry.addData("Final Answer", "Center BLUE");
+//            telemetry.update();
+//            sleep(4000);
+//            // Move forward to place purple pixel on center spike mark
+//            MOVE_FORWARD(1570);
+//            // Scoot back a bit
+//            MOVE_BACKWARD(300);
+//            // Turn left 90 degrees to aim back of robot at backdrop
+//            TURN_LEFT(90);
+//            // Move backward into the backdrop
+//            MOVE_BACKWARD(1810);
+//            // Move lift up to backdrop (IDK THE VALUE BUT WOOO)
+//            lift_move(true, -800);
+//            // Open grabber to release yellow pixel
+//            OPEN_GRABBER();
+//            // Move lift away from board to avoid disturbance
+//            lift_move(false, -400);
+//            // Move forward a bit away from the board
+//            MOVE_FORWARD(200);
+//            // Strafe left a square to move away from the board
+//            STRAFE_LEFT(1000);
+//            // Move backward to confirm park
+//            MOVE_BACKWARD(200);
+//        }
 
         telemetry.update();
 
