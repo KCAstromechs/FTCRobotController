@@ -21,11 +21,9 @@ public class TankDriveM3 extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor backRight;
     private DcMotor frontRight;
-    private DcMotor lift;
 
-    private Servo leftGrabber;
-    private Servo rightGrabber;
-    private Servo planeLauncher;
+
+
 
 
     /**
@@ -39,13 +37,6 @@ public class TankDriveM3 extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
-        lift = hardwareMap.get(DcMotor.class, "lift");
-
-        leftGrabber = hardwareMap.get(Servo.class, "leftGrabber");
-        rightGrabber = hardwareMap.get(Servo.class, "rightGrabber");
-
-        planeLauncher = hardwareMap.get(Servo.class, "planeLauncher");
-
         // Put initialization blocks here.
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -53,10 +44,6 @@ public class TankDriveM3 extends LinearOpMode {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        planeLauncher.setPosition(0);
 
         // Wait for start
         waitForStart();
@@ -74,36 +61,12 @@ public class TankDriveM3 extends LinearOpMode {
 
                 double Speed_percentage = .6; // Normal drive will be 60% of max power
 
-                // Lift stuff
-                double lift_speed_limit = .7; // Normal lift speed will be 50% of max power
-
-                double lift_power = -gamepad2.right_stick_y;
-
-
                 // Telemetry
                 // Drive motor telemetry
                 telemetry.addData("Power of backLeft", backLeft.getPower());
                 telemetry.addData("Power of backRight", backRight.getPower());
                 telemetry.addData("Power of frontLeft", frontLeft.getPower());
                 telemetry.addData("Power of frontRight", frontRight.getPower());
-
-                // Lift telemetry
-                telemetry.addData("lift_power", lift.getPower());
-                telemetry.addData("lift_position", lift.getCurrentPosition());
-                /*
-                For lift:
-                Up is negative encoders
-                Down is positive encoders
-                 */
-
-                // Grabber telemetry
-                telemetry.addData("Position of left grabber", leftGrabber.getPosition());
-                telemetry.addData("Position of right grabber", rightGrabber.getPosition());
-                telemetry.addData("Grabber status", "neutral");
-
-                // Plane Launcher telemetry
-                telemetry.addData("Position of planeLauncher", planeLauncher.getPosition());
-                telemetry.addData("planeLauncher", "loaded");
 
                 // ------------------IF statements------------------
 
@@ -112,29 +75,6 @@ public class TankDriveM3 extends LinearOpMode {
                     Speed_percentage = 1;
                 } else {
                     Speed_percentage = 0.6;
-                }
-
-                // GRABBER
-                // close grabber if either bumpers/ trigger is pressed
-                if (gamepad2.left_trigger >= .5 || gamepad2.right_trigger >= .5 || gamepad2.left_bumper || gamepad2.right_bumper) {
-                    rightGrabber.setPosition(.15);
-                    leftGrabber.setPosition(.07);
-                    telemetry.addData("Grabber status", "closed");
-                } else { // open grabber when bumpers/ triggers are not pressed
-                    rightGrabber.setPosition(.05);
-                    leftGrabber.setPosition(.17);
-                    telemetry.addData("Grabber status", "open");
-                }
-
-                // Plane launcher
-                // planelaunch YES (launch)
-                if (gamepad2.dpad_down || gamepad2.dpad_up || gamepad2.dpad_left || gamepad2.dpad_right || gamepad2.ps) {
-                    planeLauncher.setPosition(.225);
-                    telemetry.addData("planeLauncher", "launched");
-                }
-                // planeLauncher RESET
-                if (gamepad2.a) {
-                    planeLauncher.setPosition(0);
                 }
 
                 // Reset lift encoder
@@ -146,9 +86,6 @@ public class TankDriveM3 extends LinearOpMode {
                 backLeft.setPower((backLeftPower) * Speed_percentage);
                 frontRight.setPower((frontRightPower) * Speed_percentage);
                 frontLeft.setPower((frontLeftPower) * Speed_percentage);
-
-                // Lift
-                lift.setPower(lift_power * lift_speed_limit);
 
 
                 telemetry.update();
