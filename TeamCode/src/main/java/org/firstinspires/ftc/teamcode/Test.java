@@ -1,79 +1,135 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.IMU;
+import org.firstinspires.ftc.robotcore.external.JavaUtil;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
+import java.lang.Math;
 
-/*
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When a selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
- */
 
 @TeleOp(name="Test", group="Linear OpMode")
 public class Test extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+//    private VoltageSensor voltageSensor = null;
+//    vol= hardwareMap.voltageSensor.get("Battery_Voltage_Sensor");
+
+    // IMU
+    private IMU imu;
+
+    private DcMotor frontRight = null;
+    private DcMotor backRight = null;
+    private DcMotor backLeft = null;
+    private DcMotor frontLeft = null;
+
+    private DcMotor intake = null;
+    
+    private DcMotor progression = null;
+    private double progressionPercent = 1.0; // 1.0 = 100%
+
+    private DcMotorEx outtakeLeft = null;
+    private DcMotorEx outtakeRight = null;
+
+    private double shooterPercent = .6; // 1.0 = 100%
+
+    private double leftTicksPerRev;
+    private double rightTicksPerRev;
+    private double leftRPM;
+    private double rightRPM;
+    private boolean shooting = false;
+    private boolean canShoot = false;
+
+//    private boolean in = false;
+//    private boolean progress = false;
+//    private double voltage = voltageSensor.getVoltage();
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
-        telemetry.update();
+
+        // IMU stuff
+        YawPitchRollAngles orientation;
+        AngularVelocity angularVelocity;
+
+        // CONSTANTS
+        double yawAngle;
+        double Speed_percentage;
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        frontRight  = hardwareMap.get(DcMotor.class, "frontRight");
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+
+        // IMU
+        imu = hardwareMap.get(IMU.class, "imu");
+
+        intake = hardwareMap.get(DcMotor.class, "intake");
+
+        progression = hardwareMap.get(DcMotor.class, "progression");
+
+        outtakeLeft = hardwareMap.get(DcMotorEx.class, "outtakeLeft");
+        outtakeRight = hardwareMap.get(DcMotorEx.class, "outtakeRight");
+
+        leftTicksPerRev = outtakeLeft.getMotorType().getTicksPerRev();
+        rightTicksPerRev = outtakeRight.getMotorType().getTicksPerRev();
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        intake.setDirection(DcMotor.Direction.FORWARD);
+
+        progression.setDirection(DcMotor.Direction.REVERSE);
+
+        // To allow automatic braking, set 'zero power behavor' to brake for all motors
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        outtakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        outtakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        // Speed stuff
+        outtakeLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+//        outtakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        outtakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        Speed_percentage = 0.6;
+        yawAngle = 0;
+        // Initialize the IMU.
+        // Initialize the IMU with non-default settings. To use this block,
+        // plug one of the "new IMU.Parameters" blocks into the parameters socket.
+        // Create a Parameters object for use with an IMU in a REV Robotics Control Hub or
+        // Expansion Hub, specifying the hub's orientation on the robot via the direction that
+        // the REV Robotics logo is facing and the direction that the USB ports are facing.
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD)));
+        // Prompt user to press start button.
+        telemetry.addData("IMU Example", "Press start to continue...");
+        telemetry.update();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -81,33 +137,114 @@ public class Test extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addData("Yaw/Rotation Angle", "Press Y on Gamepad to reset.");
+            // Check to see if reset yaw is requested.
+            if (gamepad1.y)   {
+                imu.resetYaw();
+            }
+            orientation = imu.getRobotYawPitchRollAngles();
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
+            yawAngle = orientation.getYaw(AngleUnit.RADIANS);
 
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
+//            // intake/progression toggles
+//
+//            if (gamepad1.aWasPressed()) {
+//                in = !in;
+//            }
 
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            // if driver1 triggers pressed, both on no matter what
+            if ((shooting && canShoot) || gamepad2.x || Math.abs(gamepad1.right_trigger) > 0.5 || Math.abs(gamepad1.left_trigger) > 0.5) { // if toggled, intake in
+                intake.setPower(1);
+            } else {
+                intake.setPower(0);
+            }
 
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
+            // progression logic
+            leftRPM = (outtakeLeft.getVelocity() / leftTicksPerRev) * 60;
+            rightRPM = (outtakeRight.getVelocity() / rightTicksPerRev) * 60 * -1;
+            shooting = gamepad2.right_trigger > 0.5;
+            canShoot = (leftRPM > 95 && rightRPM > 95);
+            if (gamepad2.x || gamepad2.a || (shooting && canShoot)) { // if toggled, progression continue
+                progression.setPower(1 * progressionPercent);
+            } else if (gamepad2.b) { // if b, progression retract from shooter
+                progression.setPower(-1 * progressionPercent);
+            } else {
+                progression.setPower(0);
+            }
 
-            // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
+            // shooter buttons
+            if (gamepad2.dpadDownWasPressed()) {
+                shooterPercent -= .05; // -5%
+            } else if (gamepad2.dpadUpWasPressed()) {
+                shooterPercent += .05; // +5%
+            }
+
+            // outtake
+            outtakeLeft.setPower(gamepad2.right_trigger * shooterPercent);
+            outtakeRight.setPower(-gamepad2.right_trigger * shooterPercent);
+
+            // Ian's shooter thing
+            /* if (leftRPM > 95 && rightRPM > 95) {
+                progression.setPower(1);
+                intake.setPower(1);
+            } */
+
+            // BOOSTER BUTTON!!!!!
+            if (gamepad1.left_bumper || gamepad1.right_bumper) {
+                Speed_percentage = 1;
+            } else {
+                Speed_percentage = 0.6;
+            }
+            double theta = yawAngle;
+            // PI / 2; = 90 degrees (in terms of radians)
+
+            double _inputX = gamepad1.left_stick_x;
+            double _inputY = gamepad1.left_stick_y;
+
+            // Changing vectors of joystick input
+            double robotInputY = ((_inputX * Math.sin(theta)) + (_inputY * Math.sin(theta + (PI / 2)))); // *1.4
+            double robotInputX = (_inputX * Math.cos(theta)) + (_inputY * Math.cos(theta + (PI / 2)));
+
+            // Robot-centric drive base code (with edits to robotInputY and robotInputX turn this into Field-centric drive)
+            double rightBackPower = (robotInputY + -robotInputX + gamepad1.right_stick_x) * Speed_percentage;
+            double leftBackPower = (robotInputY + robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
+            double rightFrontPower = (robotInputY + robotInputX + gamepad1.right_stick_x) * Speed_percentage;
+            double leftFrontPower = (robotInputY + -robotInputX + -gamepad1.right_stick_x) * Speed_percentage;
+
+            /* highestPower is the highest value out of all of the absolute values of
+                rightBackPower, leftBackPower, rightFrontPower, and leftFrontPower. */
+            double highestPower = Math.max(Math.max(Math.abs(rightBackPower), Math.abs(leftBackPower)),
+                    Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)));
+
+            // Normalizing powers (the powers will never go above 1)
+            if (highestPower > 1) {
+                leftBackPower = leftBackPower / highestPower;
+                rightBackPower = rightBackPower / highestPower;
+                leftFrontPower = leftFrontPower / highestPower;
+                rightFrontPower = rightFrontPower / highestPower;
+            }
+            backRight.setPower((rightBackPower));
+            backLeft.setPower((leftBackPower));
+            frontRight.setPower((rightFrontPower));
+            frontLeft.setPower((leftFrontPower));
+            // Get the orientation and angular velocity.
+
+            orientation = imu.getRobotYawPitchRollAngles();
+            angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
+            telemetry.addData("Yaw Angle", JavaUtil.formatNumber(yawAngle, 2));
+
+//            voltage = voltageSensor.getVoltage();
+//            telemetry.addData("Battery Voltage", voltage);
 
             // Show the elapsed game time and wheel power.
+//            telemetry.addData("Press A for intake toggle", in);
+//            telemetry.addData("Press B for progression toggle", progress);
+            telemetry.addData("Set Power of intake", intake.getPower());
+            telemetry.addData("Set Power of progression", progression.getPower());
+            telemetry.addData("Shooter Percentage", shooterPercent *100 + " %");
+            telemetry.addData("RPM of shooterLeft", leftRPM); // (ticksPerSec/ticksPerRev) * 60
+            telemetry.addData("RPM of shooterRight", rightRPM ); // (ticksPerSec/ticksPerRev) * 60sd
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
     }
