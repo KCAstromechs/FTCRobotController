@@ -42,7 +42,7 @@ public class Test extends LinearOpMode {
     private DcMotorEx outtakeLeft = null;
     private DcMotorEx outtakeRight = null;
 
-    private double shooterPercent = .6; // 1.0 = 100%
+    private double shooterPercent = .7; // 1.0 = 100%
 
     private double leftTicksPerRev;
     private double rightTicksPerRev;
@@ -184,10 +184,10 @@ public class Test extends LinearOpMode {
             outtakeRight.setPower(-gamepad2.right_trigger * shooterPercent);
 
             // Ian's shooter thing
-            /* if (leftRPM > 95 && rightRPM > 95) {
+             /*if (leftRPM > 95 && rightRPM > 95) {
                 progression.setPower(1);
                 intake.setPower(1);
-            } */
+            }*/
 
             // BOOSTER BUTTON!!!!!
             if (gamepad1.left_bumper || gamepad1.right_bumper) {
